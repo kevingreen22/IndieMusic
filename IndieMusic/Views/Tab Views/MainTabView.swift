@@ -30,7 +30,7 @@ struct MainTabView: View {
                         .navigationBarTitleDisplayMode(.large)
                         .navigationBarTitle(TabTitle.favorites.rawValue)
                 }.tabItem {
-                    Label(TabTitle.favorites.rawValue, systemImage: "star.fill")
+                    Label(TabTitle.favorites.rawValue, systemImage: "heart.fill")
                 }
                 
                 
@@ -46,18 +46,13 @@ struct MainTabView: View {
                 }
                 
                 
-//                NavigationView {
-                    ProfileView()
-                        .environmentObject(vm)
-                        .environmentObject(cpVM)
-                        .environment(\.defaultMinListRowHeight, 60)
-//                        .navigationBarTitleDisplayMode(.large)
-//                        .navigationBarTitle(TabTitle.profile.rawValue)
-//                }
-                        .tabItem {
-                            Label("Profile", systemImage: "person.fill")
-                        }
-                
+                ProfileView()
+                    .environmentObject(vm)
+                    .environmentObject(cpVM)
+                    .environment(\.defaultMinListRowHeight, 60)
+                    .tabItem {
+                        Label("Profile", systemImage: "person.fill")
+                    }
                 
             } // End TabView
             .accentColor(.black)
