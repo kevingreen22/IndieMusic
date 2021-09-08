@@ -90,4 +90,21 @@ class ProfileViewModel: ObservableObject {
     
     
     
+    func imagePickerActionSheet() -> ActionSheet {
+        ActionSheet(title: Text("Choose Photo from"), message: nil, buttons: [
+            .default(Text("Photo Library"), action: {
+                self.sourceType = .photoLibrary
+                self.showImagePicker.toggle()
+            }),
+            .default(Text("Camera"), action: {
+                self.sourceType = .camera
+                self.showImagePicker.toggle()
+            }),
+            .cancel()
+        ])
+    }
+    
+    
+    
+    
 }
