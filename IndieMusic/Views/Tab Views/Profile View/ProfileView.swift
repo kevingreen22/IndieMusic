@@ -164,20 +164,15 @@ struct ProfileViewHeader: View {
             })
             
             .actionSheet(isPresented: $profileVM.showImagePickerPopover, content: {
-                ActionSheet(title: Text("Choose Photo from"), message: nil, buttons: [
-                    .default(Text("Photo Library"), action: {
-                        profileVM.sourceType = .photoLibrary
-                        profileVM.showImagePicker.toggle()
-                    }),
-                    .default(Text("Camera"), action: {
-                        profileVM.sourceType = .camera
-                        profileVM.showImagePicker.toggle()
-                    }),
-                    .cancel()
-                ])
+                profileVM.imagePickerActionSheet()
             })
             
         }
+        
+        .onAppear {
+            profileVM.fetchUserProfilePicture()
+        }
+        
     }
     
 }

@@ -40,16 +40,20 @@ class ProfileViewModel: ObservableObject {
     
     
     
-    fileprivate func fetchUserProfilePicture(path: String) {
-        StorageManager.shared.downloadURLForProfilePicture(path: path) { url in
-            guard let url = url else { return }
-            let task = URLSession.shared.dataTask(with: url) { (data, _, _) in
-                guard let _data = data else { return }
-                DispatchQueue.main.async {
-                    self.selectedImage = UIImage(data: _data)
+    func fetchUserProfilePicture() {
+        let email = email.replacingOccurrences(of: ".", with: "_").replacingOccurrences(of: "@", with: "_")
+        if email != "" {
+            let path = "profile_pictures/\(email)/\(SuffixNames.photoPNG)"
+            StorageManager.shared.downloadURLForProfilePicture(path: path) { url in
+                guard let url = url else { return }
+                let task = URLSession.shared.dataTask(with: url) { (data, _, _) in
+                    guard let _data = data else { return }
+                    DispatchQueue.main.async {
+                        self.selectedImage = UIImage(data: _data)
+                    }
                 }
+                task.resume()
             }
-            task.resume()
         }
     }
     
@@ -57,7 +61,7 @@ class ProfileViewModel: ObservableObject {
     
     
     
-    fileprivate func fetchPosts() {
+    func fetchPosts() {
         
     }
     
