@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>358829137848-hh05n9thd5i98596e7v5mpaiosh2kdf2.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.358829137848-hh05n9thd5i98596e7v5mpaiosh2kdf2</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCm3lWlkEg8OKgY_TtosJ76KumXmdweo5s</string>
+	<key>GCM_SENDER_ID</key>
+	<string>358829137848</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.kevinGreen.IndieMusic</string>
+	<key>PROJECT_ID</key>
+	<string>indie-music-ac8f2</string>
+	<key>STORAGE_BUCKET</key>
+	<string>indie-music-ac8f2.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:358829137848:ios:d5e312dd9030a30ccdb94d</string>
+</dict>
+</plist>
