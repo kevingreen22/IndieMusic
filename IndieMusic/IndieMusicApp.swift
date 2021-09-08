@@ -26,6 +26,8 @@ struct IndieMusicApp: App {
                 .onAppear {
                     if !AuthManager.shared.isSignedIn {
                         vm.showSigninView = true
+                    } else {
+                        vm.setUser()
                     }
                 }
                 .fullScreenCover(isPresented: $vm.showSigninView) {

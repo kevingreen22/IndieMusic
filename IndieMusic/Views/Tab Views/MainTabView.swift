@@ -71,9 +71,6 @@ struct MainTabView: View {
         
         .onAppear {
             cpVM.preparePlayer()
-            if vm.user == nil {
-                vm.setUser()
-            }
             
 //            if vm.isOpeningApp && !IAPManager.shared.isPremium() && AuthManager.shared.isSignedIn { vm.showPayWall.toggle() }
         }
