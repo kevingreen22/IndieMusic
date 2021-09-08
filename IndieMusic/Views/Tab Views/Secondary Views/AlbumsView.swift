@@ -60,7 +60,7 @@ struct AlbumNavLinkView: View {
                         .font(.body)
                 }
                 Spacer()
-                FarvoriteStarView(typeOfFavorite: Album.self, isFavorited: $isFavorited)
+                FarvoriteHeartView(typeOfFavorite: Album.self, isFavorited: $isFavorited)
             }.padding(.horizontal)
         }
     }

@@ -86,7 +86,7 @@ struct SongListCell: View {
                 
                 Text(song.title)
                 Spacer()
-                FarvoriteStarView(typeOfFavorite: Song.self, isFavorited: $isFavorited)
+                FarvoriteHeartView(typeOfFavorite: Song.self, isFavorited: $isFavorited)
             }
         }
         .highPriorityGesture(

@@ -24,7 +24,7 @@ struct GenericListCell: View {
             Text(label)
             Spacer()
             if typeOfFavorite != nil {
-                FarvoriteStarView(typeOfFavorite: typeOfFavorite, isFavorited: $isFavorited)
+                FarvoriteHeartView(typeOfFavorite: typeOfFavorite, isFavorited: $isFavorited)
             }
         }
     }
@@ -32,7 +32,7 @@ struct GenericListCell: View {
 
 
 
-struct FarvoriteStarView: View {
+struct FarvoriteHeartView: View {
     let typeOfFavorite: AnyClass?
     @Binding var isFavorited: Bool
     
@@ -41,8 +41,8 @@ struct FarvoriteStarView: View {
             // favorite artist/album/song in model here
             
         }, label: {
-            Image(systemName: isFavorited ? "star.fill" : "star")
-                .foregroundColor(.yellow)
+            Image(systemName: isFavorited ? "heart.fill" : "heart")
+                .foregroundColor(.red)
         }).highPriorityGesture(
             TapGesture().onEnded({ () in
                 isFavorited.toggle()
@@ -67,7 +67,7 @@ struct GenericViews_Previews: PreviewProvider {
             GenericListCell(imageName: "dillinger",
                             label: "Dillinger",
                             typeOfFavorite: nil)
-            FarvoriteStarView(typeOfFavorite: Artist.self, isFavorited: .constant(false))
+            FarvoriteHeartView(typeOfFavorite: Artist.self, isFavorited: .constant(false))
         }
     }
 }
