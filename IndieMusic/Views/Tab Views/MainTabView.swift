@@ -46,16 +46,17 @@ struct MainTabView: View {
                 }
                 
                 
-                NavigationView {
+//                NavigationView {
                     ProfileView()
                         .environmentObject(vm)
                         .environmentObject(cpVM)
                         .environment(\.defaultMinListRowHeight, 60)
-                        .navigationBarTitleDisplayMode(.large)
-                        .navigationBarTitle(TabTitle.profile.rawValue)
-                }.tabItem {
-                    Label("Profile", systemImage: "person.fill")
-                }
+//                        .navigationBarTitleDisplayMode(.large)
+//                        .navigationBarTitle(TabTitle.profile.rawValue)
+//                }
+                        .tabItem {
+                            Label("Profile", systemImage: "person.fill")
+                        }
                 
                 
             } // End TabView

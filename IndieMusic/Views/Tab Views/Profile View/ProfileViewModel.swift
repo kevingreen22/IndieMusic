@@ -14,10 +14,11 @@ class ProfileViewModel: ObservableObject {
         UserDefaults.standard.string(forKey: "email") ?? ""
     }
     @Published var activeSheet: ActiveSheet?
-    @Published var showArtistOwnerInfo = false
+    @Published var showArtistOwnerInfo = true
     @Published var showImagePicker = false
     @Published var selectedImage: UIImage? = nil
     @Published var showImagePickerPopover = false
+    @Published var showSettings = false
     var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
     
