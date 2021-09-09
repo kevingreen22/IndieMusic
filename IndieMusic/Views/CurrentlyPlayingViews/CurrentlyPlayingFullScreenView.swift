@@ -1,85 +1,18 @@
 //
-//  CurrentlyPlayingViews.swift
+//  CurrentlyPlayingFullScreen.swift
 //  IndieMusic
 //
-//  Created by Kevin Green on 7/16/21.
+//  Created by Kevin Green on 9/9/21.
 //
 
 import SwiftUI
-import AVKit
-
-struct CurrentlyPlayingMinimizedView: View {
-    let album: Album
-    let song: Song
-    @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
-    @State private var showFullScreenCover: Bool = false
-    
-    var body: some View {
-        VStack {
-            ZStack(alignment: .leading) {
-                Capsule().fill(Color.black.opacity(0.08)).frame(height: 3)
-                Capsule().fill(Color.red).frame(width: cpVM.currentPlayTrackWidth, height: 3)
-            }
-            
-            HStack {
-                Image(uiImage: cpVM.albumImage)
-                    .resizable()
-                    .frame(width: 40, height: 40, alignment: .leading)
-                    .cornerRadius(5)
-                
-//                MarqueTextView(text: song.title)
-                Text(song.title)
-                    .truncationMode(.tail)
-                
-                Spacer()
-                Spacer()
-                
-                Button(action: {
-                    cpVM.playPauseSong()
-                }, label: {
-                    Image(systemName: cpVM.trackPlaying ? "pause.fill" : "play.fill")
-                        .foregroundColor(.black)
-                        .scaleEffect(1.4)
-                })
-                
-                Spacer()
-                
-                Button(action: {
-                    cpVM.playNextSong()
-                }, label: {
-                    Image(systemName: "forward.fill")
-                        .foregroundColor(.black)
-                        .scaleEffect(1.4)
-                }).padding(.trailing)
-                
-            }
-            .padding(.horizontal)
-            .offset(y: -5)
-            
-        }
-        .frame(height: ViewModel.Constants.currentlyPlayingMinimizedViewHeight)
-        .background(Color.gray)
-        
-        .onTapGesture {
-            // Show currently playing song full screen view
-            self.showFullScreenCover.toggle()
-        }
-        
-        .fullScreenCover(isPresented: $showFullScreenCover, content: {
-            CurrentlyPlayingFullScreen(album: album, song: song)
-                .environmentObject(cpVM)
-        })
-    }
-}
-
-
 
 struct CurrentlyPlayingFullScreen: View {
     let album: Album
     let song: Song
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
-    @State private var showingLyrics = false
+    
 
     var body: some View {
         ZStack {
@@ -104,13 +37,13 @@ struct CurrentlyPlayingFullScreen: View {
             
             VStack {
                 // Album artwork
-                if !showingLyrics {
+                if !cpVM.showingLyrics {
                     Image(uiImage: cpVM.albumImage)
                         .resizable()
                         .cornerRadius(10)
                         .aspectRatio(contentMode: .fit)
-                        .scaleEffect(0.7)
                         .transition(.scale)
+                        .padding()
                     
                 } else {
                     VStack {
@@ -276,11 +209,12 @@ struct CurrentlyPlayingFullScreen: View {
                     Button(action: {
                         // Show lyrics
                         withAnimation(Animation.easeOut) {
-                            showingLyrics.toggle()
+                            cpVM.showingLyrics.toggle()
                         }
                     }, label: {
                         Image(systemName: "quote.bubble.fill")
-                            .foregroundColor(.gray)
+                            .foregroundColor(.white)
+                            .opacity(0.6)
                     }).disabled(!song.hasLyrics)
                     
                     Spacer()
@@ -296,7 +230,8 @@ struct CurrentlyPlayingFullScreen: View {
                         Button("♦️ - Diamonds", action: doSomething)
                     }, label: {
                         Image(systemName: "ellipsis.circle")
-                            .foregroundColor(.gray)
+                            .foregroundColor(.white)
+                            .opacity(0.6)
                     })
 
                     Spacer()
@@ -318,39 +253,12 @@ struct CurrentlyPlayingFullScreen: View {
 
 
 
-
-
-
-extension TimeInterval {
-    
-    func timeFormat(unitsAllowed: NSCalendar.Unit) -> String {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = unitsAllowed
-        formatter.zeroFormattingBehavior = .pad
-        guard let output = formatter.string(from: self) else { return "0:00" }
-        return output
-    }
-
-}
-
-
-
-
-
-
-
-
-struct CurrentlyPlayingView_Previews: PreviewProvider {
+struct CurrentlyPlayingFullScreenView_Previews: PreviewProvider {
     static var previews: some View {
         let album = MockData.Albums().first!
         let song = MockData.Songs().first!
-        Group {
-            CurrentlyPlayingMinimizedView(album: album, song: song)
-                .environmentObject(CurrentlyPlayingViewModel())
-            CurrentlyPlayingFullScreen(album: album, song: song)
-                .environmentObject(CurrentlyPlayingViewModel())
-        }
+        
+        CurrentlyPlayingFullScreen(album: album, song: song)
+            .environmentObject(CurrentlyPlayingViewModel())
     }
 }
-
-

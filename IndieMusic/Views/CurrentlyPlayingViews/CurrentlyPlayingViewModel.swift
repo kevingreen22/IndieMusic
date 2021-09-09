@@ -22,6 +22,8 @@ class CurrentlyPlayingViewModel: ObservableObject {
     @Published var currentPlayTrackWidth: CGFloat = 0
     @Published var currTime: TimeInterval = 0
     @Published var remainingTime: TimeInterval = 0
+    @Published var showingLyrics = false
+    @Published var showFullScreenCover: Bool = false
     
     var dominantColors: (UIColor, UIColor) = (UIColor.gray, UIColor.black)
     

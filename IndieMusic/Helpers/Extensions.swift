@@ -30,8 +30,20 @@ extension Color {
     }
     
     
+}
+
+
+// MARK: TimeInterval - formatter for currently playing views
+extension TimeInterval {
     
-    
+    func timeFormat(unitsAllowed: NSCalendar.Unit) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = unitsAllowed
+        formatter.zeroFormattingBehavior = .pad
+        guard let output = formatter.string(from: self) else { return "0:00" }
+        return output
+    }
+
 }
 
 
@@ -60,6 +72,7 @@ extension UINavigationController {
         
     }
 }
+
 
 // MARK: UITableView Extension, edits List Views
 extension UITableView {

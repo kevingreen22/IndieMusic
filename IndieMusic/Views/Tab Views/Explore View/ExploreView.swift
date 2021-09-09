@@ -46,8 +46,10 @@ struct ExploreView: View {
         .onAppear {
             exploreVM.getAllGenres()
         }
+        
     }
 }
+
 
 struct ExploreViewCell: View {
     @EnvironmentObject var vm: ViewModel
