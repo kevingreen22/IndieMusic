@@ -42,13 +42,12 @@ class ProfileViewModel: ObservableObject {
     
     
     func fetchUserProfilePicture() {
-        let email = email.replacingOccurrences(of: ".", with: "_").replacingOccurrences(of: "@", with: "_")
-        if email != "" {
-            let path = "profile_pictures/\(email)/\(SuffixNames.photoPNG)"
-            StorageManager.shared.downloadURLForProfilePicture(path: path) { url in
+        if let pictureRef = vm.user.profilePictureRef {
+            StorageManager.shared.downloadURLForProfilePicture(path: pictureRef) { url in
                 guard let url = url else { return }
                 let task = URLSession.shared.dataTask(with: url) { (data, _, _) in
                     guard let _data = data else { return }
+                    print("profile picture downloaded from storage")
                     DispatchQueue.main.async {
                         self.selectedImage = UIImage(data: _data)
                     }
@@ -57,6 +56,7 @@ class ProfileViewModel: ObservableObject {
             }
         }
     }
+    
     
     
     
