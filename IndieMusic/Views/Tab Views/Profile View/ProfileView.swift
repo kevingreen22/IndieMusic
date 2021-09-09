@@ -171,7 +171,7 @@ fileprivate struct ProfileViewHeader: View {
         .frame(height: 260)
         
         .onAppear {
-            profileVM.fetchUserProfilePicture()
+            profileVM.fetchUserProfilePicture(vm.user)
         }
         
     }

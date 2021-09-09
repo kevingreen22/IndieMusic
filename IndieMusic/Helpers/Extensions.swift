@@ -7,6 +7,17 @@
 
 import SwiftUI
 
+// MARK: String Extension
+extension String {
+    
+    func underscoredDotAt() -> String {
+        return self.replacingOccurrences(of: "@", with: "_").replacingOccurrences(of: ".", with: "_")
+    }
+    
+}
+
+
+
 // MARK: Color Extension
 extension Color {
     

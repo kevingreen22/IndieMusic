@@ -28,7 +28,7 @@ class ProfileViewModel: ObservableObject {
         StorageManager.shared.uploadUserProfilePicture(email: email, image: image) { success in
             if success {
                 // update database with users photo reference
-                DatabaseManger.shared.updateProfilePhoto(email: email) { updated in
+                DatabaseManger.shared.updateProfilePhotoData(email: email, image: image) { updated in
                     guard updated else { return }
                     DispatchQueue.main.async {
                         // retrieve updated user
@@ -41,16 +41,17 @@ class ProfileViewModel: ObservableObject {
     
     
     
-    func fetchUserProfilePicture() {
-        if let pictureRef = vm.user.profilePictureRef {
-            StorageManager.shared.downloadURLForProfilePicture(path: pictureRef) { url in
+    func fetchUserProfilePicture(_ user: User) {
+        if let pngData = user.profilePictureData {
+            self.selectedImage = UIImage(data: pngData)
+        } else {
+            let path = "\(ContainerNames.profilePictures.rawValue)/\(user.email.underscoredDotAt())/\(SuffixNames.photoPNG.rawValue)"
+            StorageManager.shared.downloadURLForProfilePicture(path: path) { url in
                 guard let url = url else { return }
                 let task = URLSession.shared.dataTask(with: url) { (data, _, _) in
                     guard let _data = data else { return }
                     print("profile picture downloaded from storage")
-                    DispatchQueue.main.async {
-                        self.selectedImage = UIImage(data: _data)
-                    }
+                    self.selectedImage = UIImage(data: _data)
                 }
                 task.resume()
             }

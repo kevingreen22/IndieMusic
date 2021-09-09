@@ -14,7 +14,7 @@ import Foundation
 struct User: Codable {
     var name: String
     var email: String
-    var profilePictureRef: String?
+    var profilePictureData: Data?
     var favoriteArtists: [Artist]?
     var favoriteAlbums: [Album]?
     var favoriteSongs: [Song]?

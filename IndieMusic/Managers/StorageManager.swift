@@ -141,8 +141,7 @@ final class StorageManager {
     // MARK: User profile storage methods
     
     public func uploadUserProfilePicture(email: String, image: UIImage?, completion: @escaping (Bool) -> Void) {
-        let innerPath = email.replacingOccurrences(of: "@", with: "_").replacingOccurrences(of: ".", with: "_")
-        let path = "\(ContainerNames.profilePictures.rawValue)/\(innerPath)/\(SuffixNames.photoPNG.rawValue)"
+        let path = "\(ContainerNames.profilePictures.rawValue)/\(email.underscoredDotAt())/\(SuffixNames.photoPNG.rawValue)"
         guard let pngData = image?.pngData() else { return }
         
         container

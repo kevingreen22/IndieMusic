@@ -25,7 +25,7 @@ final class DatabaseManger {
 
     /// Inserts a User to the database.
     public func insert(user: User, completion: @escaping (Bool) -> Void) {
-        let documentID = user.email.replacingOccurrences(of: "@", with: "_").replacingOccurrences(of: ".", with: "_")
+        let documentID = user.email.underscoredDotAt()
         do {
         try database
             .collection(ContainerNames.users.rawValue)
@@ -40,7 +40,7 @@ final class DatabaseManger {
     
     
     public func getUser(email: String, completion: @escaping (User?) -> Void) {
-        let documentID = email.replacingOccurrences(of: "@", with: "_").replacingOccurrences(of: ".", with: "_")
+        let documentID = email.underscoredDotAt()
         var _user: User?
         database
             .collection(ContainerNames.users.rawValue)
@@ -71,23 +71,17 @@ final class DatabaseManger {
             }
     }
     
-    
-    public func updateProfilePhoto(email: String, completion: @escaping (Bool) -> Void) {
-        let path = email.replacingOccurrences(of: "@", with: "_").replacingOccurrences(of: ".", with: "_")
-        let photoReference = "\(ContainerNames.profilePictures.rawValue)/\(path)/\(SuffixNames.photoPNG.rawValue)"
+        
+    public func updateProfilePhotoData(email: String, image: UIImage, completion: @escaping (Bool) -> Void) {
+        let id = email.underscoredDotAt()
+        
+        guard let photoData = image.pngData() else { return } 
+        
         let dbRef = database
             .collection(ContainerNames.users.rawValue)
-            .document(path)
+            .document(id)
         
-//        dbRef.getDocument { snapshot, error in
-//            guard var data = snapshot?.data(), error == nil else { return }
-//            data["profile_photo"] = photoReference
-//            dbRef.setData(data) { error in
-//                completion(error == nil)
-//            }
-//        }
-        
-        dbRef.updateData(["profile_photo" : photoReference], completion: { error in
+        dbRef.updateData(["profile_photo" : photoData], completion: { error in
             guard error == nil else  {
                 print("Error updating document: \(String(describing: error))")
                 return
@@ -101,7 +95,7 @@ final class DatabaseManger {
     
     /// Removes a user from the database.
     public func delete(user: User, completion: @escaping (Bool) -> Void) {
-        let documentID = user.email.replacingOccurrences(of: "@", with: "_").replacingOccurrences(of: ".", with: "_")
+        let documentID = user.email.underscoredDotAt()
         database
             .collection(ContainerNames.users.rawValue)
             .document(documentID)
@@ -144,6 +138,7 @@ final class DatabaseManger {
         }
     }
     
+    
     /// Adds an album to the Firestore database.
     public func insert(album: Album, completion: @escaping (Bool) -> Void) {
         let documentID = album.id
@@ -160,6 +155,7 @@ final class DatabaseManger {
             print("Error writing \"album\" to Firestore: \(error.localizedDescription)")
         }
     }
+    
     
     /// Adds a song to the Firestore database.
     public func insert(song: Song, completion: @escaping (Bool) -> Void) {
