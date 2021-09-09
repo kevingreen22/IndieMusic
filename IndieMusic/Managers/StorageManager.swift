@@ -32,7 +32,7 @@ final class StorageManager {
         let metadata = StorageMetadata()
         metadata.contentType = "audio/mp3"
 
-        let ref = container.reference().child("\(ContainerNames.artists)/\(song.artistID)/\(song.albumID)/\(song.id)\(SuffixNames.mp3.rawValue)")
+        let ref = container.reference().child("\(ContainerNames.artists)/\(song.artistID)/\(song.albumID)/\(song.id)\(SuffixNames.mp3)")
         
         let task = ref.putFile(from: localFilePath, metadata: metadata)
         
@@ -85,7 +85,7 @@ final class StorageManager {
     
     
     public func delete(song: Song, completion: @escaping (Error?) -> Void) {
-        let path = "\(ContainerNames.artists.rawValue)/\(song.artistID)/\(song.albumID)/\(song.id)\(SuffixNames.mp3.rawValue)"
+        let path = "\(ContainerNames.artists)/\(song.artistID)/\(song.albumID)/\(song.id)\(SuffixNames.mp3)"
         container
             .reference(withPath: path)
             .delete { error in
@@ -104,7 +104,7 @@ final class StorageManager {
     
     public func uploadAlbumArtworkImage(album: Album, image: UIImage?, completion: @escaping (Bool) -> Void) {
         guard let pngData = image?.pngData() else { return }
-        let path = "\(ContainerNames.artists.rawValue)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG.rawValue)"
+        let path = "\(ContainerNames.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG)"
         container
             .reference(withPath: path)
             .putData(pngData, metadata: nil) { metaData, error in
@@ -118,7 +118,7 @@ final class StorageManager {
         DatabaseManger.shared.getAlbumWith(id: albumID) { album in
             guard let album = album else { return }
             
-            let path = "\(ContainerNames.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG.rawValue)"
+            let path = "\(ContainerNames.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG)"
             self.container
                 .reference(withPath: path)
                 .downloadURL { url, _ in
@@ -141,7 +141,7 @@ final class StorageManager {
     // MARK: User profile storage methods
     
     public func uploadUserProfilePicture(email: String, image: UIImage?, completion: @escaping (Bool) -> Void) {
-        let path = "\(ContainerNames.profilePictures.rawValue)/\(email.underscoredDotAt())/\(SuffixNames.photoPNG.rawValue)"
+        let path = "\(ContainerNames.profilePictures)/\(email.underscoredDotAt())/\(SuffixNames.photoPNG)"
         guard let pngData = image?.pngData() else { return }
         
         container

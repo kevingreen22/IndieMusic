@@ -273,7 +273,7 @@
             startingLineNumber = "75"
             endingLineNumber = "75"
             landmarkName = "removeUsersOwnerPrivelage()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -289,7 +289,7 @@
             startingLineNumber = "76"
             endingLineNumber = "76"
             landmarkName = "removeUsersOwnerPrivelage()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

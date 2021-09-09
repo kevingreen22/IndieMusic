@@ -45,7 +45,7 @@ class ProfileViewModel: ObservableObject {
         if let pngData = user.profilePictureData {
             self.selectedImage = UIImage(data: pngData)
         } else {
-            let path = "\(ContainerNames.profilePictures.rawValue)/\(user.email.underscoredDotAt())/\(SuffixNames.photoPNG.rawValue)"
+            let path = "\(ContainerNames.profilePictures)/\(user.email.underscoredDotAt())/\(SuffixNames.photoPNG)"
             StorageManager.shared.downloadURLForProfilePicture(path: path) { url in
                 guard let url = url else { return }
                 let task = URLSession.shared.dataTask(with: url) { (data, _, _) in

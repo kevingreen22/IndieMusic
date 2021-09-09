@@ -28,7 +28,7 @@ final class DatabaseManger {
         let documentID = user.email.underscoredDotAt()
         do {
         try database
-            .collection(ContainerNames.users.rawValue)
+            .collection(ContainerNames.users)
             .document(documentID)
             .setData(from: user) { error in
                 completion(error == nil)
@@ -43,7 +43,7 @@ final class DatabaseManger {
         let documentID = email.underscoredDotAt()
         var _user: User?
         database
-            .collection(ContainerNames.users.rawValue)
+            .collection(ContainerNames.users)
             .document(documentID)
             .getDocument { snapshot, error in
                 guard error == nil else {
@@ -78,7 +78,7 @@ final class DatabaseManger {
         guard let photoData = image.pngData() else { return } 
         
         let dbRef = database
-            .collection(ContainerNames.users.rawValue)
+            .collection(ContainerNames.users)
             .document(id)
         
         dbRef.updateData(["profile_photo" : photoData], completion: { error in
@@ -97,7 +97,7 @@ final class DatabaseManger {
     public func delete(user: User, completion: @escaping (Bool) -> Void) {
         let documentID = user.email.underscoredDotAt()
         database
-            .collection(ContainerNames.users.rawValue)
+            .collection(ContainerNames.users)
             .document(documentID)
             .delete() { error in
                 if let error = error {
@@ -121,7 +121,7 @@ final class DatabaseManger {
 
         do {
             try database
-                .collection(ContainerNames.artists.rawValue)
+                .collection(ContainerNames.artists)
                 .document(documentID)
                 .setData(from: artist) { [weak self] error in
 //                    guard error == nil else { completion(error == nil); return }
@@ -145,7 +145,7 @@ final class DatabaseManger {
         
         do {
             try database
-                .collection(ContainerNames.albums.rawValue)
+                .collection(ContainerNames.albums)
                 .document(documentID)
                 .setData(from: album) { error in
                     completion(error == nil)
@@ -163,7 +163,7 @@ final class DatabaseManger {
 
         do {
             try database
-                .collection(ContainerNames.songs.rawValue)
+                .collection(ContainerNames.songs)
                 .document(documentID)
                 .setData(from: song) { error in
                     completion(error == nil)
@@ -187,7 +187,7 @@ final class DatabaseManger {
     public func getAllArtists(completion: @escaping ([Artist]) -> Void) {
         var artists: [Artist] = []
         database
-            .collection(ContainerNames.artists.rawValue)
+            .collection(ContainerNames.artists)
             .getDocuments { snapshot, error in
 //                guard let documents = snapshot?.documents.compactMap({ $0.data() }), error == nil else { return }
 //                let artists: [Artist] = documents.compactMap({
@@ -228,7 +228,7 @@ final class DatabaseManger {
     public func getArtist(with id: String, completion: @escaping (Artist?) -> Void) {
         var _artist: Artist?
         database
-            .collection(ContainerNames.artists.rawValue)
+            .collection(ContainerNames.artists)
             .document(id)
             .getDocument { snapshot, error in
                 guard error == nil else { return }
@@ -260,7 +260,7 @@ final class DatabaseManger {
     public func getAllAlbums(completion: @escaping ([Album]) -> Void) {
         var albums: [Album] = []
         database
-            .collection(ContainerNames.albums.rawValue)
+            .collection(ContainerNames.albums)
             .getDocuments { snapshot, error in
 //                guard let documents = snapshot?.documents.compactMap({ $0.data() }), error == nil else { return }
 //                let albums: [Album] = documents.compactMap({
@@ -304,7 +304,7 @@ final class DatabaseManger {
     public func getAlbumsFor(artist id: String, completion: @escaping ([Album]) -> Void) {
         var albums: [Album] = []
         database
-            .collection(ContainerNames.albums.rawValue)
+            .collection(ContainerNames.albums)
             .document(id)
 //            .whereField("artistID", isEqualTo: id)
             .getDocument(completion: { snapshot, error in
@@ -350,7 +350,7 @@ final class DatabaseManger {
     public func getAlbumWith(id: String, completion: @escaping (Album?) -> Void) {
         var albm: Album?
         database
-            .collection(ContainerNames.albums.rawValue)
+            .collection(ContainerNames.albums)
             .whereField("id", isEqualTo: id)
             .getDocuments(completion: { snapshot, error in
                 guard error == nil else { return }
@@ -384,7 +384,7 @@ final class DatabaseManger {
     public func getAllSongs(completion: @escaping ([Song]) -> Void) {
         var songs: [Song] = []
         database
-            .collection(ContainerNames.songs.rawValue)
+            .collection(ContainerNames.songs)
             .getDocuments { snapshot, error in
                 for document in snapshot!.documents {
                     let result = Result {
@@ -415,7 +415,7 @@ final class DatabaseManger {
     public func getSongsFor(album id: String, completion: @escaping ([Song]) -> Void) {
         var songs: [Song] = []
         database
-            .collection(ContainerNames.songs.rawValue)
+            .collection(ContainerNames.songs)
             .whereField("albumID", isEqualTo: id)
             .getDocuments { snapshot, error in
                 for document in snapshot!.documents {
@@ -447,7 +447,7 @@ final class DatabaseManger {
     public func getSong(with id: String, completion: @escaping (Song?) -> Void) {
         var _song: Song?
         database
-            .collection(ContainerNames.songs.rawValue)
+            .collection(ContainerNames.songs)
             .document(id)
             .getDocument { snapshot, error in
                 let result = Result {

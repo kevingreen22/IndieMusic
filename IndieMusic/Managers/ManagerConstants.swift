@@ -9,16 +9,16 @@ import Foundation
 
 
 // Constant Strings
-enum ContainerNames: String {
-    case artists = "artists"
-    case albums = "albums"
-    case songs = "songs"
-    case users = "users"
-    case profilePictures = "profile_pictures"
+struct ContainerNames {
+    static var artists = "artists"
+    static var albums = "albums"
+    static var songs = "songs"
+    static var users = "users"
+    static var profilePictures = "profile_pictures"
 }
 
-enum SuffixNames: String {
-    case mp3 = ".mp3"
-    case photoPNG = "photo.png"
-    case albumArtworkPNG = "album_artwork.png"
+struct SuffixNames {
+    static var mp3 = ".mp3"
+    static var photoPNG = "photo.png"
+    static var albumArtworkPNG = "album_artwork.png"
 }
