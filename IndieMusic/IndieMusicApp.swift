@@ -27,7 +27,7 @@ struct IndieMusicApp: App {
                     if !AuthManager.shared.isSignedIn {
                         vm.showSigninView = true
                     } else {
-                        vm.setUser()
+                        vm.cacheUser()
                     }
                 }
                 .fullScreenCover(isPresented: $vm.showSigninView) {
@@ -35,16 +35,6 @@ struct IndieMusicApp: App {
                         .environmentObject(vm)
                         .environmentObject(cpVM)
                 }
-            
-//            if AuthManager.shared.isSignedIn {
-//                MainTabView()
-//                    .environmentObject(vm)
-//                    .environmentObject(cpVM)
-//            } else {
-//                SignInView()
-//                    .environmentObject(vm)
-//                    .environmentObject(cpVM)
-//            }
         }
         
         

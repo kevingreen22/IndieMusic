@@ -29,7 +29,7 @@ struct User: Codable {
         guard let albums = _artist.albums else { return nilAlbum }
         return albums
     }
-    
+   
     
 }
 

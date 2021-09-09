@@ -45,7 +45,7 @@ struct SignInView: View {
                             signinVM.signIn(completion: { success in
                                 if success == true {
                                     vm.showSigninView.toggle()
-                                    vm.setUser()
+                                    vm.cacheUser()
                                     self.presentationMode.wrappedValue.dismiss()
                                 } else {
                                     vm.alertItem = MyAlertContext.signInFailed

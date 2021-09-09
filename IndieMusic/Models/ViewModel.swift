@@ -38,7 +38,7 @@ class ViewModel: ObservableObject {
     }
     
     
-    public func setUser() {
+    public func cacheUser() {
         guard let email = UserDefaults.standard.string(forKey: "email") else { return }
         DatabaseManger.shared.getUser(email: email) { user in
             guard let user = user else { return }

@@ -31,9 +31,11 @@ class ProfileViewModel: ObservableObject {
                 DatabaseManger.shared.updateProfilePhotoData(email: email, image: image) { updated in
                     guard updated else { return }
                     DispatchQueue.main.async {
-                        // retrieve updated user
-                        self.vm.setUser()
+                        self.vm.cacheUser()
                     }
+                    
+                    // sets the image cache in the user model
+                    self.vm.user.profilePictureData = image.pngData()
                 }
             }
         }
@@ -51,7 +53,9 @@ class ProfileViewModel: ObservableObject {
                 let task = URLSession.shared.dataTask(with: url) { (data, _, _) in
                     guard let _data = data else { return }
                     print("profile picture downloaded from storage")
-                    self.selectedImage = UIImage(data: _data)
+                    DispatchQueue.main.async {
+                        self.selectedImage = UIImage(data: _data)
+                    }
                 }
                 task.resume()
             }
