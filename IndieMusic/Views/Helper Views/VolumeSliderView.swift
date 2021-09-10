@@ -19,8 +19,13 @@ struct VolumeSliderView: UIViewRepresentable {
     func updateUIView(_ uiView: UIViewType, context: Context) {}
 }
 
+
+
 struct VolumeSliderView_Previews: PreviewProvider {
     static var previews: some View {
-        VolumeSliderView()
+        ZStack {
+            Color.green
+            VolumeSliderView()
+        }
     }
 }

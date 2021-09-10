@@ -13,7 +13,6 @@ struct CurrentlyPlayingFullScreen: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
-
     var body: some View {
         ZStack {
             BackgroundGradient()
@@ -22,6 +21,8 @@ struct CurrentlyPlayingFullScreen: View {
             DismissChevron()
             
             VStack {
+                Spacer()
+                
                 // Album artwork
                 if !cpVM.showingLyrics {
                     AlbumArtwork()
@@ -34,6 +35,10 @@ struct CurrentlyPlayingFullScreen: View {
                 SongInfo(album: album, song: song)
                     .environmentObject(cpVM)
                 
+                // Track timeline
+                TrackTimeline(album: album, song: song)
+                    .environmentObject(cpVM)
+                
                 // Play Control buttons
                 PlayControlButtons()
                     .environmentObject(cpVM)
@@ -43,7 +48,6 @@ struct CurrentlyPlayingFullScreen: View {
                 // volume control
                 VolumeControl()
 
-                
                 // Option buttons
                 OptionButtons(song: song)
                     .environmentObject(cpVM)
@@ -54,8 +58,6 @@ struct CurrentlyPlayingFullScreen: View {
         }
     }
 }
-
-
 
 
 
@@ -81,7 +83,6 @@ fileprivate struct DismissChevron: View {
     }
 }
 
-
 fileprivate struct BackgroundGradient: View {
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
@@ -91,26 +92,6 @@ fileprivate struct BackgroundGradient: View {
             .opacity(0.7)
     }
 }
-
-
-
-
-
-
-
-
-struct CurrentlyPlayingFullScreenView_Previews: PreviewProvider {
-    static var previews: some View {
-        let album = MockData.Albums().first!
-        let song = MockData.Songs().first!
-        
-        CurrentlyPlayingFullScreen(album: album, song: song)
-            .environmentObject(CurrentlyPlayingViewModel())
-    }
-}
-
-
-
 
 fileprivate struct PlayControlButtons: View {
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
@@ -159,7 +140,6 @@ fileprivate struct VolumeControl: View {
         HStack {
             Image(systemName: "speaker.fill")
                 .padding(.leading)
-                .scaleEffect(0.8)
                 .foregroundColor(.white)
                 .opacity(0.8)
             
@@ -170,7 +150,6 @@ fileprivate struct VolumeControl: View {
             
             Image(systemName: "speaker.wave.3.fill")
                 .padding(.trailing)
-                .scaleEffect(0.8)
                 .foregroundColor(.white)
                 .opacity(0.8)
         }
@@ -242,47 +221,56 @@ fileprivate struct SongInfo: View {
                     .fontWeight(.medium)
                     .foregroundColor(.white)
                     .opacity(0.7)
-                
-                ZStack(alignment: .leading) {
-                    Capsule().fill(Color.black.opacity(0.08)).frame(height: 5)
-                    Capsule().fill(Color.red).frame(width: cpVM.currentPlayTrackWidth, height: 5)
-                        // allows to scrub the track time by draging the progress bar
-                        .gesture(
-                            DragGesture()
-                                .onChanged({ value in
-                                    cpVM.currentPlayTrackWidth = value.location.x
-                                    cpVM.currTime = cpVM.audioPlayer.currentTime + 1
-                                    cpVM.remainingTime = cpVM.audioPlayer.currentTime - cpVM.audioPlayer.duration
-                                })
-                                .onEnded({ value in
-                                    let x = value.location.x
-                                    let screen = UIScreen.main.bounds.width - 30
-                                    let percent = x / screen
-                                    cpVM.audioPlayer.currentTime = Double(percent) * cpVM.audioPlayer.duration
-                                    cpVM.currTime = cpVM.audioPlayer.currentTime
-                                })
-                        )
-                }
-                
-                HStack {
-                    Text(cpVM.currTime.timeFormat(unitsAllowed: cpVM.audioPlayer.duration >= 3600 ? [.hour, .minute, .second] : [.minute, .second]))
-                        .font(.caption2)
-                        .fontWeight(.light)
-                        .foregroundColor(.white)
-                        .opacity(0.7)
-                    
-                    Spacer()
-                    
-                    Text(cpVM.remainingTime.timeFormat(unitsAllowed: cpVM.audioPlayer.duration >= 3600 ? [.hour, .minute, .second] : [.minute, .second]))
-                        .font(.caption2)
-                        .fontWeight(.light)
-                        .foregroundColor(.white)
-                        .opacity(0.7)
-                }
-                
-            }.padding(.horizontal)
+            }.padding(.leading)
             Spacer()
         }
+    }
+}
+
+fileprivate struct TrackTimeline: View {
+    let album: Album
+    let song: Song
+    @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
+    
+    var body: some View {
+        ZStack(alignment: .leading) {
+            Capsule().fill(Color.black.opacity(0.08)).frame(height: 5)
+            Capsule().fill(Color.red).frame(width: cpVM.currentPlayTrackWidth, height: 5)
+                
+                // allows to scrub the track time by draging the progress bar
+                .gesture(
+                    DragGesture()
+                        .onChanged({ value in
+                            cpVM.currentPlayTrackWidth = value.location.x
+                            cpVM.currTime = cpVM.audioPlayer.currentTime + 1
+                            cpVM.remainingTime = cpVM.audioPlayer.currentTime - cpVM.audioPlayer.duration
+                        })
+                        .onEnded({ value in
+                            let x = value.location.x
+                            let screen = UIScreen.main.bounds.width - 30
+                            let percent = x / screen
+                            cpVM.audioPlayer.currentTime = Double(percent) * cpVM.audioPlayer.duration
+                            cpVM.currTime = cpVM.audioPlayer.currentTime
+                        })
+                )
+        }.padding(.horizontal)
+        
+        HStack {
+            Text(cpVM.currTime.timeFormat(unitsAllowed: cpVM.audioPlayer.duration >= 3600 ? [.hour, .minute, .second] : [.minute, .second]))
+                .font(.caption2)
+                .fontWeight(.light)
+                .foregroundColor(.white)
+                .opacity(0.7)
+            
+            Spacer()
+            
+            Text(cpVM.remainingTime.timeFormat(unitsAllowed: cpVM.audioPlayer.duration >= 3600 ? [.hour, .minute, .second] : [.minute, .second]))
+                .font(.caption2)
+                .fontWeight(.light)
+                .foregroundColor(.white)
+                .opacity(0.7)
+        }.padding(.horizontal)
+
     }
 }
 
@@ -323,7 +311,7 @@ fileprivate struct ShowingLyricsView: View {
                     .padding(.horizontal)
                     .foregroundColor(.white)
                     .opacity(0.7)
-            }.frame(height: 300)
+            }.padding(.bottom)
             
             
         }
@@ -342,5 +330,22 @@ fileprivate struct AlbumArtwork: View {
             .aspectRatio(contentMode: .fit)
             .transition(.scale)
             .padding()
+    }
+}
+
+
+
+
+
+
+
+
+struct CurrentlyPlayingFullScreenView_Previews: PreviewProvider {
+    static var previews: some View {
+        let album = MockData.Albums().first!
+        let song = MockData.Songs().first!
+        
+        CurrentlyPlayingFullScreen(album: album, song: song)
+            .environmentObject(CurrentlyPlayingViewModel())
     }
 }
