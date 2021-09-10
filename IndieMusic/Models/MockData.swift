@@ -35,7 +35,7 @@ class MockData {
                              genre: "Metal",
                              artistID: UUID().uuidString,
                              albumID: UUID().uuidString,
-                             lyrics: "jahsdh;falkia l;sijfa s;dihf a;slkdh alsdh falshd f;lasj f;aliewhj a;sidcha'osicnma,.wkenc :SOIHje f:as ;diafh awsoiafha sidhaf ;owiehjf ao aois doiah sodhf asohf;alweiUS:LW  OIje :OSIHJw e;aliawh a;oij :Oijaw;oIW E:O ASOIEHJF ;woe WEOIJ",
+                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
                              url: URL(fileURLWithPath: "song/path/name.mp3")
                         ),
                         
@@ -43,7 +43,7 @@ class MockData {
                              genre: "Metal",
                              artistID: UUID().uuidString,
                              albumID: UUID().uuidString,
-                             lyrics: "jahsdh;falkia l;sijfa s;dihf a;slkdh alsdh falshd f;lasj f;aliewhj a;sidcha'osicnma,.wkenc :SOIHje f:as ;diafh awsoiafha sidhaf ;owiehjf ao aois doiah sodhf asohf;alweiUS:LW  OIje :OSIHJw e;aliawh a;oij :Oijaw;oIW E:O ASOIEHJF ;woe WEOIJ",
+                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
                              url: URL(fileURLWithPath: "song/path/name.mp3")
                         ),
                         

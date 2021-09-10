@@ -32,8 +32,10 @@ struct CurrentlyPlayingFullScreen: View {
                 }
                 
                 // Song info
-                SongInfo(album: album, song: song)
-                    .environmentObject(cpVM)
+                if !cpVM.showingLyrics {
+                    SongInfo(album: album, song: song)
+                        .environmentObject(cpVM)
+                }
                 
                 // Track timeline
                 TrackTimeline(album: album, song: song)
@@ -220,10 +222,11 @@ fileprivate struct SongInfo: View {
                 Text(album.artistName)
                     .fontWeight(.medium)
                     .foregroundColor(.white)
-                    .opacity(0.7)
+                    .opacity(0.5)
             }.padding(.leading)
             Spacer()
         }
+        .transition(.scale)
     }
 }
 
@@ -299,7 +302,7 @@ fileprivate struct ShowingLyricsView: View {
                     Text(album.artistName)
                         .fontWeight(.medium)
                         .foregroundColor(.white)
-                        .opacity(0.7)
+                        .opacity(0.5)
                 }
                 Spacer()
             }.padding(.leading)
