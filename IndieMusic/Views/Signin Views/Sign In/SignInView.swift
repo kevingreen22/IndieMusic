@@ -48,7 +48,7 @@ struct SignInView: View {
                                     vm.cacheUser()
                                     self.presentationMode.wrappedValue.dismiss()
                                 } else {
-                                    vm.alertItem = MyAlertContext.signInFailed
+                                    vm.alertItem = MyStandardAlertContext.signInFailed
                                 }
                             })
                         }, label: {

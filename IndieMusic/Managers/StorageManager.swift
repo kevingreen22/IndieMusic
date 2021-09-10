@@ -24,7 +24,7 @@ final class StorageManager {
     
     // MARK: MP3 storage methods
     
-    public func upload(song: Song, localFilePath: URL?, completion: @escaping (Bool) -> Void) {
+    public func upload(song: Song, localFilePath: URL?, completion: @escaping (StorageTaskSnapshot) -> Void) {
         // File located on disk
         guard let localFilePath = localFilePath else { return }
         
@@ -40,20 +40,28 @@ final class StorageManager {
         // Listen for state changes, errors, and completion of the upload.
         task.observe(.resume) { snapshot in
           // Upload resumed, also fires when the upload starts
+            print("Song upload started/resumed...")
+            completion(snapshot)
         }
 
         task.observe(.pause) { snapshot in
           // Upload paused
+            print("Song upload paused...")
+            completion(snapshot)
         }
         
         task.observe(.progress) { snapshot in
             // Upload reported progress
             let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount)
                 / Double(snapshot.progress!.totalUnitCount)
+            print("Song upload progress: \(percentComplete)%")
+            completion(snapshot)
         }
         
         task.observe(.success) { snapshot in
             // Upload completed successfully
+            print("Song upload successfully.")
+            completion(snapshot)
         }
         
         task.observe(.failure) { snapshot in
@@ -61,22 +69,24 @@ final class StorageManager {
                 switch (StorageErrorCode(rawValue: error.code)!) {
                 case .objectNotFound:
                     // File doesn't exist
-                    break
+                    completion(snapshot)
+
                 case .unauthorized:
                     // User doesn't have permission to access file
-                    break
+                    completion(snapshot)
+
                 case .cancelled:
                     // User canceled the upload
-                    break
-                    
-                /* ... */
+                    completion(snapshot)
                 
                 case .unknown:
                     // Unknown error occurred, inspect the server response
-                    break
+                    completion(snapshot)
+
                 default:
                     // A separate error occurred. This is a good place to retry the upload.
-                    break
+                    completion(snapshot)
+
                 }
             }
         }

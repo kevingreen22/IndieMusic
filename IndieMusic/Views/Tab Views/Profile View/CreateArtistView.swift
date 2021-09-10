@@ -49,7 +49,7 @@ struct CreateArtistView: View {
                             vm.user.isArtistOwner = success
                             presentationMode.wrappedValue.dismiss()
                         } else {
-                            vm.alertItem = MyAlertContext.createOwnerArtistFailed
+                            vm.alertItem = MyStandardAlertContext.createOwnerArtistFailed
                         }
                     })
                 }, label: {

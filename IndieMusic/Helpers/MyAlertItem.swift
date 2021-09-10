@@ -19,6 +19,7 @@ struct MyAlertItem: Identifiable {
     var message: Text?
     var primaryButton: Alert.Button
     var secondaryButton: Alert.Button?
+
     
     
     /// This method is used in the view where .alert is used. In the view's modifier that is showing the alert, simply add this method.
@@ -40,20 +41,19 @@ struct MyAlertItem: Identifiable {
 
 
 
-/// Alerts that do not have an action attached.
-struct MyAlertContext {
+/// Standart alerts that do not have an action attached.
+struct MyStandardAlertContext {
     
-    static let restoreFailedAlert: MyAlertItem = MyAlertItem(title: Text("Restore Purchace Failed"), message: Text("We were unable to restore the transaction"), primaryButton: .cancel(Text("Ok")))
+    static let restoreFailedAlert: MyAlertItem = MyAlertItem(title: Text("Restore Purchace Failed"), message: Text("We were unable to restore the transaction"), primaryButton: .cancel(Text("Dismiss")))
     
-    static let purchasedFailedAlert: MyAlertItem = MyAlertItem(title: Text("Purchased Failed"), message: Text("We were unable to complete the transaction. Please try again."), primaryButton: .cancel(Text("Ok")))
+    static let purchasedFailedAlert: MyAlertItem = MyAlertItem(title: Text("Purchased Failed"), message: Text("We were unable to complete the transaction. Please try again."), primaryButton: .cancel(Text("Dismiss")))
     
     static let createAccontFailedAlert: MyAlertItem = MyAlertItem(title: Text("Failed to create account"), message: Text("Please try again."), primaryButton: .default(Text("Dismiss")))
     
     static let signInFailed: MyAlertItem = MyAlertItem(title: Text("Sign in failed"), message: Text("The Email or password does NOT exist."), primaryButton: .default(Text("Dismiss")))
     
     
-    static let createOwnerArtistFailed: MyAlertItem = MyAlertItem(title: Text("Error creating Artist"), message: Text("Please try again."), primaryButton: .default(Text("Dismis")))
-    
+    static let createOwnerArtistFailed: MyAlertItem = MyAlertItem(title: Text("Error creating Artist"), message: Text("Please try again."), primaryButton: .default(Text("Dismiss")))
     
     
     
@@ -65,3 +65,20 @@ struct MyAlertContext {
     }
 }
 
+
+
+
+struct MySongUploadAlertsContext {
+        
+    static let noSongTitle = MyAlertItem(title: Text("You must include a song title."), primaryButton: .default(Text("Dismiss")))
+        
+    static let creatingURLError = MyAlertItem(title: Text("Problem creating song url path/id's"), primaryButton: .default(Text("Dismiss")))
+        
+    static func uploadSongError(_ error: Error) -> MyAlertItem {
+        MyAlertItem(title: Text("Error uploading song"), message: Text("Please try again.\n\(error.localizedDescription)"), primaryButton: .default(Text("Dismiss")))
+    }
+    
+    static let insertSongToDBError = MyAlertItem(title: Text("Database Error."), message: Text("Failed to insert new song into database."), primaryButton: .default(Text("Dismiss")))
+    
+    
+}
