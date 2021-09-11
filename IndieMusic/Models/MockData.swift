@@ -18,7 +18,7 @@ class MockData {
                            favoriteAlbums: [data.first!.albums!.first!],
                            favoriteSongs: [data.first!.albums!.first!.songs.first!],
                            recentlyAdded: nil,
-                           isArtistOwner: true,
+                           /*isArtistOwner: true,*/
                            artist: data.first!
     )
     

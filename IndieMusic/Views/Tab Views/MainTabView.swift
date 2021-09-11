@@ -56,13 +56,14 @@ struct MainTabView: View {
                 
             } // End TabView
             .accentColor(.black)
+            .transition(.move(edge: .bottom))
             
             CurrentlyPlayingMinimizedView(album: MockData.Albums().first!, song: MockData.Songs().first!)
                 .environmentObject(vm)
                 .environmentObject(cpVM)
                 .offset(y: ((UIScreen.main.bounds.height/2) - UITabBarController().tabBar.frame.height - ViewModel.Constants.currentlyPlayingMinimizedViewHeight + 9))
             
-        } // End VStack
+        } // End ZStack
         .edgesIgnoringSafeArea(.top)
         
         .onAppear {

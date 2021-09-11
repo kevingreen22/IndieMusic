@@ -46,7 +46,7 @@ struct CreateArtistView: View {
                 Button(action: {
                     createArtist(completion: { success in
                         if success {
-                            vm.user.isArtistOwner = success
+//                            vm.user.isArtistOwner = success
                             presentationMode.wrappedValue.dismiss()
                         } else {
                             vm.alertItem = MyStandardAlertContext.createOwnerArtistFailed

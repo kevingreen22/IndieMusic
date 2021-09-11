@@ -79,7 +79,7 @@ class ProfileViewModel: ObservableObject {
         // remove artist, albums, songs from DatabaseManager
         // remove uploaded MP3's from StorageManager
         
-        vm.user.isArtistOwner = false
+//        vm.user.isArtistOwner = false
     }
     
     

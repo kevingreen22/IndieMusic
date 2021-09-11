@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct GenericListCell: View {
+    @EnvironmentObject var vm: ViewModel
     let imageName: String
     let label: String
-    let typeOfFavorite: AnyClass?
+    let typeOfFavorite: Any?
     let imageWidth: CGFloat = 30
     let imageHeight: CGFloat = 30
     @State private var isFavorited: Bool = false
@@ -21,33 +22,46 @@ struct GenericListCell: View {
                 .resizable()
                 .frame(width: imageWidth, height: imageHeight)
                 .aspectRatio(contentMode: .fit)
+                .cornerRadius(3)
             Text(label)
             Spacer()
             if typeOfFavorite != nil {
                 FarvoriteHeartView(typeOfFavorite: typeOfFavorite, isFavorited: $isFavorited)
             }
-        }
+        }.padding(.horizontal)
     }
 }
 
 
 
 struct FarvoriteHeartView: View {
-    let typeOfFavorite: AnyClass?
+    @EnvironmentObject var vm: ViewModel
+    let typeOfFavorite: Any?
     @Binding var isFavorited: Bool
     
     var body: some View {
-        Button(action: {
-            // favorite artist/album/song in model here
-            
-        }, label: {
-            Image(systemName: isFavorited ? "heart.fill" : "heart")
-                .foregroundColor(.red)
-        }).highPriorityGesture(
-            TapGesture().onEnded({ () in
-                isFavorited.toggle()
-            })
-        )
+        Image(systemName: isFavorited ? "heart.fill" : "heart")
+            .foregroundColor(.red)
+            .highPriorityGesture(
+                TapGesture().onEnded({ () in
+                    isFavorited.toggle()
+                    
+                    print("favorited")
+                    switch typeOfFavorite {
+                    case is Song.Type:
+                        guard let song = typeOfFavorite as? Song else { return }
+                        vm.user.favoriteSongs?.append(song)
+                    case is Album.Type:
+                        guard let album = typeOfFavorite as? Album else { return }
+                        vm.user.favoriteAlbums?.append(album)
+                    case is Artist.Type:
+                        guard let artist = typeOfFavorite as? Artist else { return }
+                        vm.user.favoriteArtists?.append(artist)
+                    case .none, .some(_):
+                        break
+                    }
+                })
+            )
     }
 }
 
@@ -66,8 +80,7 @@ struct GenericViews_Previews: PreviewProvider {
         Group {
             GenericListCell(imageName: "dillinger",
                             label: "Dillinger",
-                            typeOfFavorite: nil)
-            FarvoriteHeartView(typeOfFavorite: Artist.self, isFavorited: .constant(false))
+                            typeOfFavorite: Song.self)
         }
     }
 }

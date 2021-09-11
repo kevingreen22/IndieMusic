@@ -33,7 +33,8 @@ struct ExploreView: View {
                 LazyVGrid(columns: colums) {
                     ForEach(exploreVM.exploreCells, id: \.self) { cell in
                         NavigationLink(
-                            destination: ArtistsView(artists: exploreVM.genreOfArtists[cell.genre]!),
+                            destination: ArtistsView(artists: exploreVM.genreOfArtists[cell.genre]!)
+                                .environmentObject(vm),
                             label: {
                                 ExploreViewCell(content: cell) 
                                     .environmentObject(vm)

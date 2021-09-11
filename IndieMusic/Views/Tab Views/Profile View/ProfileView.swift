@@ -45,7 +45,7 @@ struct ProfileView: View {
                             }
                         })
                     
-                    if profileVM.showArtistOwnerInfo && vm.user.isArtistOwner {
+                    if profileVM.showArtistOwnerInfo && vm.user.artist != nil {
                         Button(action: {
                             profileVM.activeSheet = .uploadSong
                         }, label: {

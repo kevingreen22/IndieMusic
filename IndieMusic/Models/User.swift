@@ -19,7 +19,7 @@ struct User: Codable {
     var favoriteAlbums: [Album]?
     var favoriteSongs: [Song]?
     var recentlyAdded: [Album]?
-    var isArtistOwner: Bool
+//    var isArtistOwner: Bool
     var artist: Artist?
     
     

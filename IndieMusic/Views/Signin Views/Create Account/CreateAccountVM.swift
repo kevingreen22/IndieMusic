@@ -20,7 +20,7 @@ class CreateAccountVM: ObservableObject {
         
         email = email.trimmingCharacters(in: .whitespaces)
         
-        let newUser = User(name: name, email: email, profilePictureData: nil, favoriteArtists: nil, favoriteAlbums: nil, favoriteSongs: nil, recentlyAdded: nil, isArtistOwner: false, artist: nil)
+        let newUser = User(name: name, email: email, profilePictureData: nil, favoriteArtists: nil, favoriteAlbums: nil, favoriteSongs: nil, recentlyAdded: nil, /*isArtistOwner: false,*/ artist: nil)
         
         AuthManager.shared.signUp(email: email, password: password) { success in
             if success {

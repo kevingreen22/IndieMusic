@@ -380,6 +380,9 @@ final class DatabaseManger {
     
     
     
+    
+    
+    
     /// Fetches all songs.
     public func getAllSongs(completion: @escaping ([Song]) -> Void) {
         var songs: [Song] = []

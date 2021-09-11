@@ -17,9 +17,11 @@ struct FavoritesView: View {
     
     var body: some View {
         List {
-            NavigationLink(destination: ArtistsView(artists: vm.user?.favoriteArtists ?? []),
+            NavigationLink(destination: ArtistsView(artists: vm.user?.favoriteArtists ?? [])
+                            .environmentObject(vm),
                            label: {
                             GenericListCell(imageName: "music.mic", label: "Artists", typeOfFavorite: nil)
+                                .environmentObject(vm)
                            }
             ).listRowBackground(Color.clear)
             
@@ -32,6 +34,7 @@ struct FavoritesView: View {
             NavigationLink(destination: SongsListView(songs: vm.user?.favoriteSongs ?? [], album: nil),
                            label: {
                             GenericListCell(imageName: "music.note", label: "Songs", typeOfFavorite: nil)
+                                .environmentObject(vm)
                            }
             ).listRowBackground(Color.clear)
             

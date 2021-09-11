@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ArtistsView: View {
+    @EnvironmentObject var vm: ViewModel
     @Environment(\.defaultMinListRowHeight) var listRowHeight
     let artists: [Artist]
     
@@ -20,6 +21,7 @@ struct ArtistsView: View {
                         GenericListCell(imageName: artist.mostRecentAlbumArtworkURL.relativeString, label: artist.name,
                             typeOfFavorite: Artist.self
                         )
+                        .environmentObject(vm)
                         
                     }
                 ).listRowBackground(Color.clear)
