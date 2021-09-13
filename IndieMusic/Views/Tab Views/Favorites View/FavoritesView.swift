@@ -20,20 +20,20 @@ struct FavoritesView: View {
             NavigationLink(destination: ArtistsView(artists: vm.user?.favoriteArtists ?? [])
                             .environmentObject(vm),
                            label: {
-                            GenericListCell(imageName: "music.mic", label: "Artists", typeOfFavorite: nil)
+                            FavoritesNavLinkCell(imageName: "music.mic", label: "Artists")
                                 .environmentObject(vm)
                            }
             ).listRowBackground(Color.clear)
             
             NavigationLink(destination: AlbumsView(albums: vm.user?.favoriteAlbums ?? []),
                            label: {
-                            GenericListCell(imageName: "music.note.list", label: "Albums", typeOfFavorite: nil)
+                            FavoritesNavLinkCell(imageName: "music.note.list", label: "Albums")
                            }
             ).listRowBackground(Color.clear)
             
             NavigationLink(destination: SongsListView(songs: vm.user?.favoriteSongs ?? [], album: nil),
                            label: {
-                            GenericListCell(imageName: "music.note", label: "Songs", typeOfFavorite: nil)
+                            FavoritesNavLinkCell(imageName: "music.note", label: "Songs")
                                 .environmentObject(vm)
                            }
             ).listRowBackground(Color.clear)
@@ -51,7 +51,7 @@ struct FavoritesView: View {
                         NavigationLink(
                             destination: Text("Destination"),
                             label: {
-                                AlbumNavLinkView(album: recent)
+                                AlbumNavLinkCellView(album: recent)
                             })
                     }
                 }

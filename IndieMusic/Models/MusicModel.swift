@@ -25,13 +25,15 @@ class Artist: Hashable, Codable {
     let id: String
     var name: String
     var genre: String
+    var imageURL: URL?
     var albums: [Album]?
     var timeStamp: TimeInterval
     
-    init(name: String, genre: String, albums: [Album]?) {
+    init(name: String, genre: String, imageURL: URL?, albums: [Album]?) {
         self.id = UUID().uuidString
         self.name = name
         self.genre = genre
+        self.imageURL = imageURL
         self.albums = albums
         self.timeStamp = Date().timeIntervalSince1970
     }

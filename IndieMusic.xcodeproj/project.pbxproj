@@ -34,7 +34,7 @@
 		C787DC9026A8B7C4005BC46E /* brokeneck_erection.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C787DC8F26A8B7C4005BC46E /* brokeneck_erection.mp3 */; };
 		C787DC9226A8C838005BC46E /* VolumeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C787DC9126A8C838005BC46E /* VolumeSliderView.swift */; };
 		C7AAF57526A34BD800AAAFDE /* ExploreCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AAF57426A34BD800AAAFDE /* ExploreCellModel.swift */; };
-		C7AAF57726A6955000AAAFDE /* GenericViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AAF57626A6955000AAAFDE /* GenericViews.swift */; };
+		C7AAF57726A6955000AAAFDE /* CellViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AAF57626A6955000AAAFDE /* CellViews.swift */; };
 		C7AAF57A26A7321000AAAFDE /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AAF57926A7321000AAAFDE /* FavoritesView.swift */; };
 		C7AAF57C26A7325D00AAAFDE /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AAF57B26A7325D00AAAFDE /* ExploreView.swift */; };
 		C7AAF57E26A7328D00AAAFDE /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AAF57D26A7328D00AAAFDE /* ProfileView.swift */; };
@@ -113,7 +113,7 @@
 		C787DC8F26A8B7C4005BC46E /* brokeneck_erection.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = brokeneck_erection.mp3; sourceTree = "<group>"; };
 		C787DC9126A8C838005BC46E /* VolumeSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeSliderView.swift; sourceTree = "<group>"; };
 		C7AAF57426A34BD800AAAFDE /* ExploreCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreCellModel.swift; sourceTree = "<group>"; };
-		C7AAF57626A6955000AAAFDE /* GenericViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericViews.swift; sourceTree = "<group>"; };
+		C7AAF57626A6955000AAAFDE /* CellViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellViews.swift; sourceTree = "<group>"; };
 		C7AAF57926A7321000AAAFDE /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
 		C7AAF57B26A7325D00AAAFDE /* ExploreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreView.swift; sourceTree = "<group>"; };
 		C7AAF57D26A7328D00AAAFDE /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -227,7 +227,6 @@
 				C7567A0626ED549D002661C3 /* Favorites View */,
 				C75679FD26DFFE04002661C3 /* Explore View */,
 				C72FF36726B4818200F3ABC1 /* Profile View */,
-				C7AAF57826A731F200AAAFDE /* Secondary Views */,
 			);
 			path = "Tab Views";
 			sourceTree = "<group>";
@@ -287,6 +286,7 @@
 			isa = PBXGroup;
 			children = (
 				C7AAF57926A7321000AAAFDE /* FavoritesView.swift */,
+				C7AAF57826A731F200AAAFDE /* Secondary Views */,
 			);
 			path = "Favorites View";
 			sourceTree = "<group>";
@@ -372,7 +372,7 @@
 				C7AE8A22269A63C600B738C6 /* SearchBar.swift */,
 				C7AE8A2A26A0AB3D00B738C6 /* AirplayList.swift */,
 				C7AE8A20269A1CC800B738C6 /* NotchBackgroundBlur.swift */,
-				C7AAF57626A6955000AAAFDE /* GenericViews.swift */,
+				C7AAF57626A6955000AAAFDE /* CellViews.swift */,
 				C7AAF57F26A75DFF00AAAFDE /* MarqueTextVIew.swift */,
 				C787DC8B26A7A885005BC46E /* SwimplyPlayIndicator.swift */,
 				C787DC8D26A8A8E8005BC46E /* PayWallView.swift */,
@@ -690,7 +690,7 @@
 				C74264C526A1F52E0075C8E0 /* StorageManager.swift in Sources */,
 				C7AE8A192697970F00B738C6 /* SongsListView.swift in Sources */,
 				C74264C326A1F5100075C8E0 /* AuthManager.swift in Sources */,
-				C7AAF57726A6955000AAAFDE /* GenericViews.swift in Sources */,
+				C7AAF57726A6955000AAAFDE /* CellViews.swift in Sources */,
 				C72FF35926B11A6A00F3ABC1 /* MyAlertItem.swift in Sources */,
 				C7567A0126E04061002661C3 /* CreateArtistView.swift in Sources */,
 				C787DC9226A8C838005BC46E /* VolumeSliderView.swift in Sources */,

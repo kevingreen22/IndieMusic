@@ -15,19 +15,12 @@ struct ArtistsView: View {
     var body: some View {
         List {
             ForEach(artists, id: \.self) { artist in
-                NavigationLink(
-                    destination: AlbumsView(albums: artist.albums ?? []),
-                    label: {
-                        GenericListCell(imageName: artist.mostRecentAlbumArtworkURL.relativeString, label: artist.name,
-                            typeOfFavorite: Artist.self
-                        )
+                GenericListCell(imageName: artist.mostRecentAlbumArtworkURL.relativeString, label: artist.name, typeOfFavorite: Artist.self)
                         .environmentObject(vm)
-                        
-                    }
-                ).listRowBackground(Color.clear)
+                        .listRowBackground(Color.clear)
             }
-        }.environment(\.defaultMinListRowHeight, 60)
-        
+        }
+        .environment(\.defaultMinListRowHeight, 60)
         .navigationBarTitle("Artists", displayMode: .large)
     }
 }
@@ -41,5 +34,6 @@ struct ArtistsView: View {
 struct ArtistView_Previews: PreviewProvider {
     static var previews: some View {
         ArtistsView(artists: MockData.Artists())
+            .environmentObject(ViewModel())
     }
 }

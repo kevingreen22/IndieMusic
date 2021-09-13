@@ -56,10 +56,97 @@ class MockData {
                         ),
                       ],
                       year: "2009",
+                      genre: "Metal"),
+                
+                Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
+                      artworkURL: URL(string: "dillinger"),
+                      songs: [
+                        Song(title: "Electric Sloth",
+                             genre: "Metal",
+                             artistID: UUID().uuidString,
+                             albumID: UUID().uuidString,
+                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
+                             url: URL(fileURLWithPath: "song/path/name.mp3")
+                        ),
+                        
+                        Song(title: "Crush, Kill, Destroy",
+                             genre: "Metal",
+                             artistID: UUID().uuidString,
+                             albumID: UUID().uuidString,
+                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
+                             url: URL(fileURLWithPath: "song/path/name.mp3")
+                        ),
+                        
+                        Song(title: "Penguins Are Awfly Cute",
+                             genre: "Metal",
+                             artistID: UUID().uuidString,
+                             albumID: UUID().uuidString,
+                             lyrics: nil,
+                             url: URL(fileURLWithPath: "song/path/name.mp3")
+                        ),
+                      ],
+                      year: "2009",
+                      genre: "Metal"),
+                Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
+                      artworkURL: URL(string: "dillinger"),
+                      songs: [
+                        Song(title: "Electric Sloth",
+                             genre: "Metal",
+                             artistID: UUID().uuidString,
+                             albumID: UUID().uuidString,
+                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
+                             url: URL(fileURLWithPath: "song/path/name.mp3")
+                        ),
+                        
+                        Song(title: "Crush, Kill, Destroy",
+                             genre: "Metal",
+                             artistID: UUID().uuidString,
+                             albumID: UUID().uuidString,
+                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
+                             url: URL(fileURLWithPath: "song/path/name.mp3")
+                        ),
+                        
+                        Song(title: "Penguins Are Awfly Cute",
+                             genre: "Metal",
+                             artistID: UUID().uuidString,
+                             albumID: UUID().uuidString,
+                             lyrics: nil,
+                             url: URL(fileURLWithPath: "song/path/name.mp3")
+                        ),
+                      ],
+                      year: "2009",
+                      genre: "Metal"),
+                Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
+                      artworkURL: URL(string: "dillinger"),
+                      songs: [
+                        Song(title: "Electric Sloth",
+                             genre: "Metal",
+                             artistID: UUID().uuidString,
+                             albumID: UUID().uuidString,
+                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
+                             url: URL(fileURLWithPath: "song/path/name.mp3")
+                        ),
+                        
+                        Song(title: "Crush, Kill, Destroy",
+                             genre: "Metal",
+                             artistID: UUID().uuidString,
+                             albumID: UUID().uuidString,
+                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
+                             url: URL(fileURLWithPath: "song/path/name.mp3")
+                        ),
+                        
+                        Song(title: "Penguins Are Awfly Cute",
+                             genre: "Metal",
+                             artistID: UUID().uuidString,
+                             albumID: UUID().uuidString,
+                             lyrics: nil,
+                             url: URL(fileURLWithPath: "song/path/name.mp3")
+                        ),
+                      ],
+                      year: "2009",
                       genre: "Metal")
                ]
         ),
-        
     ]
     
     static func Artists() -> [Artist] {
