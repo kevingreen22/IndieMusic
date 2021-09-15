@@ -29,27 +29,6 @@ class CurrentlyPlayingViewModel: ObservableObject {
     
     
     
-    
-    
-    /// Prepares song info for playing. i.e. album artwork, stream url, etc.
-    fileprivate func prepareInfoForSong() -> URL? {
-        let song = songListData[currentSongIndex]
-        
-        // for pre-cloud-storage testing
-//        guard let songUrl = Bundle.main.path(forResource: song.url.absoluteString, ofType: "mp3") else { return nil }
-        
-        StorageManager.shared.downloadAlbumArtwork(for: song.albumID) { image in
-            guard let img = image else { return }
-            self.dominantColors = DominantColors.getDominantColors(image: img)
-            DispatchQueue.main.async {
-                self.albumImage = img
-            }
-        }
-        
-        return song.url
-    }
-    
-    
     func preparePlayer() {
         guard let songURL = prepareInfoForSong() else { return }
         
@@ -75,6 +54,26 @@ class CurrentlyPlayingViewModel: ObservableObject {
         } catch {
             print(error)
         }
+    }
+    
+    
+    
+    /// Prepares song info for playing. i.e. album artwork, stream url, etc.
+    fileprivate func prepareInfoForSong() -> URL? {
+        let song = songListData[currentSongIndex]
+        
+        // for pre-cloud-storage testing
+//        guard let songUrl = Bundle.main.path(forResource: song.url.absoluteString, ofType: "mp3") else { return nil }
+        
+        StorageManager.shared.downloadAlbumArtwork(for: song.albumID) { image in
+            guard let img = image else { return }
+            self.dominantColors = DominantColors.getDominantColors(image: img)
+            DispatchQueue.main.async {
+                self.albumImage = img
+            }
+        }
+        
+        return song.url
     }
     
     
@@ -121,7 +120,7 @@ class CurrentlyPlayingViewModel: ObservableObject {
     
     
     func playNextSong() {
-        if songListData.count - 1 != currentSongIndex {
+        if songListData.count - 1 < currentSongIndex {
             currentSongIndex += 1
             changeSong()
         }
@@ -131,10 +130,9 @@ class CurrentlyPlayingViewModel: ObservableObject {
     func playPreviousSong() {
         if currentSongIndex > 0 {
             currentSongIndex -= 1
-            changeSong()
         }
+        changeSong()
     }
-    
     
     
 }
