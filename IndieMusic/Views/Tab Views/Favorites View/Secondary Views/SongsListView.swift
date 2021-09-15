@@ -20,6 +20,7 @@ struct SongsListView: View {
                 List {
                     ForEach(_songs, id: \.self) { song in
                         SongListCell(albumArtwork: cpVM.albumImage, song: song, selectedSongCell: $vm.selectedSongCell)
+                            .environmentObject(vm)
                             .environmentObject(cpVM)
                     }
                 }.environment(\.defaultMinListRowHeight, 60)
@@ -43,6 +44,7 @@ struct SongsListView: View {
                 List {
                     ForEach(_album.songs, id: \.self) { song in
                         SongListCell(albumArtwork: cpVM.albumImage, song: song, selectedSongCell: $vm.selectedSongCell)
+                            .environmentObject(vm)
                             .environmentObject(cpVM)
                     }
                 }.environment(\.defaultMinListRowHeight, 60)

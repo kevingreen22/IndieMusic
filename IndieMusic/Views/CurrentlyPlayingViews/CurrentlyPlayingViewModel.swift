@@ -10,10 +10,10 @@ import AVKit
 
 class CurrentlyPlayingViewModel: ObservableObject {
     
-    @Published var songListData: [Song] = [] // = MockData.Songs()
     @AppStorage("currentSongIndex") var currentSongIndex: Int = 0
-    
     @State private var delegate = AVDelegate()
+    
+    @Published var songListData: [Song] = [] // = MockData.Songs()
     @Published var audioPlayer = AVAudioPlayer()
     @Published var albumImage = UIImage(systemName: "photo")!
     @Published var playState: SwimplyPlayIndicator.AudioState = .stop

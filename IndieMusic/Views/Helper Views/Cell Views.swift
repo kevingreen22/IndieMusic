@@ -96,6 +96,7 @@ struct AlbumNavLinkCellView: View {
 
 
 struct SongListCell: View {
+    @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     let albumArtwork: UIImage
     let song: Song
@@ -140,6 +141,7 @@ struct SongListCell: View {
 }
 
 fileprivate struct CellTapped: Gesture {
+    @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     let song: Song
     @Binding var selectedSongCell: Song?
@@ -151,6 +153,7 @@ fileprivate struct CellTapped: Gesture {
                 if song == selectedSongCell {
                     cpVM.playPauseSong()
                     cpVM.playState = .play
+                    vm.user.songListData.append(song)
                 }
             }
     }
@@ -251,6 +254,8 @@ struct FavoritesNavLinkCell_Previews: PreviewProvider {
                 .frame(width: 200, height: 200, alignment: .center)
         
             SongListCell(albumArtwork: UIImage(imageLiteralResourceName: "album_artwork_placeholder"), song: MockData.Songs().first!, selectedSongCell: .constant(MockData.Songs().first!))
+                .environmentObject(ViewModel())
+                .environmentObject(CurrentlyPlayingViewModel())
         
 //            let em = ExploreViewModel()
 //            ExploreViewCell(content: em.exploreCells.first!)
