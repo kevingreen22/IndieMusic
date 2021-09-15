@@ -27,6 +27,7 @@ class MockData {
     static let data: [Artist] = [
         Artist(name: "Brokeneck",
                genre: "Metal",
+               imageURL: nil,
                albums: [
                 Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
                       artworkURL: URL(string: "dillinger"),
@@ -186,11 +187,11 @@ class MockData {
     
     // MARK: Explore mock data
     static let exploreData: [ExploreCellModel] = [
-        ExploreCellModel(genre: "Metal", imageName: "metal", artists: Artists()),
-        ExploreCellModel(genre: "R&B", imageName: "r&b", artists: Artists()),
-        ExploreCellModel(genre: "Hip Hop", imageName: "hip_hop", artists: Artists()),
-        ExploreCellModel(genre: "Rap", imageName: "rap", artists: Artists()),
-        ExploreCellModel(genre: "Blues", imageName: "blues", artists: Artists())
+        ExploreCellModel(imageName: "metal", genre: "Metal", artists: Artists()),
+        ExploreCellModel(imageName: "r&b", genre: "R&B", artists: Artists()),
+        ExploreCellModel(imageName: "hip_hop", genre: "Hip Hop", artists: Artists()),
+        ExploreCellModel(imageName: "rap", genre: "Rap", artists: Artists()),
+        ExploreCellModel(imageName: "blues", genre: "Blues", artists: Artists())
     ]
     
     

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct SongsListView: View {
     @Environment(\.defaultMinListRowHeight) var listRowHeight
+    @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
-    @State private var selectedSongCell: Song?
     let songs: [Song]?
     let album: Album?
     
@@ -19,11 +19,11 @@ struct SongsListView: View {
             VStack {
                 List {
                     ForEach(_songs, id: \.self) { song in
-                        SongListCell(albumArtwork: cpVM.albumImage, song: song, selectedSongCell: $selectedSongCell)
+                        SongListCell(albumArtwork: cpVM.albumImage, song: song, selectedSongCell: $vm.selectedSongCell)
                             .environmentObject(cpVM)
                     }
                 }.environment(\.defaultMinListRowHeight, 60)
-            }
+            }.navigationBarTitle("Songs", displayMode: .large)
         } else if let _album = album {
             VStack {
                 Image(uiImage: cpVM.albumImage)
@@ -38,14 +38,16 @@ struct SongsListView: View {
                     .bold()
                 Text(_album.artistName)
                     .font(.title3)
+                    .foregroundColor(.gray)
                                 
                 List {
                     ForEach(_album.songs, id: \.self) { song in
-                        SongListCell(albumArtwork: cpVM.albumImage, song: song, selectedSongCell: $selectedSongCell)
+                        SongListCell(albumArtwork: cpVM.albumImage, song: song, selectedSongCell: $vm.selectedSongCell)
                             .environmentObject(cpVM)
                     }
                 }.environment(\.defaultMinListRowHeight, 60)
             }
+            
         }
     }
 }
@@ -59,6 +61,7 @@ struct SongsListView_Previews: PreviewProvider {
             SongsListView(songs: MockData.Songs(), album: nil)
                 .environmentObject(ViewModel())
                 .environmentObject(CurrentlyPlayingViewModel())
+            
             SongsListView(songs: nil, album: MockData.Albums().first!)
                 .environmentObject(ViewModel())
                 .environmentObject(CurrentlyPlayingViewModel())

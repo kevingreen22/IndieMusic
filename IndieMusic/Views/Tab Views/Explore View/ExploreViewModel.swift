@@ -9,13 +9,14 @@ import SwiftUI
 
 class ExploreViewModel: ObservableObject {
     
+    var genreCells: [ExploreCellModel] = MockData.exploreData //[]
     var genreOfArtists: [String : [Artist]] = [:]
-    var exploreCells: [ExploreCellModel] = []
     
+    var artistCells: [ExploreCellModel] = []
     
+    var albumCells: [ExploreCellModel] = []
     
-    
-    func getAllGenres() {
+    func setAllGenres() {
         DatabaseManger.shared.getAllArtists { artists in
             for artist in artists {
                 self.genreOfArtists[artist.genre]?.append(artist)
@@ -23,12 +24,28 @@ class ExploreViewModel: ObservableObject {
             
             for genre in self.genreOfArtists {
                 let imageString = genre.key.lowercased().replacingOccurrences(of: " ", with: "_")
-                let cell = ExploreCellModel(genre: genre.key, imageName: imageString, artists: genre.value)
-                self.exploreCells.append(cell)
+                let cell = ExploreCellModel(imageName: imageString, genre: genre.key, artists: genre.value)
+                self.genreCells.append(cell)
             }
             
         }
     }
+    
+    
+    
+//    func setAllAlbums() {
+//        DatabaseManger.shared.getAllAlbums { albums in
+//            for album in albums {
+//                let imageString = album.albumArtworkURL
+//                let cell = ExploreCellModel(
+//                self.genreCells.append(cell)
+//            }
+//        }
+//    }
+    
+    
+    
+    
     
     
 }

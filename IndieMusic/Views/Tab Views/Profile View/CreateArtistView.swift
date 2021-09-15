@@ -83,7 +83,7 @@ struct CreateArtistView: View {
     
     
     fileprivate func createArtist(completion: ((Bool) -> Void)?) {
-        let ownerArtist = Artist(name: artistName, genre: genre, albums: nil)
+        let ownerArtist = Artist(name: artistName, genre: genre, imageURL: nil, albums: nil)
         DatabaseManger.shared.insert(artist: ownerArtist) { success in
             if success {
                 vm.user.artist = ownerArtist
@@ -183,9 +183,10 @@ struct CreatArtistAlbumSongView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             CreateArtistView()
+                .environmentObject(ViewModel())
             
             CreateAlbumView(genre: "Metal")
-            
+                .environmentObject(ViewModel())
         }
     }
 }

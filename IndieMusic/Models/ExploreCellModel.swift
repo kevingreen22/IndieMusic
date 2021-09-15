@@ -12,8 +12,8 @@ import SwiftUI
 
 struct ExploreCellModel: Hashable {
     let id: String = UUID().uuidString
-    let genre: String
     let imageName: String?
+    let genre: String
     let artists: [Artist]
     
 }

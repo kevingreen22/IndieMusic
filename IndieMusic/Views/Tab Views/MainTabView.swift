@@ -55,7 +55,7 @@ struct MainTabView: View {
                     }
                 
             } // End TabView
-            .accentColor(.black)
+            .accentColor(.mainApp)
             .transition(.move(edge: .bottom))
             
             CurrentlyPlayingMinimizedView(album: MockData.Albums().first!, song: MockData.Songs().first!)

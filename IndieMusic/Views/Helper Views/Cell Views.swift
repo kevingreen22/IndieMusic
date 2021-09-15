@@ -10,18 +10,19 @@ import SwiftUI
 struct FavoritesNavLinkCell: View {
     @EnvironmentObject var vm: ViewModel
     @State private var isFavorited: Bool = false
-    let imageName: String
+    let systemImageName: String
     let label: String
     let imageWidth: CGFloat = 30
     let imageHeight: CGFloat = 30
 
     var body: some View {
         HStack {
-            Image(imageName)
+            Image(systemName: systemImageName)
                 .resizable()
                 .frame(width: imageWidth, height: imageHeight)
                 .aspectRatio(contentMode: .fit)
                 .cornerRadius(3)
+                .foregroundColor(.mainApp)
             Text(label)
         }.padding(.horizontal)
     }
@@ -157,9 +158,6 @@ fileprivate struct CellTapped: Gesture {
 
 
 
-
-
-
 struct FarvoriteHeartView: View {
     @EnvironmentObject var vm: ViewModel
     let typeOfFavorite: Any?
@@ -197,16 +195,66 @@ struct FarvoriteHeartView: View {
 
 
 
-struct GenericViews_Previews: PreviewProvider {
+struct ExploreViewCell: View {
+    let content: ExploreCellModel
+
+    var body: some View {
+        Rectangle()
+            .fill(Color.blue)
+            .overlay(
+                Image(content.imageName ?? "genre_image_placeholder")
+                    .resizable()
+            )
+            .cornerRadius(25)
+            .overlay(
+                VStack(alignment: .leading) {
+                    Spacer()
+                    Text(content.genre)
+                        .foregroundColor(.white)
+                        .font(.title3)
+                        .bold()
+                        .lineLimit(2)
+                        .padding(.bottom)
+                }
+            )
+            .frame(height: ViewModel.Constants.exploreCellSize)
+            .padding(.horizontal)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+struct FavoritesNavLinkCell_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            FavoritesNavLinkCell(imageName: "album_artwork_placeholder", label: "Favorites Cell")
+            FavoritesNavLinkCell(systemImageName: "album_artwork_placeholder", label: "Favorites Cell")
             
             ArtistNavLinkCell(artist: MockData.Artists().first!)
             
             AlbumNavLinkCellView(album: MockData.Albums().first!)
                 .environmentObject(ViewModel())
                 .frame(width: 200, height: 200, alignment: .center)
+        
+            SongListCell(albumArtwork: UIImage(imageLiteralResourceName: "album_artwork_placeholder"), song: MockData.Songs().first!, selectedSongCell: .constant(MockData.Songs().first!))
+        
+//            let em = ExploreViewModel()
+//            ExploreViewCell(content: em.exploreCells.first!)
+//                .environmentObject(ViewModel())
         }
     }
 }

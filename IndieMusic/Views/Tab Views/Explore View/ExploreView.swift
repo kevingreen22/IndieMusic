@@ -24,61 +24,38 @@ struct ExploreView: View {
     
     let colums = [GridItem(.flexible(minimum: ViewModel.Constants.exploreCellSize)), GridItem(.flexible(minimum: ViewModel.Constants.exploreCellSize))]
     
+    let rows = [GridItem(.flexible(minimum: ViewModel.Constants.exploreCellSize)), GridItem(.flexible(minimum: ViewModel.Constants.exploreCellSize))]
+    
     
     var body: some View {
         GeometryReader { proxy in
             ScrollView {
                 SearchBar(text: $vm.searchText).padding(.vertical)
                 
-                LazyVGrid(columns: colums) {
-                    ForEach(exploreVM.exploreCells, id: \.self) { cell in
+                LazyHGrid(rows: rows) {
+                    ForEach(exploreVM.genreCells, id: \.self) { cell in
                         NavigationLink(
                             destination: ArtistsView(artists: exploreVM.genreOfArtists[cell.genre]!)
                                 .environmentObject(vm),
                             label: {
-                                ExploreViewCell(content: cell) 
+                                ExploreViewCell(content: cell)
                                     .environmentObject(vm)
                             })
                     }
                 }
+                
+                
+
             }
         }
         
         .onAppear {
-            exploreVM.getAllGenres()
+            exploreVM.setAllGenres()
         }
         
     }
 }
 
-
-struct ExploreViewCell: View {
-    @EnvironmentObject var vm: ViewModel
-    let content: ExploreCellModel
-    
-    var body: some View {
-        Rectangle()
-            .fill(Color.blue)
-            .overlay(
-                Image(content.imageName ?? "genre_image_placeholder")
-                    .resizable()
-            )
-            .cornerRadius(25)
-            .overlay(
-                VStack(alignment: .leading) {
-                    Spacer()
-                    Text(content.genre)
-                        .foregroundColor(.white)
-                        .font(.title3)
-                        .bold()
-                        .lineLimit(2)
-                        .padding(.bottom)
-                }
-            )
-            .frame(height: ViewModel.Constants.exploreCellSize)
-            .padding(.horizontal)
-    }
-}
 
 
 
@@ -94,5 +71,6 @@ struct ExploreView_Previews: PreviewProvider {
     static var previews: some View {
         ExploreView()
             .environmentObject(ViewModel())
+            .environmentObject(ExploreViewModel())
     }
 }

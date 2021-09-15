@@ -15,7 +15,7 @@ struct ArtistsView: View {
     var body: some View {
         List {
             ForEach(artists, id: \.self) { artist in
-                GenericListCell(imageName: artist.mostRecentAlbumArtworkURL.relativeString, label: artist.name, typeOfFavorite: Artist.self)
+                ArtistNavLinkCell(artist: artist)
                         .environmentObject(vm)
                         .listRowBackground(Color.clear)
             }

@@ -28,6 +28,8 @@ class ViewModel: ObservableObject {
     
     @Published var searchText: String = ""
     
+    @Published var selectedSongCell: Song? = nil
+    
     
     
     public func setArtworkFor(album: Album) {

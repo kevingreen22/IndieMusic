@@ -21,12 +21,12 @@ extension String {
 // MARK: Color Extension
 extension Color {
     
-    static var appMainColor: Color {
-        Color(.sRGB, red: 250, green: 200, blue: 55, opacity: 1.0)
+    static var mainApp: Color {
+        Color("MainApp")
     }
     
     static var appSecondaryColor: Color {
-        Color(.sRGB, red: 250, green: 200, blue: 80, opacity: 1.0)
+        Color("SecondaryApp")
     }
     
     

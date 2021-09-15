@@ -20,20 +20,21 @@ struct FavoritesView: View {
             NavigationLink(destination: ArtistsView(artists: vm.user?.favoriteArtists ?? [])
                             .environmentObject(vm),
                            label: {
-                            FavoritesNavLinkCell(imageName: "music.mic", label: "Artists")
+                            FavoritesNavLinkCell(systemImageName: "music.mic", label: "Artists")
                                 .environmentObject(vm)
                            }
             ).listRowBackground(Color.clear)
             
             NavigationLink(destination: AlbumsView(albums: vm.user?.favoriteAlbums ?? []),
                            label: {
-                            FavoritesNavLinkCell(imageName: "music.note.list", label: "Albums")
+                            FavoritesNavLinkCell(systemImageName: "music.note.list", label: "Albums")
+                                .environmentObject(vm)
                            }
             ).listRowBackground(Color.clear)
             
             NavigationLink(destination: SongsListView(songs: vm.user?.favoriteSongs ?? [], album: nil),
                            label: {
-                            FavoritesNavLinkCell(imageName: "music.note", label: "Songs")
+                            FavoritesNavLinkCell(systemImageName: "music.note", label: "Songs")
                                 .environmentObject(vm)
                            }
             ).listRowBackground(Color.clear)
