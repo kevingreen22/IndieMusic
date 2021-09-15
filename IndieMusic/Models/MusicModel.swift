@@ -186,7 +186,7 @@ class Song: Hashable, Equatable, Codable  {
         self.lyrics = ""
         self.artistID = ""
         self.albumID = ""
-        self.url = URL(string: "")!
+        self.url = URL(fileURLWithPath: "")
         self.timeStamp = Date().timeIntervalSince1970
     }
     

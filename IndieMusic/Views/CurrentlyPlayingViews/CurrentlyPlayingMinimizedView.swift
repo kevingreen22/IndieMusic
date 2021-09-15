@@ -71,7 +71,7 @@ struct CurrentlyPlayingMinimizedView: View {
         })
         
         .onAppear {
-            cpVM.initSongAlbum(user: vm.user)
+            cpVM.initialize(with: vm.user)
         }
     }
 }

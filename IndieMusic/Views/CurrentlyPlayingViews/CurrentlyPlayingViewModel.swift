@@ -30,7 +30,7 @@ class CurrentlyPlayingViewModel: ObservableObject {
     
     
     
-    func initSongAlbum(user: User) {
+    func initialize(with user: User) {
         if !user.songListData.isEmpty {
             let song = user.songListData[currentSongIndex]
             

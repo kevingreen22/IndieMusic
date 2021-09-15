@@ -28,6 +28,8 @@ struct IndieMusicApp: App {
                         vm.showSigninView = true
                     } else {
                         vm.cacheUser()
+                        cpVM.initialize(with: vm.user)
+                        cpVM.preparePlayer(user: vm.user)
                     }
                 }
                 .fullScreenCover(isPresented: $vm.showSigninView) {
