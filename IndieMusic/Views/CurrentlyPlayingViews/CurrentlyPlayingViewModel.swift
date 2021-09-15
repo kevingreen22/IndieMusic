@@ -10,7 +10,7 @@ import AVKit
 
 class CurrentlyPlayingViewModel: ObservableObject {
     
-    @Published var songListData: [Song] = MockData.Songs()
+    @Published var songListData: [Song] = [] // = MockData.Songs()
     @AppStorage("currentSongIndex") var currentSongIndex: Int = 0
     
     @State private var delegate = AVDelegate()
@@ -33,7 +33,6 @@ class CurrentlyPlayingViewModel: ObservableObject {
     
     /// Prepares song info for playing. i.e. album artwork, stream url, etc.
     fileprivate func prepareInfoForSong() -> URL? {
-        
         let song = songListData[currentSongIndex]
         
         // for pre-cloud-storage testing
@@ -77,6 +76,8 @@ class CurrentlyPlayingViewModel: ObservableObject {
             print(error)
         }
     }
+    
+    
     
     
     func changeSong() {

@@ -14,11 +14,11 @@ class MockData {
     static let user = User(name: "Kevin",
                            email: "Bbongrip@gmail.com",
                            profilePictureData: nil,
+                           songListData: [],
                            favoriteArtists: [data.first!],
                            favoriteAlbums: [data.first!.albums!.first!],
                            favoriteSongs: [data.first!.albums!.first!.songs.first!],
                            recentlyAdded: nil,
-                           /*isArtistOwner: true,*/
                            artist: data.first!
     )
     

@@ -15,11 +15,11 @@ struct User: Codable {
     var name: String
     var email: String
     var profilePictureData: Data?
+    var songListData: [Song]
     var favoriteArtists: [Artist]?
     var favoriteAlbums: [Album]?
     var favoriteSongs: [Song]?
     var recentlyAdded: [Album]?
-//    var isArtistOwner: Bool
     var artist: Artist?
     
     
