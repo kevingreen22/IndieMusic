@@ -13,7 +13,6 @@ class CurrentlyPlayingViewModel: ObservableObject {
     @AppStorage("currentSongIndex") var currentSongIndex: Int = 0
     @State private var delegate = AVDelegate()
     
-//    @Published var songListData: [Song] = [] // = MockData.Songs()
     @Published var audioPlayer = AVAudioPlayer()
     @Published var albumImage = UIImage(systemName: "photo")!
     @Published var playState: SwimplyPlayIndicator.AudioState = .stop
@@ -143,8 +142,8 @@ class CurrentlyPlayingViewModel: ObservableObject {
     
     
     
-    func addSongToUserSongList(vm: ViewModel, song: Song) {
-        vm.user.songListData.append(song)
+    func addSongToUserSongList(user: User, song: Song) {
+        user.songListData.append(song)
         currentSongIndex += 1
     }
     

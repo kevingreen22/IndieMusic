@@ -134,7 +134,7 @@ struct SongListCell: View {
             }
         }
         .highPriorityGesture(
-            CellTapped(cpVM: _cpVM, song: song, selectedSongCell: $selectedSongCell)
+            CellTapped(vm: _vm, cpVM: _cpVM, song: song, selectedSongCell: $selectedSongCell)
         )
         
     }
@@ -153,7 +153,7 @@ fileprivate struct CellTapped: Gesture {
                 if song == selectedSongCell {
                     cpVM.playPauseSong()
                     cpVM.playState = .play
-                    cpVM.addSongToUserSongList(vm: vm, song: song)
+                    cpVM.addSongToUserSongList(user: vm.user, song: song)
                 }
             }
     }
