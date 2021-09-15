@@ -32,12 +32,17 @@ struct ExploreView: View {
             ScrollView {
                 SearchBar(text: $vm.searchText).padding(.vertical)
                 
-                ForEach(exploreVM.songs, id: \.self) { song in
-                    Text(song.title)
+                if !exploreVM.songs.isEmpty {
+                    ForEach(exploreVM.songs, id: \.self) { song in
+                        Text(song.title)
+                    }
+                } else {
+                    Text("Nothing to Explore")
+                        .font(.largeTitle)
                 }
-                .onAppear {
-                    exploreVM.getSongs()
-                }
+                
+                
+                
                 
 //                LazyHGrid(rows: rows) {
 //                    ForEach(exploreVM.genreCells, id: \.self) { cell in
@@ -56,6 +61,9 @@ struct ExploreView: View {
             }
         }
         
+        .onAppear {
+            exploreVM.getSongs()
+        }
         
     }
 }

@@ -24,14 +24,15 @@ struct IndieMusicApp: App {
                 .environmentObject(vm)
                 .environmentObject(cpVM)
                 .onAppear {
-                    if !AuthManager.shared.isSignedIn {
-                        vm.showSigninView = true
-                    } else {
+                    if AuthManager.shared.isSignedIn {
                         vm.cacheUser { success in
                             if success {
+                                print("user cached")
                                 cpVM.initialize(with: vm.user)
-                            }
+                            } else { print("user NOT cached") }
                         }
+                    } else {
+                        vm.showSigninView = true
                     }
                 }
                 .fullScreenCover(isPresented: $vm.showSigninView) {

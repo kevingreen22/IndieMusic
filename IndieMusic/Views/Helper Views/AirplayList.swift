@@ -9,8 +9,9 @@ import SwiftUI
 import AVKit
 import MediaPlayer
 
-
+/// Must add frame modifier with width and height of 40.
 struct AirPlayButton: UIViewControllerRepresentable {
+    
     func makeUIViewController(context: Context) -> UIViewController {
         return AirPlayViewController()
     }
@@ -23,13 +24,13 @@ struct AirPlayButton: UIViewControllerRepresentable {
 
 
 class AirPlayViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let isDarkMode = self.traitCollection.userInterfaceStyle == .dark
 
         let button = UIButton()
-        let boldConfig = UIImage.SymbolConfiguration(scale: .medium)
+        let boldConfig = UIImage.SymbolConfiguration(scale: .large)
         let boldSearch = UIImage(systemName: "airplayaudio", withConfiguration: boldConfig)
 
         button.setImage(boldSearch, for: .normal)

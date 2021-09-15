@@ -172,8 +172,9 @@ fileprivate struct OptionButtons: View {
                 }
             }, label: {
                 Image(systemName: "quote.bubble.fill")
-                    .foregroundColor(.white)
+                    .foregroundColor(!cpVM.song.hasLyrics ? .gray : .white)
                     .opacity(0.6)
+                    .font(.system(size: 27))
             }).disabled(!cpVM.song.hasLyrics)
             
             Spacer()
@@ -191,6 +192,7 @@ fileprivate struct OptionButtons: View {
                 Image(systemName: "ellipsis.circle")
                     .foregroundColor(.white)
                     .opacity(0.6)
+                    .font(.system(size: 27))
             })
             
             Spacer()

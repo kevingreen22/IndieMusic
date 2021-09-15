@@ -191,8 +191,11 @@ class Song: Hashable, Equatable, Codable  {
     }
     
     var hasLyrics: Bool {
-        guard lyrics != nil else { return false }
-        return true
+        if lyrics == "" || lyrics == nil {
+            return false
+        } else {
+            return true
+        }
     }
     
     func getLyrics() -> String {
