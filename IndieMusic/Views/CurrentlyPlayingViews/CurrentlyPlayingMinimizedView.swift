@@ -11,6 +11,7 @@ import AVKit
 struct CurrentlyPlayingMinimizedView: View {
     let album: Album
     let song: Song
+    @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
     
@@ -45,7 +46,7 @@ struct CurrentlyPlayingMinimizedView: View {
                 Spacer()
                 
                 Button(action: {
-                    cpVM.playNextSong()
+                    cpVM.playNextSong(user: vm.user)
                 }, label: {
                     Image(systemName: "forward.fill")
                         .foregroundColor(.black)

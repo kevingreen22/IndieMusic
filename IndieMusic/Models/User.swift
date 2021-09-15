@@ -11,7 +11,7 @@
 
 import Foundation
 
-struct User: Codable {
+class User: Codable {
     var name: String
     var email: String
     var profilePictureData: Data?
@@ -21,6 +21,18 @@ struct User: Codable {
     var favoriteSongs: [Song]?
     var recentlyAdded: [Album]?
     var artist: Artist?
+    
+    init(name: String, email: String, profilePictureData: Data?, songListData: [Song], favoriteArtists: [Artist]?, favoriteAlbums: [Album]?, favoriteSongs: [Song]?, recentlyAdded: [Album]?, artist: Artist?) {
+        self.name = name
+        self.email = email
+        self.profilePictureData = profilePictureData
+        self.songListData = songListData
+        self.favoriteArtists = favoriteArtists
+        self.favoriteAlbums = favoriteAlbums
+        self.favoriteSongs = favoriteSongs
+        self.recentlyAdded = recentlyAdded
+        self.artist = artist
+    }
     
     
     func getOwnerAlbums() -> [Album] {

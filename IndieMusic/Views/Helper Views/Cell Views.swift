@@ -153,7 +153,7 @@ fileprivate struct CellTapped: Gesture {
                 if song == selectedSongCell {
                     cpVM.playPauseSong()
                     cpVM.playState = .play
-                    vm.user.songListData.append(song)
+                    cpVM.addSongToUserSongList(vm: vm, song: song)
                 }
             }
     }

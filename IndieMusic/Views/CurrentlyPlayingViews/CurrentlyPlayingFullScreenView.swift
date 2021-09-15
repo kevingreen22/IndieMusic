@@ -96,12 +96,13 @@ fileprivate struct BackgroundGradient: View {
 }
 
 fileprivate struct PlayControlButtons: View {
+    @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
     var body: some View {
         HStack {
             Button(action: {
-                cpVM.playPreviousSong()
+                cpVM.playPreviousSong(user: vm.user)
             }, label: {
                 Image(systemName: "backward.fill")
                     .scaleEffect(2.3)
@@ -124,7 +125,7 @@ fileprivate struct PlayControlButtons: View {
             Spacer()
             
             Button(action: {
-                cpVM.playNextSong()
+                cpVM.playNextSong(user: vm.user)
             }, label: {
                 Image(systemName: "forward.fill")
                     .scaleEffect(2.3)

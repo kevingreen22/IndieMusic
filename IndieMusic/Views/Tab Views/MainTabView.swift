@@ -67,7 +67,7 @@ struct MainTabView: View {
         .edgesIgnoringSafeArea(.top)
         
         .onAppear {
-            cpVM.preparePlayer()
+            cpVM.preparePlayer(user: vm.user)
             
 //            if vm.isOpeningApp && !IAPManager.shared.isPremium() && AuthManager.shared.isSignedIn { vm.showPayWall.toggle() }
         }

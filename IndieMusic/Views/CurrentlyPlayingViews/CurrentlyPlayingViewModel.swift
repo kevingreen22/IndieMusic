@@ -13,7 +13,7 @@ class CurrentlyPlayingViewModel: ObservableObject {
     @AppStorage("currentSongIndex") var currentSongIndex: Int = 0
     @State private var delegate = AVDelegate()
     
-    @Published var songListData: [Song] = [] // = MockData.Songs()
+//    @Published var songListData: [Song] = [] // = MockData.Songs()
     @Published var audioPlayer = AVAudioPlayer()
     @Published var albumImage = UIImage(systemName: "photo")!
     @Published var playState: SwimplyPlayIndicator.AudioState = .stop
@@ -29,8 +29,8 @@ class CurrentlyPlayingViewModel: ObservableObject {
     
     
     
-    func preparePlayer() {
-        guard let songURL = prepareInfoForSong() else { return }
+    func preparePlayer(user: User) {
+        guard let songURL = prepareInfoForSong(user: user) else { return }
         
         do {
             try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
@@ -59,43 +59,32 @@ class CurrentlyPlayingViewModel: ObservableObject {
     
     
     /// Prepares song info for playing. i.e. album artwork, stream url, etc.
-    fileprivate func prepareInfoForSong() -> URL? {
-        let song = songListData[currentSongIndex]
-        
-        // for pre-cloud-storage testing
-//        guard let songUrl = Bundle.main.path(forResource: song.url.absoluteString, ofType: "mp3") else { return nil }
-        
-        StorageManager.shared.downloadAlbumArtwork(for: song.albumID) { image in
-            guard let img = image else { return }
-            self.dominantColors = DominantColors.getDominantColors(image: img)
-            DispatchQueue.main.async {
-                self.albumImage = img
+    fileprivate func prepareInfoForSong(user: User) -> URL? {
+        if user.songListData.count > 0 {
+            let song = user.songListData[currentSongIndex]
+            
+            // for pre-cloud-storage testing
+            //        guard let songUrl = Bundle.main.path(forResource: song.url.absoluteString, ofType: "mp3") else { return nil }
+            
+            StorageManager.shared.downloadAlbumArtwork(for: song.albumID) { image in
+                guard let img = image else { return }
+                self.dominantColors = DominantColors.getDominantColors(image: img)
+                DispatchQueue.main.async {
+                    self.albumImage = img
+                }
             }
-        }
-        
-        return song.url
-    }
-    
-    
-    
-    
-    func changeSong() {
-        guard let songURL = prepareInfoForSong() else { return }
-        
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
-            audioPlayer = try AVAudioPlayer(contentsOf: songURL)
-            audioPlayer.delegate = delegate
-            audioPlayer.prepareToPlay()
-            trackPlaying = true
-            trackEnded = false
-            currentPlayTrackWidth = 0
-            audioPlayer.play()
-        } catch {
-            print(error)
+            
+            return song.url
+        } else {
+            return nil
         }
     }
-
+    
+    
+    
+    
+    
+    
     
     func playPauseSong() {
         if audioPlayer.isPlaying {
@@ -119,19 +108,44 @@ class CurrentlyPlayingViewModel: ObservableObject {
     }
     
     
-    func playNextSong() {
-        if songListData.count - 1 < currentSongIndex {
+    func playNextSong(user: User) {
+        if user.songListData.count - 1 < currentSongIndex {
             currentSongIndex += 1
-            changeSong()
+            changeSong(user: user)
         }
     }
     
     
-    func playPreviousSong() {
+    func playPreviousSong(user: User) {
         if currentSongIndex > 0 {
             currentSongIndex -= 1
         }
-        changeSong()
+        changeSong(user: user)
+    }
+    
+    
+    fileprivate func changeSong(user: User) {
+        guard let songURL = prepareInfoForSong(user: user) else { return }
+        
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
+            audioPlayer = try AVAudioPlayer(contentsOf: songURL)
+            audioPlayer.delegate = delegate
+            audioPlayer.prepareToPlay()
+            trackPlaying = true
+            trackEnded = false
+            currentPlayTrackWidth = 0
+            audioPlayer.play()
+        } catch {
+            print(error)
+        }
+    }
+    
+    
+    
+    func addSongToUserSongList(vm: ViewModel, song: Song) {
+        vm.user.songListData.append(song)
+        currentSongIndex += 1
     }
     
     
