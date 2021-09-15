@@ -66,9 +66,7 @@ struct MainTabView: View {
         } // End ZStack
         .edgesIgnoringSafeArea(.top)
         
-        .onAppear {
-            cpVM.preparePlayer(user: vm.user)
-            
+        .onAppear {            
 //            if vm.isOpeningApp && !IAPManager.shared.isPremium() && AuthManager.shared.isSignedIn { vm.showPayWall.toggle() }
         }
         

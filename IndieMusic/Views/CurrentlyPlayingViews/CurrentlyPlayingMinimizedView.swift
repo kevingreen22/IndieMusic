@@ -36,10 +36,10 @@ struct CurrentlyPlayingMinimizedView: View {
                 Button(action: {
                     cpVM.playPauseSong()
                 }, label: {
-                    Image(systemName: cpVM.trackPlaying ? "pause.fill" : "play.fill")
+                    Image(systemName: cpVM.trackPlaying && !cpVM.trackEnded ? "pause.fill" : "play.fill")
                         .foregroundColor(.black)
                         .scaleEffect(1.4)
-                })
+                }).disabled(cpVM.song.url.path != "")
                 
                 Spacer()
                 
@@ -49,7 +49,9 @@ struct CurrentlyPlayingMinimizedView: View {
                     Image(systemName: "forward.fill")
                         .foregroundColor(.black)
                         .scaleEffect(1.4)
-                }).padding(.trailing)
+                })
+                .padding(.trailing)
+                .disabled(cpVM.song.url.path != "")
                 
             }
             .padding(.horizontal)
@@ -70,9 +72,6 @@ struct CurrentlyPlayingMinimizedView: View {
                 .environmentObject(cpVM)
         })
         
-        .onAppear {
-            cpVM.initialize(with: vm.user)
-        }
     }
 }
 

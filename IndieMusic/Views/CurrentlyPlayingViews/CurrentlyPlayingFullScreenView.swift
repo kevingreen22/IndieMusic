@@ -57,10 +57,6 @@ struct CurrentlyPlayingFullScreen: View {
                 
             }
         }
-        
-        .onAppear {
-            cpVM.initialize(with: vm.user)
-        }
     }
 }
 
@@ -112,7 +108,7 @@ fileprivate struct PlayControlButtons: View {
                     .padding(.leading, 40)
                     .foregroundColor(.white)
                     .opacity(0.7)
-            })
+            }).disabled(cpVM.song.url.path != "")
             
             Spacer()
             
@@ -123,7 +119,7 @@ fileprivate struct PlayControlButtons: View {
                     .scaleEffect(4)
                     .foregroundColor(.white)
                     .opacity(0.7)
-            })
+            }).disabled(cpVM.song.url.path != "")
             
             Spacer()
             
@@ -135,7 +131,7 @@ fileprivate struct PlayControlButtons: View {
                     .padding(.trailing, 40)
                     .foregroundColor(.white)
                     .opacity(0.7)
-            })
+            }).disabled(cpVM.song.url.path != "")
             
         }.padding().padding(.top, 20)
     }
@@ -163,7 +159,6 @@ fileprivate struct VolumeControl: View {
 }
 
 fileprivate struct OptionButtons: View {
-//    let song: Song
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
     var body: some View {

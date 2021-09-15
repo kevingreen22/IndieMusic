@@ -40,6 +40,8 @@ class CurrentlyPlayingViewModel: ObservableObject {
                 self.album = album!
             })
         }
+        
+        preparePlayer(user: user)
     }
     
     

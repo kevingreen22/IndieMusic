@@ -40,11 +40,15 @@ class ViewModel: ObservableObject {
     }
     
     
-    public func cacheUser() {
-        guard let email = UserDefaults.standard.string(forKey: "email") else { return }
+    public func cacheUser(completion: @escaping (Bool) -> Void) {
+        guard let email = UserDefaults.standard.string(forKey: "email") else {
+            completion(false)
+            return
+        }
         DatabaseManger.shared.getUser(email: email) { user in
             guard let user = user else { return }
             self.user = user
+            completion(true)
         }
     }
     

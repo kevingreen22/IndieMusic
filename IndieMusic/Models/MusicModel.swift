@@ -181,8 +181,8 @@ class Song: Hashable, Equatable, Codable  {
     
     init() {
         self.id = UUID().uuidString
-        self.title = "Unknown Title"
-        self.genre = "Unknown Genre"
+        self.title = ""
+        self.genre = ""
         self.lyrics = ""
         self.artistID = ""
         self.albumID = ""

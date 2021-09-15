@@ -54,7 +54,7 @@ struct CreateAccountView: View {
                         Button(action: {
                             createAccountVM.createAccount(completion: { success in
                                 if success {
-                                    vm.cacheUser()
+                                    vm.cacheUser(completion:  { _ in })
                                     self.presentationMode.wrappedValue.dismiss()
                                 } else {
                                     self.vm.alertItem = MyStandardAlertContext.createAccontFailedAlert

@@ -9,12 +9,27 @@ import SwiftUI
 
 class ExploreViewModel: ObservableObject {
     
-    var genreCells: [ExploreCellModel] = MockData.exploreData //[]
-    var genreOfArtists: [String : [Artist]] = [:]
+    @Published var genreCells: [ExploreCellModel] = MockData.exploreData //[]
+    @Published var genreOfArtists: [String : [Artist]] = [:]
     
-    var artistCells: [ExploreCellModel] = []
+    @Published var artistCells: [ExploreCellModel] = []
     
-    var albumCells: [ExploreCellModel] = []
+    @Published var albumCells: [ExploreCellModel] = []
+    
+    
+    
+    
+    @Published var songs: [Song] = []
+    
+    func getSongs() {
+        DatabaseManger.shared.getAllSongs { songs in
+            self.songs = songs
+        }
+    }
+    
+    
+    
+    
     
     func setAllGenres() {
         DatabaseManger.shared.getAllArtists { artists in

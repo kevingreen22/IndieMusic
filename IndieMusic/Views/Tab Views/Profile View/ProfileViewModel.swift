@@ -31,7 +31,7 @@ class ProfileViewModel: ObservableObject {
                 DatabaseManger.shared.updateProfilePhotoData(email: email, image: image) { updated in
                     guard updated else { return }
                     DispatchQueue.main.async {
-                        self.vm.cacheUser()
+                        self.vm.cacheUser(completion: { _ in })
                     }
                     
                     // sets the image cache in the user model

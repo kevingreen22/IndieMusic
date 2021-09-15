@@ -32,26 +32,30 @@ struct ExploreView: View {
             ScrollView {
                 SearchBar(text: $vm.searchText).padding(.vertical)
                 
-                LazyHGrid(rows: rows) {
-                    ForEach(exploreVM.genreCells, id: \.self) { cell in
-                        NavigationLink(
-                            destination: ArtistsView(artists: exploreVM.genreOfArtists[cell.genre]!)
-                                .environmentObject(vm),
-                            label: {
-                                ExploreViewCell(content: cell)
-                                    .environmentObject(vm)
-                            })
-                    }
+                ForEach(exploreVM.songs, id: \.self) { song in
+                    Text(song.title)
                 }
+                .onAppear {
+                    exploreVM.getSongs()
+                }
+                
+//                LazyHGrid(rows: rows) {
+//                    ForEach(exploreVM.genreCells, id: \.self) { cell in
+//                        NavigationLink(
+//                            destination: ArtistsView(artists: exploreVM.genreOfArtists[cell.genre]!)
+//                                .environmentObject(vm),
+//                            label: {
+//                                ExploreViewCell(content: cell)
+//                                    .environmentObject(vm)
+//                            })
+//                    }
+//                }
                 
                 
 
             }
         }
         
-        .onAppear {
-            exploreVM.setAllGenres()
-        }
         
     }
 }
