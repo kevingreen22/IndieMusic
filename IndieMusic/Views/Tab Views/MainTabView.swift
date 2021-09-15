@@ -58,7 +58,7 @@ struct MainTabView: View {
             .accentColor(.mainApp)
             .transition(.move(edge: .bottom))
             
-            CurrentlyPlayingMinimizedView(album: MockData.Albums().first!, song: MockData.Songs().first!)
+            CurrentlyPlayingMinimizedView()
                 .environmentObject(vm)
                 .environmentObject(cpVM)
                 .offset(y: ((UIScreen.main.bounds.height/2) - UITabBarController().tabBar.frame.height - ViewModel.Constants.currentlyPlayingMinimizedViewHeight + 9))

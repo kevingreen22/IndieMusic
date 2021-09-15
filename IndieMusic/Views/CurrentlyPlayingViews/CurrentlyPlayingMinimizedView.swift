@@ -65,7 +65,8 @@ struct CurrentlyPlayingMinimizedView: View {
         }
         
         .fullScreenCover(isPresented: $cpVM.showFullScreenCover, content: {
-            CurrentlyPlayingFullScreen(album: cpVM.album, song: cpVM.song)
+            CurrentlyPlayingFullScreen()
+                .environmentObject(vm)
                 .environmentObject(cpVM)
         })
         
@@ -82,9 +83,6 @@ struct CurrentlyPlayingMinimizedView: View {
 
 struct CurrentlyPlayingView_Previews: PreviewProvider {
     static var previews: some View {
-        let album = MockData.Albums().first!
-        let song = MockData.Songs().first!
-        
         Group {
             CurrentlyPlayingMinimizedView()
                 .environmentObject(CurrentlyPlayingViewModel())                

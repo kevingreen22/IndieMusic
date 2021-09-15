@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct CurrentlyPlayingFullScreen: View {
-    let album: Album
-    let song: Song
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
     var body: some View {
@@ -27,18 +26,18 @@ struct CurrentlyPlayingFullScreen: View {
                 if !cpVM.showingLyrics {
                     AlbumArtwork()
                 } else {
-                    ShowingLyricsView(album: album, song: song)
+                    ShowingLyricsView()
                         .environmentObject(cpVM)
                 }
                 
                 // Song info
                 if !cpVM.showingLyrics {
-                    SongInfo(album: album, song: song)
+                    SongInfo()
                         .environmentObject(cpVM)
                 }
                 
                 // Track timeline
-                TrackTimeline(album: album, song: song)
+                TrackTimeline()
                     .environmentObject(cpVM)
                 
                 // Play Control buttons
@@ -51,12 +50,16 @@ struct CurrentlyPlayingFullScreen: View {
                 VolumeControl()
 
                 // Option buttons
-                OptionButtons(song: song)
+                OptionButtons()
                     .environmentObject(cpVM)
                 
                 Spacer()
                 
             }
+        }
+        
+        .onAppear {
+            cpVM.initSongAlbum(user: vm.user)
         }
     }
 }
@@ -160,7 +163,7 @@ fileprivate struct VolumeControl: View {
 }
 
 fileprivate struct OptionButtons: View {
-    let song: Song
+//    let song: Song
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
     var body: some View {
@@ -176,7 +179,7 @@ fileprivate struct OptionButtons: View {
                 Image(systemName: "quote.bubble.fill")
                     .foregroundColor(.white)
                     .opacity(0.6)
-            }).disabled(!song.hasLyrics)
+            }).disabled(!cpVM.song.hasLyrics)
             
             Spacer()
             
@@ -207,20 +210,18 @@ fileprivate struct OptionButtons: View {
 }
 
 fileprivate struct SongInfo: View {
-    let album: Album
-    let song: Song
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(song.title)
+                Text(cpVM.song.title)
                     .font(.title3)
                     .bold()
                     .foregroundColor(.white)
                     .opacity(0.7)
                 
-                Text(album.artistName)
+                Text(cpVM.album.artistName)
                     .fontWeight(.medium)
                     .foregroundColor(.white)
                     .opacity(0.5)
@@ -232,8 +233,6 @@ fileprivate struct SongInfo: View {
 }
 
 fileprivate struct TrackTimeline: View {
-    let album: Album
-    let song: Song
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
     var body: some View {
@@ -279,8 +278,6 @@ fileprivate struct TrackTimeline: View {
 }
 
 fileprivate struct ShowingLyricsView: View {
-    let album: Album
-    let song: Song
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
     var body: some View {
@@ -293,14 +290,14 @@ fileprivate struct ShowingLyricsView: View {
                 
                 VStack(alignment: .leading) {
 //                    MarqueTextView(text: song.title)
-                    Text(song.title)
+                    Text(cpVM.song.title)
                         .font(.title3)
                         .bold()
                         .foregroundColor(.white)
                         .opacity(0.7)
                     
 //                    MarqueTextView(text: song.artistName)
-                    Text(album.artistName)
+                    Text(cpVM.album.artistName)
                         .fontWeight(.medium)
                         .foregroundColor(.white)
                         .opacity(0.5)
@@ -309,7 +306,7 @@ fileprivate struct ShowingLyricsView: View {
             }.padding(.leading)
             
             ScrollView {
-                Text(song.getLyrics())
+                Text(cpVM.song.getLyrics())
                     .lineLimit(nil)
                     .font(.title2)
                     .padding(.horizontal)
@@ -323,6 +320,7 @@ fileprivate struct ShowingLyricsView: View {
         .transition(.move(edge: .top))
     }
 }
+
 
 fileprivate struct AlbumArtwork: View {
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
@@ -346,10 +344,8 @@ fileprivate struct AlbumArtwork: View {
 
 struct CurrentlyPlayingFullScreenView_Previews: PreviewProvider {
     static var previews: some View {
-        let album = MockData.Albums().first!
-        let song = MockData.Songs().first!
-        
-        CurrentlyPlayingFullScreen(album: album, song: song)
+        CurrentlyPlayingFullScreen()
+            .environmentObject(ViewModel())
             .environmentObject(CurrentlyPlayingViewModel())
     }
 }
