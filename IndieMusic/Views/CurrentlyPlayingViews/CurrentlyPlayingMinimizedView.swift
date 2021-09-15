@@ -9,8 +9,6 @@ import SwiftUI
 import AVKit
 
 struct CurrentlyPlayingMinimizedView: View {
-    let album: Album
-    let song: Song
     @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
@@ -29,7 +27,7 @@ struct CurrentlyPlayingMinimizedView: View {
                     .cornerRadius(5)
                 
 //                MarqueTextView(text: song.title)
-                Text(song.title)
+                Text(cpVM.song.title)
                     .truncationMode(.tail)
                 
                 Spacer()
@@ -67,9 +65,13 @@ struct CurrentlyPlayingMinimizedView: View {
         }
         
         .fullScreenCover(isPresented: $cpVM.showFullScreenCover, content: {
-            CurrentlyPlayingFullScreen(album: album, song: song)
+            CurrentlyPlayingFullScreen(album: cpVM.album, song: cpVM.song)
                 .environmentObject(cpVM)
         })
+        
+        .onAppear {
+            cpVM.initSongAlbum(user: vm.user)
+        }
     }
 }
 
@@ -84,7 +86,7 @@ struct CurrentlyPlayingView_Previews: PreviewProvider {
         let song = MockData.Songs().first!
         
         Group {
-            CurrentlyPlayingMinimizedView(album: album, song: song)
+            CurrentlyPlayingMinimizedView()
                 .environmentObject(CurrentlyPlayingViewModel())                
         }
     }

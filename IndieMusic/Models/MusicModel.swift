@@ -179,6 +179,17 @@ class Song: Hashable, Equatable, Codable  {
         self.timeStamp = Date().timeIntervalSince1970
     }
     
+    init() {
+        self.id = UUID().uuidString
+        self.title = "Unknown Title"
+        self.genre = "Unknown Genre"
+        self.lyrics = ""
+        self.artistID = ""
+        self.albumID = ""
+        self.url = URL(string: "")!
+        self.timeStamp = Date().timeIntervalSince1970
+    }
+    
     var hasLyrics: Bool {
         guard lyrics != nil else { return false }
         return true

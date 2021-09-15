@@ -13,6 +13,8 @@ class CurrentlyPlayingViewModel: ObservableObject {
     @AppStorage("currentSongIndex") var currentSongIndex: Int = 0
     @State private var delegate = AVDelegate()
     
+    var album: Album = Album()
+    var song: Song = Song()
     @Published var audioPlayer = AVAudioPlayer()
     @Published var albumImage = UIImage(systemName: "photo")!
     @Published var playState: SwimplyPlayIndicator.AudioState = .stop
@@ -25,6 +27,20 @@ class CurrentlyPlayingViewModel: ObservableObject {
     @Published var showFullScreenCover: Bool = false
     
     var dominantColors: (UIColor, UIColor) = (UIColor.gray, UIColor.black)
+    
+    
+    
+    func initSongAlbum(user: User) {
+        if !user.songListData.isEmpty {
+            let song = user.songListData[currentSongIndex]
+            
+            DatabaseManger.shared.getAlbumWith(id: song.albumID, completion: { album in
+                guard album != nil else { return }
+                self.song = song
+                self.album = album!
+            })
+        }
+    }
     
     
     
@@ -56,10 +72,9 @@ class CurrentlyPlayingViewModel: ObservableObject {
     }
     
     
-    
     /// Prepares song info for playing. i.e. album artwork, stream url, etc.
     fileprivate func prepareInfoForSong(user: User) -> URL? {
-        if user.songListData.count > 0 {
+        if !user.songListData.isEmpty {
             let song = user.songListData[currentSongIndex]
             
             // for pre-cloud-storage testing
@@ -78,11 +93,6 @@ class CurrentlyPlayingViewModel: ObservableObject {
             return nil
         }
     }
-    
-    
-    
-    
-    
     
     
     func playPauseSong() {
@@ -139,7 +149,6 @@ class CurrentlyPlayingViewModel: ObservableObject {
             print(error)
         }
     }
-    
     
     
     func addSongToUserSongList(user: User, song: Song) {
