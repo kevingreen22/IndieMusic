@@ -8,8 +8,6 @@
 import Foundation
 import SwiftUI
 
-
-
 struct ExploreCellModel: Hashable {
     let id: String = UUID().uuidString
     let imageName: String?

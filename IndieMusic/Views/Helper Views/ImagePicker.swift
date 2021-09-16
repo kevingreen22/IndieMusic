@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct ImagePicker: UIViewControllerRepresentable {
-    @Environment(\.presentationMode) var presentationMode
     @Binding var selectedImage: UIImage?
+    @Binding var finishedSelecting: Bool?
     var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    @Environment(\.presentationMode) var presentationMode
     
     func makeUIViewController(context: Context) -> some UIImagePickerController {
         let picker = UIImagePickerController()
@@ -42,9 +43,15 @@ struct ImagePicker: UIViewControllerRepresentable {
             if let image = info[.editedImage] as? UIImage {
                 parent.selectedImage = image
             }
-            
+            parent.finishedSelecting = true
             parent.presentationMode.wrappedValue.dismiss()
             
+        }
+        
+        
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            parent.finishedSelecting = true
+            parent.presentationMode.wrappedValue.dismiss()
         }
     }
     

@@ -159,7 +159,7 @@ fileprivate struct ProfileViewHeader: View {
                 guard let image = profileVM.selectedImage else { return }
                 profileVM.uploadUserProfilePicture(email: profileVM.email, image: image)
             }, content: {
-                ImagePicker(selectedImage: $profileVM.selectedImage, sourceType: profileVM.sourceType)
+                ImagePicker(selectedImage: $profileVM.selectedImage, finishedSelecting: .constant(nil), sourceType: profileVM.sourceType)
             })
             
             .actionSheet(isPresented: $profileVM.showImagePickerPopover, content: {

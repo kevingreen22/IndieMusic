@@ -16,56 +16,59 @@ struct UploadSongView: View {
     @StateObject var uploadVM = UploadSongViewModel()
     
     
-    
     var body: some View {
-        VStack {
-            Image(uiImage: (uploadVM.selectedImage ?? UIImage(systemName: "photo"))!)
-                .resizable()
-                .frame(maxWidth: 300, maxHeight: 300)
-                .aspectRatio(contentMode: .fit)
-                .onTapGesture {
-                    uploadVM.showImagePicker.toggle()
-                }
-            
-            List {
-//                Picker("", selection: $uploadVM.artist) {
-//                    // get artist(s) from user
-////                    ForEach(user.artist) { artist in
-////                        Text(artist)
-////                    }
-//                }
-                
-                TextField("Song Title", text: $uploadVM.songTitle)
-                Spacer()
-                Picker("Genre", selection: $uploadVM.songGenre) {
-                    ForEach(Genres.names, id: \.self) { genre in
-                        Text(genre)
-                    }
-                }
-                Spacer()
-                TextField("Lyrics", text: $uploadVM.lyrics)
-                Spacer()
-                Picker("Album", selection: $uploadVM.album) {
-                    // get all albums for artist picked above
-                    ForEach(vm.user.getOwnerAlbums(), id: \.self) { album in
-                        HStack {
-                            Text(album.title)
+        ZStack {
+            NavigationView {
+                Form {
+                    TextField("Song Title", text: $uploadVM.songTitle)
+                        .font(.system(size: 24))
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom)
+                    
+                    Picker("Album", selection: $uploadVM.album) {
+                        // get all albums for artist picked above
+                        ForEach(/*vm.user.getOwnerAlbums()*/ MockData.mockAlbums, id: \.self) { album in
+                            HStack {
+                                Text(album)
+                            }
                         }
                     }
-                }.frame(height: 100)
+                    
+                    Picker("Genre", selection: $uploadVM.songGenre) {
+                        ForEach(Genres.names, id: \.self) { genre in
+                            Text(genre)
+                        }
+                    }
+                    
+                    TextField("Lyrics", text: $uploadVM.lyrics)
+                    
+                    
+                    
+                } // End Form
+                
+                .navigationBarTitle(Text("Upload Song"), displayMode: .inline)
             }
             
-
-            Button(action: {
-                // upload song
-                uploadVM.uploadSong()
-            }, label: {
-                Text("Upload")
-            })
-            .frame(width: 300, height: 50)
-            .foregroundColor(.white)
-            .background(Color.green)
-            .cornerRadius(8)
+            VStack {
+                Spacer()
+                Rectangle()
+                    .background(Color.black).opacity(0.05)
+                    .blur(radius: 3)
+                    .frame(height: 100)
+                    .ignoresSafeArea(edges: .bottom)
+                    .overlay(
+                        Button(action: {
+                            // upload song
+                            uploadVM.uploadSong()
+                        }, label: {
+                            Text("Upload")
+                        })
+                        .frame(width: 300, height: 50)
+                        .foregroundColor(.white)
+                        .background(Color.green)
+                        .cornerRadius(8)
+                    )
+            }.ignoresSafeArea(edges: .bottom)
         }
         
         .alert(item: $vm.alertItem, content: { alertItem in
@@ -73,7 +76,7 @@ struct UploadSongView: View {
         }) // End alert
         
         .sheet(isPresented: $uploadVM.showImagePicker) {
-            ImagePicker(selectedImage: $uploadVM.selectedImage)
+            ImagePicker(selectedImage: $uploadVM.selectedImage, finishedSelecting: .constant(nil))
         }
         
     }

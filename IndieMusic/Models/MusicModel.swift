@@ -212,5 +212,5 @@ class Song: Hashable, Equatable, Codable  {
 
 
 struct Genres {
-    static let names = ["Metal", "Blues", "R&B", "Hip Hop", "Rap", "Other"]
+    static var names = ["Metal", "Blues", "R & B", "Hip Hop", "Rap", "Other"]
 }
