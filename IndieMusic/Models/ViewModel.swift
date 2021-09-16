@@ -45,7 +45,7 @@ class ViewModel: ObservableObject {
             completion(false)
             return
         }
-        DatabaseManger.shared.getUser(email: email) { user in
+        DatabaseManger.shared.fetchUser(email: email) { user in
             guard let user = user else { return }
             self.user = user
             completion(true)

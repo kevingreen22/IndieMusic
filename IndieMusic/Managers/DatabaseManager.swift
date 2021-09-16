@@ -27,19 +27,19 @@ final class DatabaseManger {
     public func insert(user: User, completion: @escaping (Bool) -> Void) {
         let documentID = user.email.underscoredDotAt()
         do {
-        try database
-            .collection(ContainerNames.users)
-            .document(documentID)
-            .setData(from: user) { error in
-                completion(error == nil)
-            }
+            try database
+                .collection(ContainerNames.users)
+                .document(documentID)
+                .setData(from: user) { error in
+                    completion(error == nil)
+                }
         } catch let error {
             print("Error writing \"user\" to Firestore: \(error.localizedDescription)")
         }
     }
     
     
-    public func getUser(email: String, completion: @escaping (User?) -> Void) {
+    public func fetchUser(email: String, completion: @escaping (User?) -> Void) {
         let documentID = email.underscoredDotAt()
         var _user: User?
         database
@@ -72,14 +72,15 @@ final class DatabaseManger {
     }
     
         
+    // THIS DOESNT WORK BECAUSE THE IMAGE DATA IS TO LARGE FOR THE DATABASE
     public func updateProfilePhotoData(email: String, image: UIImage, completion: @escaping (Bool) -> Void) {
-        let id = email.underscoredDotAt()
+        let documentID = email.underscoredDotAt()
         
         guard let photoData = image.pngData() else { return } 
         
         let dbRef = database
             .collection(ContainerNames.users)
-            .document(id)
+            .document(documentID)
         
         dbRef.updateData(["profile_photo" : photoData], completion: { error in
             guard error == nil else  {
