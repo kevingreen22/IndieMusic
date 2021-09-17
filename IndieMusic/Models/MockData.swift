@@ -13,6 +13,7 @@ class MockData {
     // MARK: User mock data
     static let user = User(name: "Kevin",
                            email: "Bbongrip@gmail.com",
+                           profilePictureURL: nil,
                            profilePictureData: nil,
                            songListData: [],
                            favoriteArtists: [data.first!],

@@ -27,9 +27,9 @@ struct UploadSongView: View {
                     
                     Picker("Album", selection: $uploadVM.album) {
                         // get all albums for artist picked above
-                        ForEach(/*vm.user.getOwnerAlbums()*/ MockData.mockAlbums, id: \.self) { album in
+                        ForEach(vm.user.getOwnerAlbums(), id: \.self) { album in
                             HStack {
-                                Text(album)
+                                Text(album.title)
                             }
                         }
                     }
@@ -41,12 +41,16 @@ struct UploadSongView: View {
                     }
                     
                     TextField("Lyrics", text: $uploadVM.lyrics)
+                        .frame(height: 200)
                     
                     
                     
                 } // End Form
                 
                 .navigationBarTitle(Text("Upload Song"), displayMode: .inline)
+                .navigationBarItems(leading: Button("Cancel") {
+                    presentationMode.wrappedValue.dismiss()
+                })
             }
             
             VStack {
@@ -59,7 +63,7 @@ struct UploadSongView: View {
                     .overlay(
                         Button(action: {
                             // upload song
-                            uploadVM.uploadSong()
+                            uploadVM.uploadSong(viewModel: vm)
                         }, label: {
                             Text("Upload")
                         })

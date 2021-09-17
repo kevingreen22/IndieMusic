@@ -44,7 +44,9 @@ struct MyAlertItem: Identifiable {
 /// Standart alerts that do not have an action attached.
 struct MyStandardAlertContext {
     
-    static let restoreFailedAlert: MyAlertItem = MyAlertItem(title: Text("Restore Purchace Failed"), message: Text("We were unable to restore the transaction"), primaryButton: .cancel(Text("Dismiss")))
+    static let generalErrorAlert: MyAlertItem = MyAlertItem(title: Text("Error"), message: Text("There was an error. Please try again."), primaryButton: .cancel(Text("Dismiss")))
+    
+    static let restoreFailedAlert: MyAlertItem = MyAlertItem(title: Text("Restore Purchace Failed"), message: Text("We were unable to restore the transaction."), primaryButton: .cancel(Text("Dismiss")))
     
     static let purchasedFailedAlert: MyAlertItem = MyAlertItem(title: Text("Purchased Failed"), message: Text("We were unable to complete the transaction. Please try again."), primaryButton: .cancel(Text("Dismiss")))
     
@@ -52,8 +54,12 @@ struct MyStandardAlertContext {
     
     static let signInFailed: MyAlertItem = MyAlertItem(title: Text("Sign in failed"), message: Text("The Email or password does NOT exist."), primaryButton: .default(Text("Dismiss")))
     
-    
     static let createOwnerArtistFailed: MyAlertItem = MyAlertItem(title: Text("Error creating Artist"), message: Text("Please try again."), primaryButton: .default(Text("Dismiss")))
+    
+    
+    static let infoIncomplete: MyAlertItem = MyAlertItem(title: Text("Info incomplete"), message: Text("All required info must be completed."), primaryButton: .default(Text("Dismiss")))
+    
+    static let createAlbumFailed: MyAlertItem = MyAlertItem(title: Text("Error creating Album"), message: Text("Please try again."), primaryButton: .default(Text("Dismiss")))
     
     
     
@@ -68,9 +74,10 @@ struct MyStandardAlertContext {
 
 
 
+
 struct MySongUploadAlertsContext {
         
-    static let noSongTitle = MyAlertItem(title: Text("You must include a song title."), primaryButton: .default(Text("Dismiss")))
+    static let songInfoIncomplete = MyAlertItem(title: Text("You must complete all song info."), primaryButton: .default(Text("Dismiss")))
         
     static let creatingURLError = MyAlertItem(title: Text("Problem creating song url path/id's"), primaryButton: .default(Text("Dismiss")))
         

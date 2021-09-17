@@ -24,6 +24,12 @@ struct CreateArtistView: View {
                             .offset(x: -20)
                         
                         
+                        Picker("Album", selection: $createArtistVM.album) {
+                            ForEach(vm.user.getOwnerAlbums(), id: \.self) { album in
+                                Text(album.title)
+                            }
+                        }
+                        
                         Picker("Genre", selection: $createArtistVM.genre) {
                             TextField("Add new genre", text: $createArtistVM.newGenreName,  onCommit: {
                                 
@@ -39,11 +45,10 @@ struct CreateArtistView: View {
                         }
                         
                         
-                        Picker("Album", selection: $createArtistVM.albums) {
-                            ForEach(/* vm.user.getOwnerAlbums() */MockData.mockAlbums, id: \.self) { album in
-                                Text(album)
-                            }
-                        }
+                        TextField("Enter Bio", text: $createArtistVM.bio)
+                            .frame(height: 200)
+                            .padding(.bottom)
+                        
                         
                         Button(action: {
                             withAnimation(.easeInOut) {
@@ -96,13 +101,7 @@ struct CreateArtistView: View {
                         .ignoresSafeArea(edges: .bottom)
                         .overlay(
                             Button(action: {
-                                createArtistVM.createArtist(viewModel: vm, completion: { success in
-                                    if success {
-                                        presentationMode.wrappedValue.dismiss()
-                                    } else {
-                                        vm.alertItem = MyStandardAlertContext.createOwnerArtistFailed
-                                    }
-                                })
+                                createArtistVM.createArtist(viewModel: vm
                             }, label: {
                                 Text("Create")
                                     .font(.system(size: 25))

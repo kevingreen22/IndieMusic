@@ -14,6 +14,7 @@ import Foundation
 class User: Codable {
     var name: String
     var email: String
+    var profilePictureURL: URL?
     var profilePictureData: Data?
     var songListData: [Song]
     var favoriteArtists: [Artist]?
@@ -22,9 +23,10 @@ class User: Codable {
     var recentlyAdded: [Album]?
     var artist: Artist?
     
-    init(name: String, email: String, profilePictureData: Data?, songListData: [Song], favoriteArtists: [Artist]?, favoriteAlbums: [Album]?, favoriteSongs: [Song]?, recentlyAdded: [Album]?, artist: Artist?) {
+    init(name: String, email: String, profilePictureURL: URL?, profilePictureData: Data?, songListData: [Song], favoriteArtists: [Artist]?, favoriteAlbums: [Album]?, favoriteSongs: [Song]?, recentlyAdded: [Album]?, artist: Artist?) {
         self.name = name
         self.email = email
+        self.profilePictureURL = profilePictureURL
         self.profilePictureData = profilePictureData
         self.songListData = songListData
         self.favoriteArtists = favoriteArtists

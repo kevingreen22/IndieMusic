@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CreateAlbumView: View {
+    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var vm: ViewModel
     @StateObject var createAlbumVM = CreateAlbumViewModel()
     
@@ -36,21 +37,23 @@ struct CreateAlbumView: View {
                     }
                     
                     Picker("Year", selection: $createAlbumVM.year) {
-    //                    ForEach(1970...getCurrentYear()) { year in
-    //                        Text(year)
-    //                    }
+                        ForEach((1971...createAlbumVM.currentYear + 1).reversed(), id: \.self) { year in
+                            Text(String(year))
+                        }
                     }
                     
                     
                     
                 }
                 
-                
                 .sheet(isPresented: $createAlbumVM.showImagePicker, content: {
                     ImagePicker(selectedImage: $createAlbumVM.selectedImage, finishedSelecting: $createAlbumVM.pickImage)
                 })
                 
                 .navigationBarTitle(Text("Create Album"), displayMode: .inline)
+                .navigationBarItems(leading: Button("Cancel") {
+                    presentationMode.wrappedValue.dismiss()
+                })
             }
             
             VStack {
@@ -62,13 +65,7 @@ struct CreateAlbumView: View {
                     .ignoresSafeArea(edges: .bottom)
                     .overlay(
                         Button(action: {
-                            createAlbumVM.createAlbum(viewModel: vm, completion: { success in
-                                if success {
-                                    presentationMode.wrappedValue.dismiss()
-                                } else {
-                                    vm.alertItem = MyStandardAlertContext.
-                                }
-                            })
+                            createAlbumVM.createAlbum(viewModel: vm)
                         }, label: {
                             Text("Create")
                                 .font(.system(size: 25))
@@ -82,14 +79,8 @@ struct CreateAlbumView: View {
                     )
             }.ignoresSafeArea(edges: .bottom)
             
-            
         }
     }
-    
-    
-    
-    
-    
     
 }
 
@@ -101,5 +92,6 @@ struct CreateAlbumView: View {
 struct CreateAlbumView_Previews: PreviewProvider {
     static var previews: some View {
         CreateAlbumView()
+            .environmentObject(ViewModel())
     }
 }

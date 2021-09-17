@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-
 struct ProfileView: View {
-//    @Environment(\.defaultMinListRowHeight) var listRowHeight
     @EnvironmentObject var vm: ViewModel
     @StateObject var profileVM = ProfileViewModel()
     
@@ -45,11 +43,24 @@ struct ProfileView: View {
                             }
                         })
                     
-                    if profileVM.showArtistOwnerInfo && vm.user.artist != nil {
+                    if vm.user.artist != nil {
+                        Button(action: {
+                            profileVM.activeSheet = .createAlbum
+                        }, label: {
+                            Text("Create Album")
+                        })
+                        .frame(width: 300, height: 50)
+                        .foregroundColor(.white)
+                        .background(Color.green)
+                        .cornerRadius(8)
+                        .shadow(radius: 10)
+                        
+                        Spacer()
+                        
                         Button(action: {
                             profileVM.activeSheet = .uploadSong
                         }, label: {
-                            Text("Upload Song/Album")
+                            Text("Upload Song")
                         })
                         .frame(width: 300, height: 50)
                         .foregroundColor(.white)
@@ -85,12 +96,10 @@ struct ProfileView: View {
                 case .createArtist:
                     CreateArtistView()
                         .environmentObject(vm)
-                        .environmentObject(profileVM)
                     
                 case .createAlbum:
                     CreateAlbumView()
                         .environmentObject(vm)
-                        .environmentObject(profileVM)
                     
                 case .uploadSong:
                     UploadSongView()

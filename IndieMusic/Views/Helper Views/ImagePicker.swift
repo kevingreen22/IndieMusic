@@ -43,14 +43,14 @@ struct ImagePicker: UIViewControllerRepresentable {
             if let image = info[.editedImage] as? UIImage {
                 parent.selectedImage = image
             }
-            parent.finishedSelecting = true
+            parent.finishedSelecting = false
             parent.presentationMode.wrappedValue.dismiss()
             
         }
         
         
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            parent.finishedSelecting = true
+            parent.finishedSelecting = false
             parent.presentationMode.wrappedValue.dismiss()
         }
     }
