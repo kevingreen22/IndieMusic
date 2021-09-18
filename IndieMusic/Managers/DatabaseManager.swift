@@ -34,7 +34,7 @@ final class DatabaseManger {
                     completion(error == nil)
                 }
         } catch let error {
-            print("Error writing \"user\" to Firestore: \(error.localizedDescription)")
+            print("Error writing \"user\" to Firestore: \(error)")
         }
     }
     
@@ -45,7 +45,7 @@ final class DatabaseManger {
         database
             .collection(ContainerNames.users)
             .document(documentID)
-            .getDocument { snapshot, error in
+            .getDocument { [weak self] snapshot, error in
                 guard error == nil else {
                     return
                 }
@@ -82,9 +82,9 @@ final class DatabaseManger {
             .collection(ContainerNames.users)
             .document(documentID)
         
-        dbRef.updateData(["profile_photo" : photoData], completion: { error in
+        dbRef.updateData(["profile_photo" : photoData], completion: { [weak self] error in
             guard error == nil else  {
-                print("Error updating document: \(String(describing: error))")
+                print("Error updating document: \(error.debugDescription))")
                 return
             }
             print("Profile photo ref successfully updated for user")
@@ -100,7 +100,7 @@ final class DatabaseManger {
         database
             .collection(ContainerNames.users)
             .document(documentID)
-            .delete() { error in
+            .delete() { [weak self] error in
                 if let error = error {
                     print("Error removing document: \(error)")
                 } else {
@@ -127,13 +127,12 @@ final class DatabaseManger {
                 .setData(from: artist) { [weak self] error in
 //                    guard error == nil else { completion(error == nil); return }
 //                    for album in artist.albums {
-//                        self?.insert(album: album, completion: { success in
+//                        self?.insert(album: album, completion: { [weak self] success in
 //                            print("Error saving album into database: \(String(describing: error.debugDescription))")
 //                        })
 //                    }
                     completion(error == nil)
                 }
-            
         } catch let error {
             print("Error writing \"artist\" to Firestore: \(error.localizedDescription)")
         }
@@ -148,10 +147,9 @@ final class DatabaseManger {
             try database
                 .collection(ContainerNames.albums)
                 .document(documentID)
-                .setData(from: album) { error in
+                .setData(from: album) { [weak self] error in
                     completion(error == nil)
                 }
-            
         } catch let error {
             print("Error writing \"album\" to Firestore: \(error.localizedDescription)")
         }
@@ -166,10 +164,9 @@ final class DatabaseManger {
             try database
                 .collection(ContainerNames.songs)
                 .document(documentID)
-                .setData(from: song) { error in
+                .setData(from: song) { [weak self] error in
                     completion(error == nil)
                 }
-            
         } catch let error {
             print("Error writing \"song\" to Firestore: \(error.localizedDescription)")
         }
@@ -185,11 +182,11 @@ final class DatabaseManger {
     // MARK: Get music from database
     
     /// Gets all artists.
-    public func getAllArtists(completion: @escaping ([Artist]) -> Void) {
-        var artists: [Artist] = []
+    public func fetchAllArtists(completion: @escaping ([Artist]) -> Void) {
+        var _artists: [Artist] = []
         database
             .collection(ContainerNames.artists)
-            .getDocuments { snapshot, error in
+            .getDocuments { [weak self] snapshot, error in
 //                guard let documents = snapshot?.documents.compactMap({ $0.data() }), error == nil else { return }
 //                let artists: [Artist] = documents.compactMap({
 //                    let name = $0["name"] as! String
@@ -210,7 +207,7 @@ final class DatabaseManger {
                         if let artist = artist {
                             // A `Artist` value was successfully initialized from the DocumentSnapshot.
                             print("Artist: \(artist)")
-                            artists.append(artist)
+                            _artists.append(artist)
                         } else {
                             // A nil value was successfully initialized from the DocumentSnapshot, or the DocumentSnapshot was nil.
                             print("Document does not exist")
@@ -221,17 +218,17 @@ final class DatabaseManger {
                     }
                 }
                 
-                completion(artists)
+                completion(_artists)
             }
     }
     
     /// Fetches the artist that matches the given ID if it exists.
-    public func getArtist(with id: String, completion: @escaping (Artist?) -> Void) {
+    public func fetchArtist(with id: String, completion: @escaping (Artist?) -> Void) {
         var _artist: Artist?
         database
             .collection(ContainerNames.artists)
             .document(id)
-            .getDocument { snapshot, error in
+            .getDocument { [weak self] snapshot, error in
                 guard error == nil else { return }
                 let result = Result {
                     try snapshot?.data(as: Artist.self)
@@ -258,11 +255,11 @@ final class DatabaseManger {
     
     
     /// Gets all albums
-    public func getAllAlbums(completion: @escaping ([Album]) -> Void) {
-        var albums: [Album] = []
+    public func fetchAllAlbums(completion: @escaping ([Album]) -> Void) {
+        var _albums: [Album] = []
         database
             .collection(ContainerNames.albums)
-            .getDocuments { snapshot, error in
+            .getDocuments { [weak self] snapshot, error in
 //                guard let documents = snapshot?.documents.compactMap({ $0.data() }), error == nil else { return }
 //                let albums: [Album] = documents.compactMap({
 //                    let title = $0["title"] as! String
@@ -286,7 +283,7 @@ final class DatabaseManger {
                         if let album = album {
                             // A `Album` value was successfully initialized from the DocumentSnapshot.
                             print("Album: \(album)")
-                            albums.append(album)
+                            _albums.append(album)
                         } else {
                             // A nil value was successfully initialized from the DocumentSnapshot, or the DocumentSnapshot was nil.
                             print("Document does not exist")
@@ -297,18 +294,18 @@ final class DatabaseManger {
                     }
                 }
                 
-                completion(albums)
+                completion(_albums)
             }
     }
     
     /// Gets all albums, for an artist.
-    public func getAlbumsFor(artist id: String, completion: @escaping ([Album]) -> Void) {
-        var albums: [Album] = []
+    public func fetchAlbumsFor(artist id: String, completion: @escaping ([Album]) -> Void) {
+        var _albums: [Album] = []
         database
             .collection(ContainerNames.albums)
             .document(id)
 //            .whereField("artistID", isEqualTo: id)
-            .getDocument(completion: { snapshot, error in
+            .getDocument(completion: { [weak self] snapshot, error in
 //                guard let documents = snapshot?.documents.compactMap({ $0.data() }), error == nil else { return }
 //                let albums: [Album] = documents.compactMap({
 //                    let title = $0["title"] as! String
@@ -333,7 +330,7 @@ final class DatabaseManger {
                     if let album = album {
                         // A `Album` value was successfully initialized from the DocumentSnapshot.
                         print("Album: \(album)")
-                        albums.append(album)
+                        _albums.append(album)
                     } else {
                         // A nil value was successfully initialized from the DocumentSnapshot, or the DocumentSnapshot was nil.
                         print("Document does not exist")
@@ -343,17 +340,17 @@ final class DatabaseManger {
                     print("Error decoding album: \(error)")
                 }
                 
-                completion(albums)
+                completion(_albums)
             })
     }
     
     /// Fetches one album that matches the given ID if it exists
-    public func getAlbumWith(id: String, completion: @escaping (Album?) -> Void) {
-        var albm: Album?
+    public func fetchAlbumWith(id: String, completion: @escaping (Album?) -> Void) {
+        var _album: Album?
         database
             .collection(ContainerNames.albums)
             .whereField("id", isEqualTo: id)
-            .getDocuments(completion: { snapshot, error in
+            .getDocuments(completion: { [weak self] snapshot, error in
                 guard error == nil else { return }
                 for document in snapshot!.documents {
                     let result = Result {
@@ -361,10 +358,10 @@ final class DatabaseManger {
                     }
                     switch result {
                     case .success(let album):
-                        if let _album = album {
+                        if let album = album {
                             // A `Album` value was successfully initialized from the DocumentSnapshot.
                             print("Album: \(String(describing: album))")
-                            albm = _album
+                            _album = album
                         } else {
                             // A nil value was successfully initialized from the DocumentSnapshot, or the DocumentSnapshot was nil.
                             print("Document does not exist")
@@ -375,21 +372,18 @@ final class DatabaseManger {
                     }
                 }
                 
-                completion(albm)
+                completion(_album)
             })
     }
     
     
     
-    
-    
-    
     /// Fetches all songs.
-    public func getAllSongs(completion: @escaping ([Song]) -> Void) {
-        var songs: [Song] = []
+    public func fetchAllSongs(completion: @escaping ([Song]) -> Void) {
+        var _songs: [Song] = []
         database
             .collection(ContainerNames.songs)
-            .getDocuments { snapshot, error in
+            .getDocuments { [weak self] snapshot, error in
                 for document in snapshot!.documents {
                     let result = Result {
                         try document.data(as: Song.self)
@@ -399,7 +393,7 @@ final class DatabaseManger {
                         if let song = song {
                             // A `Song` value was successfully initialized from the DocumentSnapshot.
                             print("Song: \(song)")
-                            songs.append(song)
+                            _songs.append(song)
                         } else {
                             // A nil value was successfully initialized from the DocumentSnapshot,
                             // or the DocumentSnapshot was nil.
@@ -411,17 +405,17 @@ final class DatabaseManger {
                     }
                 }
                 
-                completion(songs)
+                completion(_songs)
             }
     }
     
     /// Fetches all songs for an album.
-    public func getSongsFor(album id: String, completion: @escaping ([Song]) -> Void) {
-        var songs: [Song] = []
+    public func fetchSongsFor(album id: String, completion: @escaping ([Song]) -> Void) {
+        var _songs: [Song] = []
         database
             .collection(ContainerNames.songs)
             .whereField("albumID", isEqualTo: id)
-            .getDocuments { snapshot, error in
+            .getDocuments { [weak self] snapshot, error in
                 for document in snapshot!.documents {
                     let result = Result {
                         try document.data(as: Song.self)
@@ -431,7 +425,7 @@ final class DatabaseManger {
                         if let song = song {
                             // A `Song` value was successfully initialized from the DocumentSnapshot.
                             print("Song: \(song)")
-                            songs.append(song)
+                            _songs.append(song)
                         } else {
                             // A nil value was successfully initialized from the DocumentSnapshot,
                             // or the DocumentSnapshot was nil.
@@ -443,17 +437,17 @@ final class DatabaseManger {
                     }
                 }
                 
-                completion(songs)
+                completion(_songs)
             }
     }
     
     /// Fetches one song that matches the given ID if it exists.
-    public func getSong(with id: String, completion: @escaping (Song?) -> Void) {
+    public func fetchSong(with id: String, completion: @escaping (Song?) -> Void) {
         var _song: Song?
         database
             .collection(ContainerNames.songs)
             .document(id)
-            .getDocument { snapshot, error in
+            .getDocument { [weak self] snapshot, error in
                 let result = Result {
                     try snapshot?.data(as: Song.self)
                 }
@@ -476,6 +470,29 @@ final class DatabaseManger {
                 completion(_song)
             }
     }
+    
+    
+    
+    
+    
+    
+    
+    // MARK: Add new genre to database
+    
+    public func addNewGenre(_ genre: String) {
+        database
+            .collection(ContainerNames.users)
+            .document("genres")
+            .updateData(["genre" : genre], completion: { [weak self] error in
+                guard error == nil else  {
+                    print("Error updating genres: \(error.debugDescription)")
+                    return
+                }
+                print("Genre successfully added.")
+            })
+    }
+    
+    
     
     
     

@@ -22,7 +22,7 @@ class ExploreViewModel: ObservableObject {
     @Published var songs: [Song] = []
     
     func getSongs() {
-        DatabaseManger.shared.getAllSongs { songs in
+        DatabaseManger.shared.fetchAllSongs { songs in
             self.songs = songs
         }
     }
@@ -32,7 +32,7 @@ class ExploreViewModel: ObservableObject {
     
     
     func setAllGenres() {
-        DatabaseManger.shared.getAllArtists { artists in
+        DatabaseManger.shared.fetchAllArtists { artists in
             for artist in artists {
                 self.genreOfArtists[artist.genre]?.append(artist)
             }

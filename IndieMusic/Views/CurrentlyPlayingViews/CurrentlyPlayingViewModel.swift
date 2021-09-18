@@ -34,7 +34,7 @@ class CurrentlyPlayingViewModel: ObservableObject {
         if !user.songListData.isEmpty {
             let song = user.songListData[currentSongIndex]
             
-            DatabaseManger.shared.getAlbumWith(id: song.albumID, completion: { album in
+            DatabaseManger.shared.fetchAlbumWith(id: song.albumID, completion: { album in
                 guard album != nil else { return }
                 self.song = song
                 self.album = album!

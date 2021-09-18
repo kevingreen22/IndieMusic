@@ -125,7 +125,7 @@ final class StorageManager {
     
     
     public func downloadAlbumArtwork(for albumID: String, completion: @escaping (UIImage?) -> Void) {
-        DatabaseManger.shared.getAlbumWith(id: albumID) { album in
+        DatabaseManger.shared.fetchAlbumWith(id: albumID) { album in
             guard let album = album else { return }
             
             let path = "\(ContainerNames.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG)"

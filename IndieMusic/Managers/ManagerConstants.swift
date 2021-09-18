@@ -15,6 +15,7 @@ struct ContainerNames {
     static var songs = "songs"
     static var users = "users"
     static var profilePictures = "profile_pictures"
+    static var genres = "genres"
 }
 
 struct SuffixNames {
