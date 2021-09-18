@@ -35,6 +35,13 @@ struct UploadSongView: View {
                     }
                     
                     Picker("Genre*", selection: $uploadVM.songGenre) {
+                        TextField("Add new genre", text: $uploadVM.newGenreName, onCommit: {
+                            // add new genre to database here
+                            uploadVM.saveNewGenreToDB()
+                            Genres.names.append(uploadVM.newGenreName)
+                            uploadVM.newGenreName = ""
+                        })
+                        
                         ForEach(Genres.names, id: \.self) { genre in
                             Text(genre)
                         }

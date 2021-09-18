@@ -493,6 +493,22 @@ final class DatabaseManger {
     }
     
     
+    public func fetchGenres(completion: @escaping ([String]?, Error?) -> Void) {
+        database
+            .collection(ContainerNames.users)
+            .document("genres")
+            .getDocument { [weak self] snapshot, error in
+                guard error == nil else { return }
+                guard let genres: [String] = snapshot?.get("genre") as? [String] else {
+                    completion(nil, error)
+                    return
+                }
+                
+                completion(genres, nil)
+            }
+    }
+    
+    
     
     
     

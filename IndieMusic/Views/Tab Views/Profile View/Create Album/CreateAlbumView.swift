@@ -31,6 +31,13 @@ struct CreateAlbumView: View {
                         .padding()
                     
                     Picker("Genre*", selection: $createAlbumVM.genre) {
+                        TextField("Add new genre", text: $createAlbumVM.newGenreName, onCommit: {
+                            // add new genre to database here
+                            createAlbumVM.saveNewGenreToDB()
+                            Genres.names.append(createAlbumVM.newGenreName)
+                            createAlbumVM.newGenreName = ""
+                        })
+                        
                         ForEach(Genres.names, id: \.self) { genre in
                             Text(genre)
                         }

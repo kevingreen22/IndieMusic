@@ -17,6 +17,7 @@ class UploadSongViewModel: ObservableObject {
     @Published var songGenre = ""
     @Published var lyrics = ""
     @Published var uploadProgress: Double = 0
+    @Published var newGenreName = ""
     
     
     
@@ -111,6 +112,11 @@ class UploadSongViewModel: ObservableObject {
     
     fileprivate func reverseUploadSongIfError(viewModel: ViewModel) {
         
+    }
+    
+    
+    func saveNewGenreToDB() {
+        DatabaseManger.shared.addNewGenre(newGenreName)
     }
     
 }

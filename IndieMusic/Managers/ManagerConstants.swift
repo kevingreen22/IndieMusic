@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-// Constant Strings
 struct ContainerNames {
     static var artists = "artists"
     static var albums = "albums"

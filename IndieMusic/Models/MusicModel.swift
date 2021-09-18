@@ -209,8 +209,3 @@ class Song: Hashable, Equatable, Codable  {
 
 
 
-
-
-struct Genres {
-    static var names = ["Metal", "Blues", "R & B", "Hip Hop", "Rap", "Other"]
-}

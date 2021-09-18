@@ -17,17 +17,11 @@ class ViewModel: ObservableObject {
     }
     
     @Published var user: User!
-    
     @Published var albumImage: UIImage = UIImage(systemName: "photo")!
-    
     @Published var showSigninView = false
-    
     @Published var alertItem: MyAlertItem?
-    
     @Published var showPayWall = false
-    
     @Published var searchText: String = ""
-    
     @Published var selectedSongCell: Song? = nil
     
     
@@ -49,6 +43,15 @@ class ViewModel: ObservableObject {
             guard let user = user else { return }
             self.user = user
             completion(true)
+        }
+    }
+    
+    
+    public func cacheGenres(completion: (([String]?, Error?) -> Void)? = nil) {
+        DatabaseManger.shared.fetchGenres { genres, error in
+            guard let genres = genres, error == nil else { completion?(nil, error); return }
+            Genres.names = genres
+            completion?(genres, nil)
         }
     }
     

@@ -15,7 +15,7 @@ struct IndieMusicApp: App {
     init() { setupFirebase() }
     
     @Environment(\.scenePhase) var scenePhase
-    @StateObject var vm: ViewModel = ViewModel()
+    @StateObject var  vm: ViewModel = ViewModel()
     @StateObject var cpVM: CurrentlyPlayingViewModel = CurrentlyPlayingViewModel()
     
     var body: some Scene {
@@ -24,16 +24,15 @@ struct IndieMusicApp: App {
                 .environmentObject(vm)
                 .environmentObject(cpVM)
                 .onAppear {
-                    if AuthManager.shared.isSignedIn {
-                        vm.cacheUser { success in
-                            if success {
-                                print("user cached")
-                                cpVM.initialize(with: vm.user)
-                            } else { print("user NOT cached") }
+                    cacheDataFromFirebase(completion: { success in
+                        if success {
+                            // turn loader off
+                            print("Caching completed")
+                        } else {
+                            // alert the user something went wrong and then retry the query
+                            print("Error caching from DB")
                         }
-                    } else {
-                        vm.showSigninView = true
-                    }
+                    })
                 }
                 .fullScreenCover(isPresented: $vm.showSigninView) {
                     SignInView()
@@ -58,6 +57,30 @@ struct IndieMusicApp: App {
             }
         }
     }
+    
+    
+    fileprivate func cacheDataFromFirebase(completion: @escaping (Bool) -> Void) {
+        vm.cacheGenres { _, _ in
+            if AuthManager.shared.isSignedIn {
+                vm.cacheUser { success in
+                    if success {
+                        print("user cached")
+                        cpVM.initialize(with: vm.user)
+                        completion(true)
+                    } else {
+                        print("user NOT cached")
+                        completion(false)
+                    }
+                }
+            } else {
+                vm.showSigninView = true
+                completion(true)
+            }
+        }
+        
+    }
+    
+    
 }
 
 

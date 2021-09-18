@@ -58,4 +58,8 @@ class CreateArtistViewModel: ObservableObject {
         
     }
     
+    func saveNewGenreToDB() {
+        DatabaseManger.shared.addNewGenre(newGenreName)
+    }
+    
 }

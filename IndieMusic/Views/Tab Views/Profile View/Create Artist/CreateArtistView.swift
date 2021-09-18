@@ -32,10 +32,9 @@ struct CreateArtistView: View {
                         
                         Picker("Genre*", selection: $createArtistVM.genre) {
                             TextField("Add new genre", text: $createArtistVM.newGenreName,  onCommit: {
-                                
-                                Genres.names.append(createArtistVM.newGenreName)
                                 // add new genre to database here
-                                
+                                createArtistVM.saveNewGenreToDB()
+                                Genres.names.append(createArtistVM.newGenreName)
                                 createArtistVM.newGenreName = ""
                             }).multilineTextAlignment(.center)
                             

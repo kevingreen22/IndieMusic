@@ -10,7 +10,8 @@ import SwiftUI
 class CreateAlbumViewModel: ObservableObject {
     @Environment(\.presentationMode) var presentationMode
     @Published var albumName = ""
-    @Published var genre: String?
+    @Published var genre: String = ""
+    @Published var newGenreName = ""
     @Published var selectedImage: UIImage?
     @Published var year: Int = Calendar.current.component(.year, from: Date())
     @Published var showImagePicker = false
@@ -26,7 +27,7 @@ class CreateAlbumViewModel: ObservableObject {
     func createAlbum(viewModel: ViewModel) {
         guard let ownerArtist = viewModel.user.artist,
               albumName != "",
-              let genre = genre else {
+              genre != "" else {
             viewModel.alertItem = MyStandardAlertContext.infoIncomplete
             return
         }
@@ -80,6 +81,9 @@ class CreateAlbumViewModel: ObservableObject {
     }
     
     
+    func saveNewGenreToDB() {
+        DatabaseManger.shared.addNewGenre(newGenreName)
+    }
     
 
 }
