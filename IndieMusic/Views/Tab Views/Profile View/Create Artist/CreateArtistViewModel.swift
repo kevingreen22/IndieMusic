@@ -16,14 +16,15 @@ class CreateArtistViewModel: ObservableObject {
     @Published var genre = ""
     @Published var newGenreName = ""
     @Published var bioImage: UIImage? = nil
-    @Published var pickImage: Bool? = false
+    @Published var showImagePicker = false
     
     
     
     func createArtist(viewModel: ViewModel) {
         // Validate info
         guard artistName != "",
-              genre != "" else {
+              genre != "",
+              album != "" else {
             print("Required Song info not completed.")
             viewModel.alertItem = MyStandardAlertContext.infoIncomplete
             return

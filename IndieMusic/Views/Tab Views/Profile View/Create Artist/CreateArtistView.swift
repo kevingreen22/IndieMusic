@@ -17,20 +17,20 @@ struct CreateArtistView: View {
             ZStack {
                 NavigationView {
                     Form {
-                        TextField("Enter Artist name", text: $createArtistVM.artistName)
+                        TextField("Enter Artist name*", text: $createArtistVM.artistName)
                             .font(.system(size: 24))
                             .multilineTextAlignment(.center)
                             .padding(.bottom)
                             .offset(x: -20)
                         
                         
-                        Picker("Album", selection: $createArtistVM.album) {
+                        Picker("Album*", selection: $createArtistVM.album) {
                             ForEach(vm.user.getOwnerAlbums(), id: \.self) { album in
                                 Text(album.title)
                             }
                         }
                         
-                        Picker("Genre", selection: $createArtistVM.genre) {
+                        Picker("Genre*", selection: $createArtistVM.genre) {
                             TextField("Add new genre", text: $createArtistVM.newGenreName,  onCommit: {
                                 
                                 Genres.names.append(createArtistVM.newGenreName)
@@ -50,37 +50,27 @@ struct CreateArtistView: View {
                             .padding(.bottom)
                         
                         
-                        Button(action: {
-                            withAnimation(.easeInOut) {
-                                createArtistVM.pickImage?.toggle()
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text("Choose Artist Image")
+                                Text("Optional")
+                                    .font(.system(size: 10))
+                                    .foregroundColor(.gray)
+                                    .multilineTextAlignment(.leading)
                             }
-                        }, label: {
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text("Choose Artist Image")
-                                    Text("Optional")
-                                        .font(.system(size: 10))
-                                        .foregroundColor(.gray)
-                                        .multilineTextAlignment(.leading)
+                            
+                            Spacer()
+                            
+                            Image(uiImage: createArtistVM.bioImage ?? UIImage(systemName: "person.circle")!)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: 50)
+                                .clipShape(Circle())
+                                .transition(.opacity)
+                                .onTapGesture {
+                                    createArtistVM.showImagePicker.toggle()
                                 }
-                                Image(systemName: "chevron.right.circle")
-                                    .rotationEffect(.degrees(createArtistVM.pickImage! ? 90 : 0))
-                                Spacer()
-                                Image(uiImage: createArtistVM.bioImage ?? UIImage(systemName: "person.circle")!)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(height: 50)
-                                    .clipShape(Circle())
-                                    .transition(.opacity)
-                            }
-                        })
-                        
-                        if createArtistVM.pickImage! {
-                            ImagePicker(selectedImage: $createArtistVM.bioImage, finishedSelecting: $createArtistVM.pickImage)
                         }
-                        
-                        Spacer()
-                        
                         
                     } // End Form
                     
@@ -101,7 +91,7 @@ struct CreateArtistView: View {
                         .ignoresSafeArea(edges: .bottom)
                         .overlay(
                             Button(action: {
-                                createArtistVM.createArtist(viewModel: vm
+                                createArtistVM.createArtist(viewModel: vm)
                             }, label: {
                                 Text("Create")
                                     .font(.system(size: 25))
@@ -123,6 +113,10 @@ struct CreateArtistView: View {
         .alert(item: $vm.alertItem) { alert in
             MyAlertItem.present(alertItem: alert)
         }
+        
+        .sheet(isPresented: $createArtistVM.showImagePicker, content: {
+            ImagePicker(selectedImage: $createArtistVM.bioImage, finishedSelecting: .constant(nil))
+        })
     }
     
 }

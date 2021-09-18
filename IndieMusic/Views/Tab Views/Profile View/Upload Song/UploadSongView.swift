@@ -20,12 +20,12 @@ struct UploadSongView: View {
         ZStack {
             NavigationView {
                 Form {
-                    TextField("Song Title", text: $uploadVM.songTitle)
+                    TextField("Song Title*", text: $uploadVM.songTitle)
                         .font(.system(size: 24))
                         .multilineTextAlignment(.center)
                         .padding(.bottom)
                     
-                    Picker("Album", selection: $uploadVM.album) {
+                    Picker("Album*", selection: $uploadVM.album) {
                         // get all albums for artist picked above
                         ForEach(vm.user.getOwnerAlbums(), id: \.self) { album in
                             HStack {
@@ -34,7 +34,7 @@ struct UploadSongView: View {
                         }
                     }
                     
-                    Picker("Genre", selection: $uploadVM.songGenre) {
+                    Picker("Genre*", selection: $uploadVM.songGenre) {
                         ForEach(Genres.names, id: \.self) { genre in
                             Text(genre)
                         }
@@ -62,7 +62,6 @@ struct UploadSongView: View {
                     .ignoresSafeArea(edges: .bottom)
                     .overlay(
                         Button(action: {
-                            // upload song
                             uploadVM.uploadSong(viewModel: vm)
                         }, label: {
                             Text("Upload")

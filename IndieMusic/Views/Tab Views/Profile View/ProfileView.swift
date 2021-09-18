@@ -6,11 +6,18 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct ProfileView: View {
     @EnvironmentObject var vm: ViewModel
     @StateObject var profileVM = ProfileViewModel()
     
+    var songsWithImages: [UIImage? : [Song]] {
+        vm.user.getOwnerSongs()
+    }
+    var songCount: Int {
+        songsWithImages.count
+    }
     
     var body: some View {
         ZStack {
@@ -20,65 +27,13 @@ struct ProfileView: View {
                     .environmentObject(profileVM)
                 
                 ScrollView {
-                    Toggle("Use as artist profile", isOn: $profileVM.showArtistOwnerInfo)
-                        .padding()
-                        .onChange(of: profileVM.showArtistOwnerInfo, perform: { value in
-                            if value {
-                                profileVM.activeSheet = .createArtist
-                            } else if !value && vm.user.artist != nil {
-                                // Alert user if they turn off "Artist Profile" that
-                                // all of their albums/songs including thier artist
-                                // will be deleted from the service, and they'll have to
-                                // re-upload everything if they want to turn it back on.
-                                // i.e. no one will be able to listen to it anymore
-                                vm.alertItem = MyAlertItem(
-                                    title: Text("Are you sure?"),
-                                    message: Text("This will delete all of your albums/songs including your artist profile from the service. Everyone will no longer be able to listen to your uploaded song(s)"),
-                                    primaryButton: .cancel(),
-                                    secondaryButton: .destructive(Text("Confirm"),
-                                                                  action: {
-                                                                    profileVM.removeUsersOwnerPrivelage()
-                                                                  })
-                                )
-                            }
-                        })
-                    
                     if vm.user.artist != nil {
-                        Button(action: {
-                            profileVM.activeSheet = .createAlbum
-                        }, label: {
-                            Text("Create Album")
-                        })
-                        .frame(width: 300, height: 50)
-                        .foregroundColor(.white)
-                        .background(Color.green)
-                        .cornerRadius(8)
-                        .shadow(radius: 10)
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            profileVM.activeSheet = .uploadSong
-                        }, label: {
-                            Text("Upload Song")
-                        })
-                        .frame(width: 300, height: 50)
-                        .foregroundColor(.white)
-                        .background(Color.green)
-                        .cornerRadius(8)
-                        .shadow(radius: 10)
-                        
-                        Spacer()
-                        
                         VStack {
-                            Text("Song name")
-                            Text("Song name")
-                            Text("Song name")
-                            Text("Song name")
-                            Text("Song name")
-                            Text("Song name")
+                            ForEach(0..<songCount) { element in
+                                getSongCell()
+                                    .environmentObject(vm)
+                            }
                         }
-                        
                     }
                     
                 } // End ScrollView
@@ -112,7 +67,43 @@ struct ProfileView: View {
             }
             
         } // End ZStack
+        
+        .onAppear {
+            if vm.user.artist != nil {
+                profileVM.showArtistOwnerInfo = true
+            }
+        }
+        
     } // End body
+    
+    
+    
+    func getSongCell() -> some View {
+        struct Cell: View {
+            @EnvironmentObject var vm: ViewModel
+            var image: UIImage?
+            var name: String = "Unknown"
+            var song: Song
+            var body: some View {
+                HStack {
+                    Image(uiImage: image ?? UIImage(systemName: "album_artwork_placeholder")!)
+                        .padding(.trailing)
+                    Text(name)
+                }
+            }
+        }
+        
+        var cell: Cell?
+        for element in songsWithImages {
+            for song in element.value {
+                cell = Cell.init(image: element.key, name: song.title, song: song)
+            }
+        }
+        
+        return cell
+    }
+    
+    
     
     
     func doStuff() {
@@ -141,11 +132,12 @@ struct ProfileView: View {
 fileprivate struct ProfileViewHeader: View {
     @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
+    @State private var isExpanded = false
     
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(Color.green)
+                .fill(Color.mainApp)
                 .edgesIgnoringSafeArea(.top)
                 .frame(height: 260)
                 
@@ -164,51 +156,79 @@ fileprivate struct ProfileViewHeader: View {
                     .font(.title)
             }
             
-            .sheet(isPresented: $profileVM.showImagePicker, onDismiss: {
-                guard let image = profileVM.selectedImage else { return }
-                profileVM.uploadUserProfilePicture(email: profileVM.email, image: image)
-            }, content: {
-                ImagePicker(selectedImage: $profileVM.selectedImage, finishedSelecting: .constant(nil), sourceType: profileVM.sourceType)
-            })
             
-            .actionSheet(isPresented: $profileVM.showImagePickerPopover, content: {
-                profileVM.imagePickerActionSheet()
-            })
+            VStack {
+                Spacer()
+                HStack {
+                    UseAsArtistProfileButton()
+                        .environmentObject(profileVM)
+                        .onChange(of: profileVM.showArtistOwnerInfo, perform: { value in
+                            if value && vm.user.artist == nil {
+                                profileVM.activeSheet = .createArtist
+                            } else if !value && vm.user.artist != nil {
+                                /* Alert user if they turn off "Artist Profile" that all of their albums/songs including thier artist will be deleted from the service, and they'll have to re-upload everything if they want to turn it back on. i.e. no one will be able to listen to it anymore */
+                                vm.alertItem = MyAlertItem(
+                                    title: Text("Are you sure?"),
+                                    message: Text("This will delete all of your albums/songs including your artist profile from the service. Everyone will no longer be able to listen to your uploaded song(s)"),
+                                    primaryButton: .cancel(Text("Cancel"), action: {
+                                            profileVM.showArtistOwnerInfo = true
+                                    }),
+                                    secondaryButton: .destructive(Text("Confirm"), action: {
+                                        profileVM.removeUsersOwnerPrivelage(viewModel: vm)
+                                    })
+                                )
+                            }
+                        })
+                    Spacer()
+                }
+            }.padding([.leading, .bottom])
+            
+            if vm.user.artist != nil {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        ExpandableButtonPanel(primaryItem: ExpandableButtonItem(label: nil, imageName: "plus", action: nil), secondaryItems: [
+                            ExpandableButtonItem(label: nil, imageName: "music.note", action: {
+                                // show create album view
+                                profileVM.activeSheet = .createAlbum
+                                withAnimation {
+                                    isExpanded.toggle()
+                                }
+                            }),
+                            ExpandableButtonItem(label: nil, imageName: "rectangle.stack.fill.badge.plus", action: {
+                                // show upload song view
+                                profileVM.activeSheet = .uploadSong
+                                withAnimation {
+                                    isExpanded.toggle()
+                                }
+                            })
+                        ], size: 50, color: .appSecondary, isExpanded: $isExpanded)
+                    }
+                }.padding([.trailing, .bottom])
+            }
+            
             
         }
-        
         .frame(height: 260)
         
         .onAppear {
             profileVM.fetchUserProfilePicture(vm.user)
         }
         
+        .sheet(isPresented: $profileVM.showImagePicker, onDismiss: {
+            guard let image = profileVM.selectedImage else { return }
+            profileVM.uploadUserProfilePicture(viewModel: vm, email: profileVM.email, image: image)
+        }, content: {
+            ImagePicker(selectedImage: $profileVM.selectedImage, finishedSelecting: .constant(nil), sourceType: profileVM.sourceType)
+        })
+        
+        .actionSheet(isPresented: $profileVM.showImagePickerPopover, content: {
+            profileVM.imagePickerActionSheet()
+        })
+        
     }
     
-}
-
-
-// Add this at the end of ZStack.
-fileprivate struct TopNavButtons: View {
-    @EnvironmentObject var vm: ViewModel
-    @EnvironmentObject var profileVM: ProfileViewModel
-    
-    var body: some View {
-        VStack {
-            HStack {
-                SettingsButton()
-                    .environmentObject(vm)
-                    .environmentObject(profileVM)
-                
-                Spacer()
-                
-                SignOutButton()
-                    .environmentObject(vm)
-                    .environmentObject(profileVM)
-            }
-            Spacer()
-        }.padding([.top, .horizontal])
-    }
 }
 
 fileprivate struct SignOutButton: View {
@@ -243,7 +263,60 @@ fileprivate struct SettingsButton: View {
     }
 }
 
+// Add this at the end of ZStack.
+fileprivate struct TopNavButtons: View {
+    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var profileVM: ProfileViewModel
+    
+    var body: some View {
+        VStack {
+            HStack {
+                SettingsButton()
+                    .environmentObject(vm)
+                    .environmentObject(profileVM)
+                
+                Spacer()
+                
+                SignOutButton()
+                    .environmentObject(vm)
+                    .environmentObject(profileVM)
+            }
+            Spacer()
+        }.padding([.top, .horizontal])
+    }
+}
 
+fileprivate struct UseAsArtistProfileButton: View {
+    @EnvironmentObject var profileVM: ProfileViewModel
+    
+    private let shadowColor = Color.black.opacity(0.4)
+    private let shadowPosition: (x: CGFloat, y: CGFloat) = (x: 2, y: 2)
+    private let shadowRadius: CGFloat = 3
+    
+    var body: some View {
+        Button(action: {
+            withAnimation(.spring()) {
+                profileVM.showArtistOwnerInfo.toggle()
+            }
+        }, label: {
+            Image(systemName: profileVM.showArtistOwnerInfo ? "music.mic" : "person.fill")
+                .foregroundColor(.white)
+                .rotationEffect(.degrees(profileVM.showArtistOwnerInfo ? 0 : 360))
+        })
+        .frame(width: 50, height: 50)
+        .background(Color.appSecondary)
+        .cornerRadius(50 / 2)
+        .shadow(
+            color: shadowColor,
+            radius: shadowRadius,
+            x: shadowPosition.x,
+            y: shadowPosition.y
+        )
+        
+        
+        
+    }
+}
 
 
 
@@ -257,8 +330,5 @@ struct ProfileView_Previews: PreviewProvider {
         
         return ProfileView()
             .environmentObject(vm)
-            .environmentObject(ProfileViewModel())
-        
-        
     }
 }

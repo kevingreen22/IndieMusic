@@ -25,7 +25,7 @@ extension Color {
         Color("MainApp")
     }
     
-    static var appSecondaryColor: Color {
+    static var appSecondary: Color {
         Color("SecondaryApp")
     }
     

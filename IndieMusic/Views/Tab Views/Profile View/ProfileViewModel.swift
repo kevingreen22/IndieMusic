@@ -8,13 +8,12 @@
 import SwiftUI
 
 class ProfileViewModel: ObservableObject {
-    @EnvironmentObject var vm: ViewModel
     
     var email: String {
         UserDefaults.standard.string(forKey: "email") ?? ""
     }
     @Published var activeSheet: ActiveSheet?
-    @Published var showArtistOwnerInfo = false
+    @Published var showArtistOwnerInfo: Bool = false
     @Published var showImagePicker = false
     @Published var selectedImage: UIImage? = nil
     @Published var showImagePickerPopover = false
@@ -23,7 +22,7 @@ class ProfileViewModel: ObservableObject {
     
     
     
-    func uploadUserProfilePicture(email: String, image: UIImage) {
+    func uploadUserProfilePicture(viewModel: ViewModel, email: String, image: UIImage) {
         // save image to storage
         StorageManager.shared.uploadUserProfilePicture(email: email, image: image) { success in
             if success {
@@ -31,11 +30,11 @@ class ProfileViewModel: ObservableObject {
                 DatabaseManger.shared.updateProfilePhotoData(email: email, image: image) { updated in
                     guard updated else { return }
                     DispatchQueue.main.async {
-                        self.vm.cacheUser(completion: { _ in })
+                        viewModel.cacheUser(completion: { _ in })
                     }
                     
                     // sets the image cache in the user model
-                    self.vm.user.profilePictureData = image.pngData()
+                    viewModel.user.profilePictureData = image.pngData()
                 }
             }
         }
@@ -75,11 +74,11 @@ class ProfileViewModel: ObservableObject {
     
     
     
-    func removeUsersOwnerPrivelage() {
+    func removeUsersOwnerPrivelage(viewModel: ViewModel) {
         // remove artist, albums, songs from DatabaseManager
         // remove uploaded MP3's from StorageManager
         
-//        vm.user.isArtistOwner = false
+        viewModel.user.artist = nil
     }
     
     

@@ -10,6 +10,7 @@
 // <div>Icons made by <a href="https://www.flaticon.com/authors/xnimrodx" title="xnimrodx">xnimrodx</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 
 import Foundation
+import UIKit
 
 class User: Codable {
     var name: String
@@ -42,6 +43,23 @@ class User: Codable {
         guard let _artist = artist else { return nilAlbum }
         guard let albums = _artist.albums else { return nilAlbum }
         return albums
+    }
+    
+    func getOwnerSongs() -> [UIImage? : [Song]] {
+        var songs: [UIImage? : [Song]] = [:]
+        guard let artist = artist else { return songs }
+        guard let albums = artist.albums else { return songs }
+        
+        for album in albums {
+            StorageManager.shared.downloadAlbumArtwork(for: album.id) { image in
+                if let image = image {
+                    songs.updateValue(album.songs, forKey: image)
+                } else {
+                    songs.updateValue(album.songs, forKey: nil)
+                }
+            }
+        }
+        return songs
     }
    
     

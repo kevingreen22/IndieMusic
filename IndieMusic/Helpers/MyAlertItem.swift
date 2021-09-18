@@ -57,7 +57,7 @@ struct MyStandardAlertContext {
     static let createOwnerArtistFailed: MyAlertItem = MyAlertItem(title: Text("Error creating Artist"), message: Text("Please try again."), primaryButton: .default(Text("Dismiss")))
     
     
-    static let infoIncomplete: MyAlertItem = MyAlertItem(title: Text("Info incomplete"), message: Text("All required info must be completed."), primaryButton: .default(Text("Dismiss")))
+    static let infoIncomplete: MyAlertItem = MyAlertItem(title: Text("Info incomplete"), message: Text("All fields with an \"*\" must be filled."), primaryButton: .default(Text("Dismiss")))
     
     static let createAlbumFailed: MyAlertItem = MyAlertItem(title: Text("Error creating Album"), message: Text("Please try again."), primaryButton: .default(Text("Dismiss")))
     
@@ -77,7 +77,7 @@ struct MyStandardAlertContext {
 
 struct MySongUploadAlertsContext {
         
-    static let songInfoIncomplete = MyAlertItem(title: Text("You must complete all song info."), primaryButton: .default(Text("Dismiss")))
+    static let songInfoIncomplete = MyAlertItem(title: Text("All fields marked with an \"*\" must be filled."), primaryButton: .default(Text("Dismiss")))
         
     static let creatingURLError = MyAlertItem(title: Text("Problem creating song url path/id's"), primaryButton: .default(Text("Dismiss")))
         

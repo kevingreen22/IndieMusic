@@ -17,7 +17,7 @@ struct CreateAlbumView: View {
         ZStack {
             NavigationView {
                 Form {
-                    Image(uiImage: (createAlbumVM.selectedImage ?? UIImage(systemName: "photo"))!)
+                    Image(uiImage: createAlbumVM.selectedImage ?? UIImage(named: "album_artwork_placeholder")!)
                         .resizable()
                         .frame(maxWidth: 300, maxHeight: 300)
                         .aspectRatio(contentMode: .fit)
@@ -25,30 +25,24 @@ struct CreateAlbumView: View {
                             createAlbumVM.showImagePicker.toggle()
                         }
                     
-                    TextField("Enter Album name", text: $createAlbumVM.albumName)
+                    TextField("Enter Album name*", text: $createAlbumVM.albumName)
                         .font(.system(size: 24))
                         .multilineTextAlignment(.center)
                         .padding()
                     
-                    Picker("Genre", selection: $createAlbumVM.genre) {
+                    Picker("Genre*", selection: $createAlbumVM.genre) {
                         ForEach(Genres.names, id: \.self) { genre in
                             Text(genre)
                         }
                     }
                     
-                    Picker("Year", selection: $createAlbumVM.year) {
-                        ForEach((1971...createAlbumVM.currentYear + 1).reversed(), id: \.self) { year in
+                    Picker("Year*", selection: $createAlbumVM.year) {
+                        ForEach((1971...createAlbumVM.currentYear).reversed(), id: \.self) { year in
                             Text(String(year))
                         }
                     }
                     
-                    
-                    
                 }
-                
-                .sheet(isPresented: $createAlbumVM.showImagePicker, content: {
-                    ImagePicker(selectedImage: $createAlbumVM.selectedImage, finishedSelecting: $createAlbumVM.pickImage)
-                })
                 
                 .navigationBarTitle(Text("Create Album"), displayMode: .inline)
                 .navigationBarItems(leading: Button("Cancel") {
@@ -80,8 +74,17 @@ struct CreateAlbumView: View {
             }.ignoresSafeArea(edges: .bottom)
             
         }
+        
+        .alert(item: $vm.alertItem, content: { alertItem in
+            MyAlertItem.present(alertItem: alertItem)
+        }) // End alert
+        
+        
+        .sheet(isPresented: $createAlbumVM.showImagePicker, content: {
+            ImagePicker(selectedImage: $createAlbumVM.selectedImage, finishedSelecting: $createAlbumVM.pickImage)
+        })
+        
     }
-    
 }
 
 
