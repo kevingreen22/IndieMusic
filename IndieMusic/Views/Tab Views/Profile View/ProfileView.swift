@@ -59,6 +59,9 @@ struct ProfileView: View {
                 case .uploadSong:
                     UploadSongView()
                         .environmentObject(vm)
+                    
+                case .imagePicker, .documentPicker:
+                    EmptyView()
                 }
             })
             
@@ -112,14 +115,7 @@ struct ProfileView: View {
             if vm.user.artist == nil {
                 profileVM.showArtistOwnerInfo = false
             }
-        
-        case .createAlbum:
-            break
-            
-        case .uploadSong:
-            break
-        
-        case .none:
+        case .uploadSong, .createAlbum, .imagePicker, .documentPicker, .none:
             break
         }
     }

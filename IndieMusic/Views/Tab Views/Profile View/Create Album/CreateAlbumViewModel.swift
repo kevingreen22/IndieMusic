@@ -9,13 +9,23 @@ import SwiftUI
 
 class CreateAlbumViewModel: ObservableObject {
     @Environment(\.presentationMode) var presentationMode
+    @Published var activeSheet: ActiveSheet?
     @Published var albumName = ""
     @Published var genre: String = ""
     @Published var newGenreName = ""
     @Published var selectedImage: UIImage?
     @Published var year: Int = Calendar.current.component(.year, from: Date())
-    @Published var showImagePicker = false
+    @Published var showPickerSheet = false
+    @Published var showImagePickerNotDocumentPicker = false
     @Published var pickImage: Bool? = false
+    @Published var url: URL? = nil {
+        didSet {
+            if let imageURL = url {
+                guard let image = UIImage(contentsOfFile: imageURL.path) else { return }
+                selectedImage = image
+            }
+        }
+    }
     
     private var artworkURL: URL? = nil
     
@@ -23,6 +33,17 @@ class CreateAlbumViewModel: ObservableObject {
         let year = Calendar.current.component(.year, from: Date())
         return year
     }
+    
+    
+    
+    func imagePicker() {
+        showImagePickerNotDocumentPicker = true
+    }
+    
+    func documentPicker() {
+        showImagePickerNotDocumentPicker = false
+    }
+    
     
     
     func createAlbum(viewModel: ViewModel/*, completion: @escaping (Bool) -> Void*/) {
@@ -88,6 +109,10 @@ class CreateAlbumViewModel: ObservableObject {
     fileprivate func reverseCreateAlbumIfError(viewModel: ViewModel) {
         
     }
+    
+    
+    
+    
     
     
     

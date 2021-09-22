@@ -19,6 +19,7 @@ class UploadSongViewModel: ObservableObject {
     @Published var lyrics = ""
     @Published var uploadProgress: Double = 0
     @Published var newGenreName = ""
+    @Published var localFilePath: URL? = nil
     
     
     
@@ -35,7 +36,7 @@ class UploadSongViewModel: ObservableObject {
             return
         }
         
-        // Generate URL for song path
+        // Generate URL for song path in Firebase Storage container
         guard let songURL = URL(string: "\(ContainerNames.artists)/\(album.id)/\(songTitle)/\(SuffixNames.mp3)") else {
             print("Problem creating song url path/id's")
             viewModel.alertItem = MySongUploadAlertsContext.creatingURLError
@@ -47,7 +48,7 @@ class UploadSongViewModel: ObservableObject {
           
         
         // Upload song to storage container
-        StorageManager.shared.upload(song: song, localFilePath: songURL) { snapshot in
+        StorageManager.shared.upload(song: song, localFilePath: localFilePath) { snapshot in
             print(snapshot.status)
             switch snapshot.status {
             case .progress:

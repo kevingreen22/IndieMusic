@@ -406,8 +406,8 @@
 				C787DC8D26A8A8E8005BC46E /* PayWallView.swift */,
 				C787DC9126A8C838005BC46E /* VolumeSliderView.swift */,
 				C72FF36326B472DF00F3ABC1 /* ImagePicker.swift */,
-				C77F46EF26F53A7800059260 /* ExpandableButtonPanel.swift */,
 				C77F46F326F7DC2400059260 /* DocumentPicker.swift */,
+				C77F46EF26F53A7800059260 /* ExpandableButtonPanel.swift */,
 			);
 			path = "Helper Views";
 			sourceTree = "<group>";

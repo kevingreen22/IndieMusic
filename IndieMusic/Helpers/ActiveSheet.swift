@@ -11,6 +11,8 @@ enum ActiveSheet: Identifiable {
     case createArtist
     case createAlbum
     case uploadSong
+    case imagePicker
+    case documentPicker
     
     var id: Int { hashValue }
     

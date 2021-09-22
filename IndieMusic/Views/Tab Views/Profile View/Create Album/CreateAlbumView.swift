@@ -13,18 +13,42 @@ struct CreateAlbumView: View {
     @StateObject var createAlbumVM = CreateAlbumViewModel()
     
     
+    
+    
     var body: some View {
         ZStack {
             NavigationView {
-                Form {
+                Menu(content: {
+                    Button {
+                        createAlbumVM.imagePicker()
+                    } label: {
+                        Label("Images", systemImage: "photo")
+                    }
+                    
+                    Button {
+                        createAlbumVM.imagePicker()
+                    } label: {
+                        Label("Camera", systemImage: "camera.fill")
+                    }
+                    
+                    Button {
+                        createAlbumVM.documentPicker()
+                    } label: {
+                        Label("Browse", systemImage: "folder.fill")
+                    }
+
+                }, label: {
                     Image(uiImage: createAlbumVM.selectedImage ?? UIImage(named: "album_artwork_placeholder")!)
                         .resizable()
                         .frame(maxWidth: 300, maxHeight: 300)
                         .aspectRatio(contentMode: .fit)
-                        .onTapGesture {
-                            createAlbumVM.showImagePicker.toggle()
-                        }
-                    
+//                            .onTapGesture {
+//                                createAlbumVM.showMenuOptions.toggle()
+//    //                            createAlbumVM.showImagePicker.toggle()
+//                            }
+                })
+                
+                Form {
                     TextField("Enter Album name*", text: $createAlbumVM.albumName)
                         .font(.system(size: 24))
                         .multilineTextAlignment(.center)
@@ -85,9 +109,27 @@ struct CreateAlbumView: View {
         }) // End alert
         
         
-        .sheet(isPresented: $createAlbumVM.showImagePicker, content: {
-            ImagePicker(selectedImage: $createAlbumVM.selectedImage, finishedSelecting: $createAlbumVM.pickImage)
-        })
+//        .sheet(isPresented: $createAlbumVM.showPickerSheet, content: {
+//            if createAlbumVM.showImagePickerNotDocumentPicker {
+//                ImagePicker(selectedImage: $createAlbumVM.selectedImage, finishedSelecting: $createAlbumVM.pickImage)
+//            } else {
+//                DocumentPicker(filePath: $createAlbumVM.url, contentTypes: [.image])
+//            }
+//        })
+        
+        .sheet(item: $createAlbumVM.activeSheet) { item in
+            switch item {
+            case .imagePicker :
+                ImagePicker(selectedImage: $createAlbumVM.selectedImage, finishedSelecting: $createAlbumVM.pickImage)
+            case .documentPicker:
+                DocumentPicker(filePath: $createAlbumVM.url, contentTypes: [.image])
+            default:
+                EmptyView()
+            }
+        }
+        
+       
+        
         
     }
 }

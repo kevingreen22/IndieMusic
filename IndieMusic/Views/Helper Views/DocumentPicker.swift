@@ -6,19 +6,21 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 import MobileCoreServices
 
 struct DocumentPicker: UIViewControllerRepresentable {
     @Environment(\.presentationMode) var presentationMode
-    
+    @Binding var filePath: URL?
+    var contentTypes: [UTType] = [.audio, .mp3]
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(self)
+        return Coordinator(parent1: self)
     }
     
     
     func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
-        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.audio, .mp3])
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: contentTypes)
         picker.allowsMultipleSelection = false
         picker.delegate = context.coordinator
         return picker
@@ -28,15 +30,16 @@ struct DocumentPicker: UIViewControllerRepresentable {
     
     
     class Coordinator: NSObject, UIDocumentPickerDelegate {
-        var parent = DocumentPicker()
+        var parent: DocumentPicker
         
-        init(_ parent: DocumentPicker) {
-            self.parent = parent
+        init(parent1: DocumentPicker){
+            self.parent = parent1
         }
         
+        
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-            print(urls)
-            
+            print("Document picker url(s): \(urls)")
+            parent.filePath = urls[0]
         }
         
         func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
@@ -44,8 +47,6 @@ struct DocumentPicker: UIViewControllerRepresentable {
         }
         
     }
-    
-    
     
     
 }

@@ -96,7 +96,7 @@ struct UploadSongView: View {
         }) // End alert
         
         .sheet(isPresented: $uploadVM.showDocumentPicker) {
-            DocumentPicker()
+            DocumentPicker(filePath: $uploadVM.localFilePath)
         }
         
     }
