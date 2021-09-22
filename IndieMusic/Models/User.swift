@@ -51,7 +51,7 @@ class User: Codable {
         guard let albums = artist.albums else { return songs }
         
         for album in albums {
-            StorageManager.shared.downloadAlbumArtwork(for: album.id) { image in
+            StorageManager.shared.downloadAlbumArtwork(for: album.id, artistID: album.artistID) { image in
                 if let image = image {
                     songs.updateValue(album.songs, forKey: image)
                 } else {

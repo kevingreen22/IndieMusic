@@ -27,7 +27,7 @@ class ViewModel: ObservableObject {
     
     
     public func setArtworkFor(album: Album) {
-        StorageManager.shared.downloadAlbumArtwork(for: album.id) { image in
+        StorageManager.shared.downloadAlbumArtwork(for: album.id, artistID: album.artistID) { image in
             guard let img = image else { return }
             self.albumImage = img
         }

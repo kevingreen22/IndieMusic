@@ -9,9 +9,7 @@ import SwiftUI
 
 class CreateArtistViewModel: ObservableObject {
     @Environment(\.presentationMode) var presentationMode
-    @Published var addAlbum = false
     @Published var artistName = ""
-    @Published var album = ""
     @Published var bio = ""
     @Published var genre = ""
     @Published var newGenreName = ""
@@ -23,8 +21,7 @@ class CreateArtistViewModel: ObservableObject {
     func createArtist(viewModel: ViewModel) {
         // Validate info
         guard artistName != "",
-              genre != "",
-              album != "" else {
+              genre != "" else {
             print("Required Song info not completed.")
             viewModel.alertItem = MyStandardAlertContext.infoIncomplete
             return
@@ -58,8 +55,10 @@ class CreateArtistViewModel: ObservableObject {
         
     }
     
-    func saveNewGenreToDB() {
+    func saveNewGenre() {
         DatabaseManger.shared.addNewGenre(newGenreName)
+        Genres.names.append(newGenreName)
+        newGenreName = ""
     }
     
 }

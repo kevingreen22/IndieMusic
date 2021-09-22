@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Genres: Codable {
+class Genres: Codable {
     
     static var names: [String] = []
     

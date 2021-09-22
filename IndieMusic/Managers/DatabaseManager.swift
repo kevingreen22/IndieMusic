@@ -23,14 +23,14 @@ final class DatabaseManger {
     
     // MARK: User database methods
 
-    /// Inserts a User to the database.
+    /// Inserts a new User to the database.
     public func insert(user: User, completion: @escaping (Bool) -> Void) {
         let documentID = user.email.underscoredDotAt()
         do {
             try database
                 .collection(ContainerNames.users)
                 .document(documentID)
-                .setData(from: user) { error in
+                .setData(from: user) { [weak self] error in
                     completion(error == nil)
                 }
         } catch let error {
@@ -38,6 +38,23 @@ final class DatabaseManger {
         }
     }
     
+    
+    /// Updates a User in the database.
+    public func update(user: User, completion: @escaping (Bool) -> Void) {
+        let documentID = user.email.underscoredDotAt()
+
+        do {
+            try database
+                .collection(ContainerNames.users)
+                .document(documentID)
+                .setData(from: user) { [weak self] error in
+                    completion(error == nil)
+                }
+        } catch let error {
+            print("Error writing \"user\" to Firestore: \(error)")
+        }
+    }
+
     
     public func fetchUser(email: String, completion: @escaping (User?) -> Void) {
         let documentID = email.underscoredDotAt()
@@ -56,7 +73,7 @@ final class DatabaseManger {
                 case .success(let user):
                     if let user = user {
                         // A `Artist` value was successfully initialized from the DocumentSnapshot.
-                        print("User: \(user)")
+                        print("Fetching User successful.")
                         _user = user
                     } else {
                         // A nil value was successfully initialized from the DocumentSnapshot, or the DocumentSnapshot was nil.
@@ -116,7 +133,7 @@ final class DatabaseManger {
     
     // MARK: Insert music to database
     
-    /// Adds an artist to the Firestore database.
+    /// Adds an artist to the Firestore database. Either overwriting the current artist with a new instance, or creating a new one.
     public func insert(artist: Artist, completion: @escaping (Bool) -> Void) {
         let documentID = artist.id
 
@@ -125,12 +142,6 @@ final class DatabaseManger {
                 .collection(ContainerNames.artists)
                 .document(documentID)
                 .setData(from: artist) { [weak self] error in
-//                    guard error == nil else { completion(error == nil); return }
-//                    for album in artist.albums {
-//                        self?.insert(album: album, completion: { [weak self] success in
-//                            print("Error saving album into database: \(String(describing: error.debugDescription))")
-//                        })
-//                    }
                     completion(error == nil)
                 }
         } catch let error {
@@ -139,37 +150,44 @@ final class DatabaseManger {
     }
     
     
-    /// Adds an album to the Firestore database.
-    public func insert(album: Album, completion: @escaping (Bool) -> Void) {
-        let documentID = album.id
+    /// Adds album(s) to the artist within the Firestore database.
+    public func insert(albums: [Album], for artist: Artist, completion: @escaping (Error?) -> Void) {
+        let documentID = artist.id
         
-        do {
-            try database
-                .collection(ContainerNames.albums)
-                .document(documentID)
-                .setData(from: album) { [weak self] error in
-                    completion(error == nil)
+        database
+            .collection(ContainerNames.artists)
+            .document(documentID)
+            .updateData([
+                "albums" : FieldValue.arrayUnion([albums])
+            ]) { [weak self] error in
+                guard error != nil else {
+                    completion(nil)
+                    return
                 }
-        } catch let error {
-            print("Error writing \"album\" to Firestore: \(error.localizedDescription)")
-        }
+                print("Error writing \"album\" to artist within Firestore: \(error!.localizedDescription))")
+                completion(error)
+            }
     }
     
     
-    /// Adds a song to the Firestore database.
-    public func insert(song: Song, completion: @escaping (Bool) -> Void) {
-        let documentID = song.id
-
-        do {
-            try database
-                .collection(ContainerNames.songs)
-                .document(documentID)
-                .setData(from: song) { [weak self] error in
-                    completion(error == nil)
+    /// Adds song(s) to an artist's album within the Firestore database.
+    public func insert(song: Song, completion: @escaping (Error?) -> Void) {
+        
+            database
+                .collection(ContainerNames.artists)
+                .document(song.artistID)
+                .updateData([
+                    "albums" : [
+                        "songs" : FieldValue.arrayUnion([song])
+                    ]
+                ]) { [weak self] error in
+                    guard error != nil else {
+                        completion(nil)
+                        return
+                    }
+                    print("Error writing \"song\" to Firestore: \(error!.localizedDescription))")
+                    completion(error)
                 }
-        } catch let error {
-            print("Error writing \"song\" to Firestore: \(error.localizedDescription)")
-        }
     }
     
     
@@ -257,123 +275,40 @@ final class DatabaseManger {
     /// Gets all albums
     public func fetchAllAlbums(completion: @escaping ([Album]) -> Void) {
         var _albums: [Album] = []
-        database
-            .collection(ContainerNames.albums)
-            .getDocuments { [weak self] snapshot, error in
-//                guard let documents = snapshot?.documents.compactMap({ $0.data() }), error == nil else { return }
-//                let albums: [Album] = documents.compactMap({
-//                    let title = $0["title"] as! String
-//                    let artistName = $0["artistName"] as! String
-//                    let artistID = $0["artistID"] as! String
-//                    let artworkURL = $0["artworkURL"] as? URL
-//                    let year = $0["year"] as! String
-//                    let genre = $0["genre"] as! String
-//                    let metaData = $0["metaData"] as? [String]
-//
-//                    return Album(title: title, artistName: artistName, artistID: artistID, artworkURL: artworkURL, year: year, genre: genre, metaData: metaData)
-//                })
-//                print("retrieved albums: \(albums)")
-                
-                for document in snapshot!.documents {
-                    let result = Result {
-                        try document.data(as: Album.self)
-                    }
-                    switch result {
-                    case .success(let album):
-                        if let album = album {
-                            // A `Album` value was successfully initialized from the DocumentSnapshot.
-                            print("Album: \(album)")
-                            _albums.append(album)
-                        } else {
-                            // A nil value was successfully initialized from the DocumentSnapshot, or the DocumentSnapshot was nil.
-                            print("Document does not exist")
-                        }
-                    case .failure(let error):
-                        // A `Album` value could not be initialized from the DocumentSnapshot.
-                        print("Error decoding album: \(error)")
+        
+        fetchAllArtists { artists in
+            for artist in artists {
+                if let albums = artist.albums {
+                    for album in albums {
+                        _albums.append(album)
                     }
                 }
-                
-                completion(_albums)
             }
+            completion(_albums)
+        }
     }
     
     /// Gets all albums, for an artist.
-    public func fetchAlbumsFor(artist id: String, completion: @escaping ([Album]) -> Void) {
-        var _albums: [Album] = []
-        database
-            .collection(ContainerNames.albums)
-            .document(id)
-//            .whereField("artistID", isEqualTo: id)
-            .getDocument(completion: { [weak self] snapshot, error in
-//                guard let documents = snapshot?.documents.compactMap({ $0.data() }), error == nil else { return }
-//                let albums: [Album] = documents.compactMap({
-//                    let title = $0["title"] as! String
-//                    let artistName = $0["artistName"] as! String
-//                    let artistID = $0["artistID"] as! String
-//                    let artworkURL = $0["artworkURL"] as? URL
-//                    let songs = $0["songs"] as! [Song]
-//                    let year = $0["year"] as! String
-//                    let genre = $0["genre"] as! String
-//                    let metaData = $0["metaData"] as? [String]
-//
-//                    return Album(title: title, artistName: artistName, artistID: artistID, artworkURL: artworkURL, songs: songs, year: year, genre: genre, metaData: metaData)
-//                })
-//                print("retrieved albums: \(albums)")
-                
-                guard error == nil else { return }
-                let result = Result {
-                    try snapshot?.data(as: Album.self)
-                }
-                switch result {
-                case .success(let album):
-                    if let album = album {
-                        // A `Album` value was successfully initialized from the DocumentSnapshot.
-                        print("Album: \(album)")
-                        _albums.append(album)
-                    } else {
-                        // A nil value was successfully initialized from the DocumentSnapshot, or the DocumentSnapshot was nil.
-                        print("Document does not exist")
-                    }
-                case .failure(let error):
-                    // A `Album` value could not be initialized from the DocumentSnapshot.
-                    print("Error decoding album: \(error)")
-                }
-                
-                completion(_albums)
-            })
+    public func fetchAlbumsFor(artistID id: String, completion: @escaping ([Album]?) -> Void) {
+        fetchArtist(with: id) { artist in
+            guard let artist = artist else { completion(nil); return }
+            guard let albums = artist.albums else { completion(nil); return }
+            completion(albums)
+        }
     }
     
     /// Fetches one album that matches the given ID if it exists
-    public func fetchAlbumWith(id: String, completion: @escaping (Album?) -> Void) {
-        var _album: Album?
-        database
-            .collection(ContainerNames.albums)
-            .whereField("id", isEqualTo: id)
-            .getDocuments(completion: { [weak self] snapshot, error in
-                guard error == nil else { return }
-                for document in snapshot!.documents {
-                    let result = Result {
-                        try document.data(as: Album.self)
-                    }
-                    switch result {
-                    case .success(let album):
-                        if let album = album {
-                            // A `Album` value was successfully initialized from the DocumentSnapshot.
-                            print("Album: \(String(describing: album))")
-                            _album = album
-                        } else {
-                            // A nil value was successfully initialized from the DocumentSnapshot, or the DocumentSnapshot was nil.
-                            print("Document does not exist")
-                        }
-                    case .failure(let error):
-                        // A `Album` value could not be initialized from the DocumentSnapshot.
-                        print("Error decoding album: \(error)")
-                    }
+    public func fetchAlbumWith(id: String, artistID: String, completion: @escaping (Album?) -> Void) {
+        fetchArtist(with: artistID) { artist in
+            guard let artist = artist else { completion(nil); return }
+            guard let albums = artist.albums else { completion(nil); return }
+            for album in albums {
+                if album.id == id {
+                    completion(album)
+                    return
                 }
-                
-                completion(_album)
-            })
+            }
+        }
     }
     
     
@@ -381,94 +316,38 @@ final class DatabaseManger {
     /// Fetches all songs.
     public func fetchAllSongs(completion: @escaping ([Song]) -> Void) {
         var _songs: [Song] = []
-        database
-            .collection(ContainerNames.songs)
-            .getDocuments { [weak self] snapshot, error in
-                for document in snapshot!.documents {
-                    let result = Result {
-                        try document.data(as: Song.self)
-                    }
-                    switch result {
-                    case .success(let song):
-                        if let song = song {
-                            // A `Song` value was successfully initialized from the DocumentSnapshot.
-                            print("Song: \(song)")
-                            _songs.append(song)
-                        } else {
-                            // A nil value was successfully initialized from the DocumentSnapshot,
-                            // or the DocumentSnapshot was nil.
-                            print("Document does not exist")
-                        }
-                    case .failure(let error):
-                        // A `Album` value could not be initialized from the DocumentSnapshot.
-                        print("Error decoding song: \(error)")
+        
+        fetchAllArtists { artists in
+            for artist in artists {
+                if let albums = artist.albums {
+                    for album in albums {
+                        _songs.append(contentsOf: album.songs)
                     }
                 }
-                
-                completion(_songs)
             }
+            completion(_songs)
+        }
     }
     
     /// Fetches all songs for an album.
-    public func fetchSongsFor(album id: String, completion: @escaping ([Song]) -> Void) {
-        var _songs: [Song] = []
-        database
-            .collection(ContainerNames.songs)
-            .whereField("albumID", isEqualTo: id)
-            .getDocuments { [weak self] snapshot, error in
-                for document in snapshot!.documents {
-                    let result = Result {
-                        try document.data(as: Song.self)
-                    }
-                    switch result {
-                    case .success(let song):
-                        if let song = song {
-                            // A `Song` value was successfully initialized from the DocumentSnapshot.
-                            print("Song: \(song)")
-                            _songs.append(song)
-                        } else {
-                            // A nil value was successfully initialized from the DocumentSnapshot,
-                            // or the DocumentSnapshot was nil.
-                            print("Document does not exist")
-                        }
-                    case .failure(let error):
-                        // A `Album` value could not be initialized from the DocumentSnapshot.
-                        print("Error decoding song: \(error)")
-                    }
-                }
-                
-                completion(_songs)
-            }
+    public func fetchSongsFor(albumID id: String, artistID: String, completion: @escaping ([Song]?) -> Void) {
+        fetchAlbumWith(id: id, artistID: artistID) { album in
+            guard let album = album else { completion(nil); return }
+            completion(album.songs)
+        }
     }
     
     /// Fetches one song that matches the given ID if it exists.
-    public func fetchSong(with id: String, completion: @escaping (Song?) -> Void) {
-        var _song: Song?
-        database
-            .collection(ContainerNames.songs)
-            .document(id)
-            .getDocument { [weak self] snapshot, error in
-                let result = Result {
-                    try snapshot?.data(as: Song.self)
+    public func fetchSong(with id: String, albumID: String, artistID: String, completion: @escaping (Song?) -> Void) {
+        fetchAlbumWith(id: albumID, artistID: artistID) { album in
+            guard let album = album else { completion(nil); return }
+            for song in album.songs {
+                if song.id == id {
+                    completion(song)
+                    return
                 }
-                switch result {
-                case .success(let song):
-                    if let song = song {
-                        // A `Song` value was successfully initialized from the DocumentSnapshot.
-                        print("Song: \(song)")
-                        _song = song
-                    } else {
-                        // A nil value was successfully initialized from the DocumentSnapshot,
-                        // or the DocumentSnapshot was nil.
-                        print("Document does not exist")
-                    }
-                case .failure(let error):
-                    // A `Album` value could not be initialized from the DocumentSnapshot.
-                    print("Error decoding song: \(error)")
-                }
-                
-                completion(_song)
             }
+        }
     }
     
     
@@ -495,15 +374,17 @@ final class DatabaseManger {
     
     public func fetchGenres(completion: @escaping ([String]?, Error?) -> Void) {
         database
-            .collection(ContainerNames.users)
+            .collection(ContainerNames.genres)
             .document("genres")
             .getDocument { [weak self] snapshot, error in
                 guard error == nil else { return }
                 guard let genres: [String] = snapshot?.get("genre") as? [String] else {
+                    print("Fetching genres failied")
                     completion(nil, error)
                     return
                 }
                 
+                print("Genres fetched successfully")
                 completion(genres, nil)
             }
     }

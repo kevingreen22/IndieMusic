@@ -189,14 +189,14 @@ fileprivate struct ProfileViewHeader: View {
                     HStack {
                         Spacer()
                         ExpandableButtonPanel(primaryItem: ExpandableButtonItem(label: nil, imageName: "plus", action: nil), secondaryItems: [
-                            ExpandableButtonItem(label: nil, imageName: "music.note", action: {
+                            ExpandableButtonItem(label: nil, imageName: "rectangle.stack.fill.badge.plus", action: {
                                 // show create album view
                                 profileVM.activeSheet = .createAlbum
                                 withAnimation {
                                     isExpanded.toggle()
                                 }
                             }),
-                            ExpandableButtonItem(label: nil, imageName: "rectangle.stack.fill.badge.plus", action: {
+                            ExpandableButtonItem(label: nil, imageName: "music.note", action: {
                                 // show upload song view
                                 profileVM.activeSheet = .uploadSong
                                 withAnimation {

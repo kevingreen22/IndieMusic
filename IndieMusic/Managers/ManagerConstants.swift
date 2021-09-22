@@ -9,8 +9,6 @@ import Foundation
 
 struct ContainerNames {
     static var artists = "artists"
-    static var albums = "albums"
-    static var songs = "songs"
     static var users = "users"
     static var profilePictures = "profile_pictures"
     static var genres = "genres"

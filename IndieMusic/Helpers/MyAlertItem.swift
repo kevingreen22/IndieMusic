@@ -61,6 +61,8 @@ struct MyStandardAlertContext {
     
     static let createAlbumFailed: MyAlertItem = MyAlertItem(title: Text("Error creating Album"), message: Text("Please try again."), primaryButton: .default(Text("Dismiss")))
     
+    static let uploadSongFailed: MyAlertItem = MyAlertItem(title: Text("Error uploading song"), message: Text("Please try again."), primaryButton: .default(Text("Dismiss")))
+    
     
     
     

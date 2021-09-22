@@ -20,6 +20,18 @@ struct UploadSongView: View {
         ZStack {
             NavigationView {
                 Form {
+                    HStack {
+                        Button(action: {
+                            uploadVM.showDocumentPicker.toggle()
+                        }, label: {
+                            Text("Attach Mp3")
+                        })
+                        .frame(width: 200, height: 50)
+                        .foregroundColor(.white)
+                        .background(Color.mainApp)
+                        .cornerRadius(8)
+                    }
+                    
                     TextField("Song Title*", text: $uploadVM.songTitle)
                         .font(.system(size: 24))
                         .multilineTextAlignment(.center)
@@ -37,9 +49,7 @@ struct UploadSongView: View {
                     Picker("Genre*", selection: $uploadVM.songGenre) {
                         TextField("Add new genre", text: $uploadVM.newGenreName, onCommit: {
                             // add new genre to database here
-                            uploadVM.saveNewGenreToDB()
-                            Genres.names.append(uploadVM.newGenreName)
-                            uploadVM.newGenreName = ""
+                            uploadVM.saveNewGenre()
                         })
                         
                         ForEach(Genres.names, id: \.self) { genre in
@@ -75,7 +85,7 @@ struct UploadSongView: View {
                         })
                         .frame(width: 300, height: 50)
                         .foregroundColor(.white)
-                        .background(Color.green)
+                        .background(Color.mainApp)
                         .cornerRadius(8)
                     )
             }.ignoresSafeArea(edges: .bottom)
@@ -85,11 +95,13 @@ struct UploadSongView: View {
             MyAlertItem.present(alertItem: alertItem)
         }) // End alert
         
-        .sheet(isPresented: $uploadVM.showImagePicker) {
-            ImagePicker(selectedImage: $uploadVM.selectedImage, finishedSelecting: .constant(nil))
+        .sheet(isPresented: $uploadVM.showDocumentPicker) {
+            DocumentPicker()
         }
         
     }
+    
+    
     
 }
 
@@ -97,7 +109,7 @@ struct UploadSongView: View {
 
 
 
-struct UploadSongVIew_Previews: PreviewProvider {
+struct UploadSongView_Previews: PreviewProvider {
     static var previews: some View {
         UploadSongView()
             .environmentObject(ViewModel())

@@ -23,19 +23,11 @@ struct CreateArtistView: View {
                             .padding(.bottom)
                             .offset(x: -20)
                         
-                        
-                        Picker("Album*", selection: $createArtistVM.album) {
-                            ForEach(vm.user.getOwnerAlbums(), id: \.self) { album in
-                                Text(album.title)
-                            }
-                        }
-                        
                         Picker("Genre*", selection: $createArtistVM.genre) {
                             TextField("Add new genre", text: $createArtistVM.newGenreName,  onCommit: {
                                 // add new genre to database here
-                                createArtistVM.saveNewGenreToDB()
-                                Genres.names.append(createArtistVM.newGenreName)
-                                createArtistVM.newGenreName = ""
+                                createArtistVM.saveNewGenre()
+                                 
                             }).multilineTextAlignment(.center)
                             
                             ForEach(Genres.names, id: \.self) { genre in

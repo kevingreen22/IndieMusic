@@ -9,7 +9,8 @@ import SwiftUI
 
 class UploadSongViewModel: ObservableObject {
     @Environment(\.presentationMode) var presentationMode
-    @Published var showImagePicker = false
+    @Published var showDocumentPicker = false
+    @Published var showAlert = false
     @Published var artist: Artist? = nil
     @Published var album: Album? = nil
     @Published var selectedImage: UIImage? = nil
@@ -35,7 +36,7 @@ class UploadSongViewModel: ObservableObject {
         }
         
         // Generate URL for song path
-        guard let songURL = URL(string: "\(ContainerNames.artists)/\(ContainerNames.albums)/\(ContainerNames.songs)/\(songTitle)/\(SuffixNames.mp3)") else {
+        guard let songURL = URL(string: "\(ContainerNames.artists)/\(album.id)/\(songTitle)/\(SuffixNames.mp3)") else {
             print("Problem creating song url path/id's")
             viewModel.alertItem = MySongUploadAlertsContext.creatingURLError
             return
@@ -78,8 +79,8 @@ class UploadSongViewModel: ObservableObject {
         print("Attempting to insert song into DB...")
         
         // Insert song into DB
-        DatabaseManger.shared.insert(song: song, completion: { success in
-            if success {
+        DatabaseManger.shared.insert(song: song, completion: { error in
+            if error == nil {
                 print("Song object inserted into DB.")
                 self.updateUser(viewModel: viewModel, with: song, for: album)
             } else {
@@ -115,8 +116,14 @@ class UploadSongViewModel: ObservableObject {
     }
     
     
-    func saveNewGenreToDB() {
+    func saveNewGenre() {
         DatabaseManger.shared.addNewGenre(newGenreName)
+        Genres.names.append(newGenreName)
+        newGenreName = ""
     }
+    
+    
+    
+   
     
 }

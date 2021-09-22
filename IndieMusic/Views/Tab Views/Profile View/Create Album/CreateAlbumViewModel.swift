@@ -17,6 +17,7 @@ class CreateAlbumViewModel: ObservableObject {
     @Published var showImagePicker = false
     @Published var pickImage: Bool? = false
     
+    private var artworkURL: URL? = nil
     
     var currentYear: Int {
         let year = Calendar.current.component(.year, from: Date())
@@ -24,37 +25,41 @@ class CreateAlbumViewModel: ObservableObject {
     }
     
     
-    func createAlbum(viewModel: ViewModel) {
-        guard let ownerArtist = viewModel.user.artist,
+    func createAlbum(viewModel: ViewModel/*, completion: @escaping (Bool) -> Void*/) {
+        // validate
+        guard viewModel.user.artist != nil,
               albumName != "",
               genre != "" else {
             viewModel.alertItem = MyStandardAlertContext.infoIncomplete
             return
         }
         
-        let artworkURL = URL(string: "\(ownerArtist.name)/\(albumName)/\(SuffixNames.albumArtworkPNG)")
+        // set artwork URL
+        if selectedImage != nil {
+            artworkURL = URL(string: "\(viewModel.user.artist!.name)/\(albumName)/\(SuffixNames.albumArtworkPNG)")
+        }
         
-        let album = Album(title: albumName, artistName: ownerArtist.name, artistID: ownerArtist.id, artworkURL: artworkURL, songs: [], year: String(year), genre: genre)
+        // create a new instance of Album
+        let album = Album(title: albumName, artistName: viewModel.user.artist!.name, artistID: viewModel.user.artist!.id, artworkURL: artworkURL, songs: [], year: String(year), genre: genre)
         
         // append new album to user's artist
-        ownerArtist.albums?.append(album)
+        viewModel.user.artist!.albums?.append(album)
         
-        // save owner album to database
-        DatabaseManger.shared.insert(album: album) { success in
+        // save user to database
+        DatabaseManger.shared.insert(user: viewModel.user) { success in
             if success {
-                print("Owner album inserted into DB.")
+                print("User model updated")
                 
-                // save user to database
-                DatabaseManger.shared.insert(user: viewModel.user) { success in
-                    if success {
-                        print("User model updated")
+                // save album to database
+                DatabaseManger.shared.insert(albums: [album], for: viewModel.user.artist!) { error in
+                    if error == nil {
+                        print("Owner album inserted into DB.")
                         
                         // Upload album artwork to stroage.
                         guard let image = self.selectedImage else { return }
                         StorageManager.shared.uploadAlbumArtworkImage(album: album, image: image) { success in
                             if success {
                                 print("Owner album artwork uploaded.")
-                                self.presentationMode.wrappedValue.dismiss()
                             } else {
                                 print("Error uploading album artwork.")
                                 self.reverseCreateAlbumIfError(viewModel: viewModel)
@@ -73,7 +78,11 @@ class CreateAlbumViewModel: ObservableObject {
                 viewModel.alertItem = MyStandardAlertContext.createAlbumFailed
             }
         }
+        
+        self.presentationMode.wrappedValue.dismiss()
     }
+    
+    
     
     
     fileprivate func reverseCreateAlbumIfError(viewModel: ViewModel) {
@@ -81,8 +90,12 @@ class CreateAlbumViewModel: ObservableObject {
     }
     
     
-    func saveNewGenreToDB() {
+    
+    
+    func saveNewGenre() {
         DatabaseManger.shared.addNewGenre(newGenreName)
+        Genres.names.append(newGenreName)
+        newGenreName = ""
     }
     
 

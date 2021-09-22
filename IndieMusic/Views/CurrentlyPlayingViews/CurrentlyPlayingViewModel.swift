@@ -34,7 +34,7 @@ class CurrentlyPlayingViewModel: ObservableObject {
         if !user.songListData.isEmpty {
             let song = user.songListData[currentSongIndex]
             
-            DatabaseManger.shared.fetchAlbumWith(id: song.albumID, completion: { album in
+            DatabaseManger.shared.fetchAlbumWith(id: song.albumID, artistID: song.artistID, completion: { album in
                 guard album != nil else { return }
                 self.song = song
                 self.album = album!
@@ -82,7 +82,7 @@ class CurrentlyPlayingViewModel: ObservableObject {
             // for pre-cloud-storage testing
             //        guard let songUrl = Bundle.main.path(forResource: song.url.absoluteString, ofType: "mp3") else { return nil }
             
-            StorageManager.shared.downloadAlbumArtwork(for: song.albumID) { image in
+            StorageManager.shared.downloadAlbumArtwork(for: song.albumID, artistID: song.artistID) { image in
                 guard let img = image else { return }
                 self.dominantColors = DominantColors.getDominantColors(image: img)
                 DispatchQueue.main.async {
