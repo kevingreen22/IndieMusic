@@ -38,9 +38,8 @@ class CreateAlbumViewModel: ObservableObject {
     func createAlbum(viewModel: ViewModel/*, completion: @escaping (Bool) -> Void*/) {
         // validate
         guard viewModel.user.artist != nil,
-              albumName != "",
-              genre != "" else {
-            viewModel.alertItem = MyStandardAlertContext.infoIncomplete
+              albumName != "" else {
+//            viewModel.alertItem = MyStandardAlertContext.infoIncomplete
             return
         }
         

@@ -11,7 +11,7 @@ class CreateArtistViewModel: ObservableObject {
     @Environment(\.presentationMode) var presentationMode
     @Published var artistName = ""
     @Published var bio = ""
-    @Published var genre = ""
+    @Published var genre = "Unknown"
     @Published var newGenreName = ""
     @Published var bioImage: UIImage? = nil
     @Published var showImagePicker = false
@@ -20,8 +20,7 @@ class CreateArtistViewModel: ObservableObject {
     
     func createArtist(viewModel: ViewModel) {
         // Validate info
-        guard artistName != "",
-              genre != "" else {
+        guard artistName != "" else {
             print("Required Song info not completed.")
             viewModel.alertItem = MyStandardAlertContext.infoIncomplete
             return
@@ -55,10 +54,5 @@ class CreateArtistViewModel: ObservableObject {
         
     }
     
-    func saveNewGenre() {
-        DatabaseManger.shared.addNewGenre(newGenreName)
-        Genres.names.append(newGenreName)
-        newGenreName = ""
-    }
     
 }

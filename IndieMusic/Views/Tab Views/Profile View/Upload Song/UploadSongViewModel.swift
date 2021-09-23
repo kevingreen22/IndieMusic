@@ -16,9 +16,9 @@ class UploadSongViewModel: ObservableObject {
     @Published var selectedImage: UIImage? = nil
     @Published var songTitle = ""
     @Published var songGenre = "Unknown"
+    @Published var newGenreName = ""
     @Published var lyrics = ""
     @Published var uploadProgress: Double = 0
-    @Published var newGenreName = ""
     @Published var localFilePath: URL? = nil
     
     
