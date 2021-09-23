@@ -358,15 +358,17 @@ final class DatabaseManger {
     
     // MARK: Add new genre to database
     
-    public func addNewGenre(_ genre: String) {
+    public func addNewGenre(_ genre: String, completion: @escaping (Bool) -> Void) {
         database
             .collection(ContainerNames.users)
             .document("genres")
             .updateData(["genre" : genre], completion: { [weak self] error in
                 guard error == nil else  {
                     print("Error updating genres: \(error.debugDescription)")
+                    completion(true)
                     return
                 }
+                completion(true)
                 print("Genre successfully added.")
             })
     }

@@ -49,7 +49,7 @@ struct UploadSongView: View {
                     Picker("Genre*", selection: $uploadVM.songGenre) {
                         TextField("Add new genre", text: $uploadVM.newGenreName, onCommit: {
                             // add new genre to database here
-                            uploadVM.saveNewGenre()
+                            vm.saveNewGenre(newGenreName: uploadVM.newGenreName)
                         })
                         
                         ForEach(Genres.names, id: \.self) { genre in
@@ -96,7 +96,7 @@ struct UploadSongView: View {
         }) // End alert
         
         .sheet(isPresented: $uploadVM.showDocumentPicker) {
-            DocumentPicker(filePath: $uploadVM.localFilePath)
+            DocumentPicker(filePath: $uploadVM.localFilePath, contentTypes: [.mp3, .audio])
         }
         
     }

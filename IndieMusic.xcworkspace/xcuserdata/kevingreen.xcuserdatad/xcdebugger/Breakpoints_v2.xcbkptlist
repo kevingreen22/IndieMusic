@@ -446,8 +446,8 @@
             filePath = "IndieMusic/Views/Tab Views/Profile View/Create Album/CreateAlbumViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "110"
-            endingLineNumber = "110"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
             landmarkName = "reverseCreateAlbumIfError(viewModel:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -464,7 +464,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "116"
             endingLineNumber = "116"
-            landmarkName = "updateUser(viewModel:with:for:)"
+            landmarkName = "reverseUploadSongIfError(viewModel:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -504,7 +504,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "9E545676-6B69-4879-82BD-DD52DE45B439"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "IndieMusic/Views/Tab Views/Explore View/ExploreViewModel.swift"
@@ -526,8 +526,8 @@
             filePath = "IndieMusic/IndieMusicApp.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "29"
-            endingLineNumber = "29"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -542,26 +542,10 @@
             filePath = "IndieMusic/IndieMusicApp.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "32"
-            endingLineNumber = "32"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
             landmarkName = "body"
             landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "D6A5E9BD-0715-404E-8FD0-473AAAC93838"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "IndieMusic/Models/User.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
-            landmarkName = "getOwnerSongs()"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -574,8 +558,8 @@
             filePath = "IndieMusic/Models/MusicModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
             landmarkName = "mostRecentAlbumArtworkURL"
             landmarkType = "24">
          </BreakpointContent>

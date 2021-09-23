@@ -13,42 +13,42 @@ struct CreateAlbumView: View {
     @StateObject var createAlbumVM = CreateAlbumViewModel()
     
     
-    
-    
     var body: some View {
         ZStack {
             NavigationView {
-                Menu(content: {
-                    Button {
-                        createAlbumVM.imagePicker()
-                    } label: {
-                        Label("Images", systemImage: "photo")
-                    }
-                    
-                    Button {
-                        createAlbumVM.imagePicker()
-                    } label: {
-                        Label("Camera", systemImage: "camera.fill")
-                    }
-                    
-                    Button {
-                        createAlbumVM.documentPicker()
-                    } label: {
-                        Label("Browse", systemImage: "folder.fill")
-                    }
-
-                }, label: {
-                    Image(uiImage: createAlbumVM.selectedImage ?? UIImage(named: "album_artwork_placeholder")!)
-                        .resizable()
-                        .frame(maxWidth: 300, maxHeight: 300)
-                        .aspectRatio(contentMode: .fit)
-//                            .onTapGesture {
-//                                createAlbumVM.showMenuOptions.toggle()
-//    //                            createAlbumVM.showImagePicker.toggle()
-//                            }
-                })
-                
                 Form {
+                    HStack {
+                        Spacer()
+                        Menu(content: {
+                            Button {
+                                createAlbumVM.activeSheet = .imagePicker(sourceType: .photoLibrary)
+                            } label: {
+                                Label("Images", systemImage: "photo")
+                            }
+                            
+                            Button {
+                                createAlbumVM.activeSheet = .imagePicker(sourceType: .camera)
+                            } label: {
+                                Label("Camera", systemImage: "camera.fill")
+                            }
+                            
+                            Button {
+                                createAlbumVM.activeSheet = .documentPicker
+                            } label: {
+                                Label("Browse", systemImage: "folder.fill")
+                            }
+                            
+                        }, label: {
+                            Image(uiImage: createAlbumVM.selectedImage ?? UIImage(named: "album_artwork_placeholder")!)
+                                .resizable()
+                                .frame(width: 260, height: 260)
+                                .aspectRatio(contentMode: .fit)
+                                .cornerRadius(5)
+                            
+                        }).padding(.bottom)
+                        Spacer()
+                    }
+                    
                     TextField("Enter Album name*", text: $createAlbumVM.albumName)
                         .font(.system(size: 24))
                         .multilineTextAlignment(.center)
@@ -57,7 +57,7 @@ struct CreateAlbumView: View {
                     Picker("Genre*", selection: $createAlbumVM.genre) {
                         TextField("Add new genre", text: $createAlbumVM.newGenreName, onCommit: {
                             // add new genre to database here
-                            createAlbumVM.saveNewGenre()
+                            vm.saveNewGenre(newGenreName: createAlbumVM.newGenreName)
                         })
                         
                         ForEach(Genres.names, id: \.self) { genre in
@@ -66,7 +66,7 @@ struct CreateAlbumView: View {
                     }
                     
                     Picker("Year*", selection: $createAlbumVM.year) {
-                        ForEach((1971...createAlbumVM.currentYear).reversed(), id: \.self) { year in
+                        ForEach((1970...createAlbumVM.currentYear).reversed(), id: \.self) { year in
                             Text(String(year))
                         }
                     }
@@ -96,7 +96,7 @@ struct CreateAlbumView: View {
                         .padding()
                         .frame(width: 300, height: 50)
                         .foregroundColor(.white)
-                        .background(Color.green)
+                        .background(Color.mainApp)
                         .cornerRadius(8)
                         .shadow(radius: 10)
                     )
@@ -108,28 +108,16 @@ struct CreateAlbumView: View {
             MyAlertItem.present(alertItem: alertItem)
         }) // End alert
         
-        
-//        .sheet(isPresented: $createAlbumVM.showPickerSheet, content: {
-//            if createAlbumVM.showImagePickerNotDocumentPicker {
-//                ImagePicker(selectedImage: $createAlbumVM.selectedImage, finishedSelecting: $createAlbumVM.pickImage)
-//            } else {
-//                DocumentPicker(filePath: $createAlbumVM.url, contentTypes: [.image])
-//            }
-//        })
-        
         .sheet(item: $createAlbumVM.activeSheet) { item in
             switch item {
-            case .imagePicker :
-                ImagePicker(selectedImage: $createAlbumVM.selectedImage, finishedSelecting: $createAlbumVM.pickImage)
+            case .imagePicker(let sourceType) :
+                ImagePicker(selectedImage: $createAlbumVM.selectedImage, finishedSelecting: $createAlbumVM.pickImage, sourceType: sourceType)
             case .documentPicker:
                 DocumentPicker(filePath: $createAlbumVM.url, contentTypes: [.image])
             default:
                 EmptyView()
             }
         }
-        
-       
-        
         
     }
 }

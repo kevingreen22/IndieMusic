@@ -11,9 +11,9 @@ enum ActiveSheet: Identifiable {
     case createArtist
     case createAlbum
     case uploadSong
-    case imagePicker
+    case imagePicker(sourceType: UIImagePickerController.SourceType)
     case documentPicker
     
-    var id: Int { hashValue }
+    var id: Int { UUID().hashValue }
     
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 import Firebase
 import Purchases
+import RQPermissions
 
 @main
 struct IndieMusicApp: App {
@@ -34,7 +35,7 @@ struct IndieMusicApp: App {
                         }
                     })
                 }
-                .fullScreenCover(isPresented: $vm.showSigninView) {
+                .fullScreenCover(isPresented: $vm.showSigninView, onDismiss: requestPermissionsIfNeeded) {
                     SignInView()
                         .environmentObject(vm)
                         .environmentObject(cpVM)
@@ -80,6 +81,13 @@ struct IndieMusicApp: App {
         
     }
     
+    
+    fileprivate func requestPermissionsIfNeeded() {
+        RQPermissions.requestPermissions(for: [.camera, .photoAndMediaLibrary], healthOptions: nil) { permissionType in
+            // handel error or alert to user here
+            
+        }
+    }
     
 }
 

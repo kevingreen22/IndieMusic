@@ -11,12 +11,11 @@ class CreateAlbumViewModel: ObservableObject {
     @Environment(\.presentationMode) var presentationMode
     @Published var activeSheet: ActiveSheet?
     @Published var albumName = ""
-    @Published var genre: String = ""
+    @Published var genre: String = "Unknown"
     @Published var newGenreName = ""
     @Published var selectedImage: UIImage?
     @Published var year: Int = Calendar.current.component(.year, from: Date())
     @Published var showPickerSheet = false
-    @Published var showImagePickerNotDocumentPicker = false
     @Published var pickImage: Bool? = false
     @Published var url: URL? = nil {
         didSet {
@@ -32,16 +31,6 @@ class CreateAlbumViewModel: ObservableObject {
     var currentYear: Int {
         let year = Calendar.current.component(.year, from: Date())
         return year
-    }
-    
-    
-    
-    func imagePicker() {
-        showImagePickerNotDocumentPicker = true
-    }
-    
-    func documentPicker() {
-        showImagePickerNotDocumentPicker = false
     }
     
     
@@ -111,17 +100,6 @@ class CreateAlbumViewModel: ObservableObject {
     }
     
     
-    
-    
-    
-    
-    
-    
-    func saveNewGenre() {
-        DatabaseManger.shared.addNewGenre(newGenreName)
-        Genres.names.append(newGenreName)
-        newGenreName = ""
-    }
     
 
 }

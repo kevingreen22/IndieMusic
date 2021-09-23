@@ -5,6 +5,9 @@
       location = "group:IndieMusic.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:../KG Swifty Tool Belt /RQPermissions/RQPermissions.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>

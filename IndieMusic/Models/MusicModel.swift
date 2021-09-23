@@ -8,7 +8,6 @@
 import Foundation
 
 // MARK: Artist Class
-
 class Artist: Hashable, Codable {
     static func == (lhs: Artist, rhs: Artist) -> Bool {
         return
@@ -60,7 +59,6 @@ class Artist: Hashable, Codable {
 
 
 // MARK: Album Class
-
 class Album: Hashable, Equatable, Comparable, Codable {
     static func < (lhs: Album, rhs: Album) -> Bool {
         return
@@ -138,7 +136,6 @@ class Album: Hashable, Equatable, Comparable, Codable {
 
 
 // MARK: Song Class
-
 class Song: Hashable, Equatable, Codable  {
     static func == (lhs: Song, rhs: Song) -> Bool {
         return

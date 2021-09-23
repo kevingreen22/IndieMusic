@@ -90,7 +90,7 @@ struct CreateArtistView: View {
                             .padding()
                             .frame(width: 300, height: 50)
                             .foregroundColor(.white)
-                            .background(Color.green)
+                            .background(Color.mainApp)
                             .cornerRadius(8)
                             .shadow(radius: 10)
                         )

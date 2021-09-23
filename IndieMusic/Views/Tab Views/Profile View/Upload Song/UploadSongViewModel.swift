@@ -15,7 +15,7 @@ class UploadSongViewModel: ObservableObject {
     @Published var album: Album? = nil
     @Published var selectedImage: UIImage? = nil
     @Published var songTitle = ""
-    @Published var songGenre = ""
+    @Published var songGenre = "Unknown"
     @Published var lyrics = ""
     @Published var uploadProgress: Double = 0
     @Published var newGenreName = ""
@@ -116,12 +116,6 @@ class UploadSongViewModel: ObservableObject {
         
     }
     
-    
-    func saveNewGenre() {
-        DatabaseManger.shared.addNewGenre(newGenreName)
-        Genres.names.append(newGenreName)
-        newGenreName = ""
-    }
     
     
     

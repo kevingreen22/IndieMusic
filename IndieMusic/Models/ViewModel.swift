@@ -55,6 +55,12 @@ class ViewModel: ObservableObject {
         }
     }
     
+    public func saveNewGenre(newGenreName: String) {
+        DatabaseManger.shared.addNewGenre(newGenreName, completion: { success in
+            self.cacheGenres()
+        })
+    }
+    
     
     
     /// Decides if the app is being opened from iPhone Home screen and not the background.
