@@ -30,7 +30,7 @@ struct CreateArtistView: View {
                                  
                             }).multilineTextAlignment(.center)
                             
-                            ForEach(Genres.names, id: \.self) { genre in
+                            ForEach(Genres.names.sorted(), id: \.self) { genre in
                                 Text(genre)
                             }
                         }

@@ -40,7 +40,7 @@ final class DatabaseManger {
     
     
     /// Updates a User in the database.
-    public func update(user: User, completion: @escaping (Bool) -> Void) {
+    public func update(user: User, completion: @escaping (Bool, Error?) -> Void) {
         let documentID = user.email.underscoredDotAt()
 
         do {
@@ -48,7 +48,13 @@ final class DatabaseManger {
                 .collection(ContainerNames.users)
                 .document(documentID)
                 .setData(from: user) { [weak self] error in
-                    completion(error == nil)
+                    if let error = error {
+                        print("Error updating User in Firestore DB: \(error)")
+                        completion(false, error)
+                    } else {
+                        print("Updating User in Firestore DB successfull.")
+                        completion(true, nil)
+                    }
                 }
         } catch let error {
             print("Error writing \"user\" to Firestore: \(error)")
@@ -77,7 +83,7 @@ final class DatabaseManger {
                         _user = user
                     } else {
                         // A nil value was successfully initialized from the DocumentSnapshot, or the DocumentSnapshot was nil.
-                        print("Document does not exist")
+                        print("Document 'User' with email: \(email), does not exist")
                     }
                 case .failure(let error):
                     // A `User` value could not be initialized from the DocumentSnapshot.
@@ -349,6 +355,35 @@ final class DatabaseManger {
             }
         }
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // MARK: Delete music from database
+    public func delete(artist: Artist, completion: @escaping (Bool, Error?) -> Void) {
+        let documentID = artist.id
+        
+        database
+            .collection(ContainerNames.artists)
+            .document(documentID)
+            .delete { error in
+                if let error = error {
+                    print("Error deleting Artist from Firestore DB: \(error)")
+                    completion(false, error)
+                } else  {
+                    print("Artist successfully deleted from Firebase DB.")
+                }
+            }
+    }
+    
+    
+    
+    
     
     
     

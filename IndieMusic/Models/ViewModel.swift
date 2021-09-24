@@ -20,18 +20,19 @@ class ViewModel: ObservableObject {
     @Published var albumImage: UIImage = UIImage(systemName: "photo")!
     @Published var showSigninView = false
     @Published var alertItem: MyAlertItem?
+    @Published var activeSheet: ActiveSheet?
     @Published var showPayWall = false
     @Published var searchText: String = ""
     @Published var selectedSongCell: Song? = nil
     
     
     
-    public func setArtworkFor(album: Album) {
-        StorageManager.shared.downloadAlbumArtwork(for: album.id, artistID: album.artistID) { image in
-            guard let img = image else { return }
-            self.albumImage = img
-        }
-    }
+//    public func setArtworkFor(album: Album) {
+//        StorageManager.shared.downloadAlbumArtwork(for: album.id, artistID: album.artistID) { image in
+//            guard let img = image else { return }
+//            self.albumImage = img
+//        }
+//    }
     
     
     public func cacheUser(completion: @escaping (Bool) -> Void) {

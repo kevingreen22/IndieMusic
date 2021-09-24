@@ -9,6 +9,7 @@ import SwiftUI
 import UIKit
 
 struct ProfileView: View {
+    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var vm: ViewModel
     @StateObject var profileVM = ProfileViewModel()
     
@@ -45,36 +46,16 @@ struct ProfileView: View {
                 .environmentObject(vm)
                 .environmentObject(profileVM)
                 
-                        
-            .sheet(item: $profileVM.activeSheet, onDismiss: doStuff, content: { item in
-                switch item {
-                case .createArtist:
-                    CreateArtistView()
-                        .environmentObject(vm)
-                    
-                case .createAlbum:
-                    CreateAlbumView()
-                        .environmentObject(vm)
-                    
-                case .uploadSong:
-                    UploadSongView()
-                        .environmentObject(vm)
-                    
-                case .imagePicker, .documentPicker:
-                    EmptyView()
-                }
-            })
-            
-            .alert(item: $vm.alertItem) { alert in
-                MyAlertItem.present(alertItem: alert)
-            }
-            
         } // End ZStack
         
         .onAppear {
             if vm.user.artist != nil {
                 profileVM.showArtistOwnerInfo = true
             }
+        }
+        
+        .alert(item: $vm.alertItem) { alert in
+            MyAlertItem.present(alertItem: alert)
         }
         
     } // End body
@@ -95,29 +76,15 @@ struct ProfileView: View {
                 }
             }
         }
-        
+
         var cell: Cell?
         for element in songsWithImages {
             for song in element.value {
                 cell = Cell.init(image: element.key, name: song.title, song: song)
             }
         }
-        
+
         return cell
-    }
-    
-    
-    
-    
-    func doStuff() {
-        switch profileVM.activeSheet {
-        case .createArtist:
-            if vm.user.artist == nil {
-                profileVM.showArtistOwnerInfo = false
-            }
-        case .uploadSong, .createAlbum, .imagePicker, .documentPicker, .none:
-            break
-        }
     }
     
 }
@@ -126,6 +93,7 @@ struct ProfileView: View {
 
 
 fileprivate struct ProfileViewHeader: View {
+    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @State private var isExpanded = false
@@ -152,29 +120,13 @@ fileprivate struct ProfileViewHeader: View {
                     .font(.title)
             }
             
-            
             VStack {
                 Spacer()
                 HStack {
                     UseAsArtistProfileButton()
+                        .environmentObject(vm)
                         .environmentObject(profileVM)
-                        .onChange(of: profileVM.showArtistOwnerInfo, perform: { value in
-                            if value && vm.user.artist == nil {
-                                profileVM.activeSheet = .createArtist
-                            } else if !value && vm.user.artist != nil {
-                                /* Alert user if they turn off "Artist Profile" that all of their albums/songs including thier artist will be deleted from the service, and they'll have to re-upload everything if they want to turn it back on. i.e. no one will be able to listen to it anymore */
-                                vm.alertItem = MyAlertItem(
-                                    title: Text("Are you sure?"),
-                                    message: Text("This will delete all of your albums/songs including your artist profile from the service. Everyone will no longer be able to listen to your uploaded song(s)"),
-                                    primaryButton: .cancel(Text("Cancel"), action: {
-                                            profileVM.showArtistOwnerInfo = true
-                                    }),
-                                    secondaryButton: .destructive(Text("Confirm"), action: {
-                                        profileVM.removeUsersOwnerPrivelage(viewModel: vm)
-                                    })
-                                )
-                            }
-                        })
+                    
                     Spacer()
                 }
             }.padding([.leading, .bottom])
@@ -204,7 +156,6 @@ fileprivate struct ProfileViewHeader: View {
                 }.padding([.trailing, .bottom])
             }
             
-            
         }
         .frame(height: 260)
         
@@ -212,17 +163,55 @@ fileprivate struct ProfileViewHeader: View {
             profileVM.fetchUserProfilePicture(vm.user)
         }
         
-        .sheet(isPresented: $profileVM.showImagePicker, onDismiss: {
-            guard let image = profileVM.selectedImage else { return }
-            profileVM.uploadUserProfilePicture(viewModel: vm, email: profileVM.email, image: image)
-        }, content: {
-            ImagePicker(selectedImage: $profileVM.selectedImage, finishedSelecting: .constant(nil), sourceType: profileVM.sourceType)
+//        .sheet(isPresented: $profileVM.showImagePicker, onDismiss: {
+//            guard let image = profileVM.selectedImage else { return }
+//            profileVM.uploadUserProfilePicture(viewModel: vm, email: profileVM.email, image: image)
+//        }, content: {
+//            ImagePicker(selectedImage: $profileVM.selectedImage, finishedSelecting: .constant(nil), sourceType: profileVM.sourceType)
+//        })
+        
+        .sheet(item: $vm.activeSheet, onDismiss: doStuff, content: { item in
+            switch item {
+            case .createArtist:
+                CreateArtistView()
+                    .environmentObject(vm)
+                
+            case .createAlbum:
+                CreateAlbumView()
+                    .environmentObject(vm)
+                
+            case .uploadSong:
+                UploadSongView()
+                    .environmentObject(vm)
+                
+            case .imagePicker(let sourceType):
+                ImagePicker(selectedImage: $profileVM.selectedImage, finishedSelecting: .constant(nil), sourceType: sourceType)
+                    
+            case .documentPicker:
+                EmptyView()
+            }
         })
         
         .actionSheet(isPresented: $profileVM.showImagePickerPopover, content: {
-            profileVM.imagePickerActionSheet()
+            profileVM.imagePickerActionSheet(viewModel: vm)
         })
         
+    }
+    
+    func doStuff() {
+        switch profileVM.activeSheet {
+        case .createArtist:
+            if vm.user.artist == nil {
+                profileVM.showArtistOwnerInfo = false
+            }
+            
+        case .imagePicker:
+            guard let image = profileVM.selectedImage else { return }
+            profileVM.uploadUserProfilePicture(viewModel: vm, email: profileVM.email, image: image)
+            
+        case .uploadSong, .createAlbum, .documentPicker, .none:
+            break
+        }
     }
     
 }
@@ -283,8 +272,8 @@ fileprivate struct TopNavButtons: View {
 }
 
 fileprivate struct UseAsArtistProfileButton: View {
+    @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
-    
     private let shadowColor = Color.black.opacity(0.4)
     private let shadowPosition: (x: CGFloat, y: CGFloat) = (x: 2, y: 2)
     private let shadowRadius: CGFloat = 3
@@ -309,7 +298,23 @@ fileprivate struct UseAsArtistProfileButton: View {
             y: shadowPosition.y
         )
         
-        
+        .onChange(of: profileVM.showArtistOwnerInfo, perform: { changed in
+            if changed && vm.user.artist == nil {
+                vm.activeSheet = .createArtist
+            } else if !changed && vm.user.artist != nil {
+                /* Alert user if they turn off "Artist Profile" that all of their albums/songs including thier artist will be deleted from the service, and they'll have to re-upload everything if they want to turn it back on. i.e. no one will be able to listen to it anymore */
+                vm.alertItem = MyAlertItem(
+                    title: Text("Are you sure?"),
+                    message: Text("This will delete all of your albums/songs including your artist profile from the service. Everyone will no longer be able to listen to your uploaded song(s)"),
+                    primaryButton: .cancel(Text("Cancel"), action: {
+                            profileVM.showArtistOwnerInfo = true
+                    }),
+                    secondaryButton: .destructive(Text("Confirm"), action: {
+                        profileVM.removeUsersOwnerPrivilage(viewModel: vm)
+                    })
+                )
+            }
+        })
         
     }
 }

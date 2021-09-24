@@ -100,7 +100,10 @@ final class StorageManager {
             .reference(withPath: path)
             .delete { error in
                 if let error = error {
+                    print("Error deleting song from Firebase Storage: \(error)")
                     completion(error)
+                } else {
+                    completion(nil)
                 }
             }
     }
@@ -144,6 +147,19 @@ final class StorageManager {
     }
     
     
+    public func deleteAlbumArtwork(_ album: Album, completion: @escaping (Error?) -> Void) {
+        let path = "\(ContainerNames.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG)"
+        container
+            .reference(withPath: path)
+            .delete { error in
+                if let error = error {
+                    print("Error deleting album artwork in Firebase Storage: \(error)")
+                    completion(error)
+                } else {
+                    completion(nil)
+                }
+            }
+    }
     
     
     

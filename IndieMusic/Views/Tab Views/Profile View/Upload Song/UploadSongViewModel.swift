@@ -31,10 +31,10 @@ class UploadSongViewModel: ObservableObject {
         guard !songTitle.isEmpty,
               let album = self.album,
               let artist = self.artist else {
-            print("Required Song info not complete.")
-            viewModel.alertItem = MySongUploadAlertsContext.songInfoIncomplete
-            return
-        }
+                  print("Required Song info not complete.")
+//                  viewModel.alertItem = MySongUploadAlertsContext.songInfoIncomplete
+                  return
+              }
         
         // Generate URL for song path in Firebase Storage container
         guard let songURL = URL(string: "\(ContainerNames.artists)/\(album.id)/\(songTitle)/\(SuffixNames.mp3)") else {
@@ -75,11 +75,10 @@ class UploadSongViewModel: ObservableObject {
         
     }
     
-    
+    // Insert song into Firestore DB
     fileprivate func insertSongToDB(viewModel: ViewModel, song: Song, album: Album, image: UIImage?) {
         print("Attempting to insert song into DB...")
         
-        // Insert song into DB
         DatabaseManger.shared.insert(song: song, completion: { error in
             if error == nil {
                 print("Song object inserted into DB.")
@@ -92,7 +91,7 @@ class UploadSongViewModel: ObservableObject {
         })
     }
     
-    
+    // Update user in Firestore DB
     fileprivate func updateUser(viewModel: ViewModel, with song: Song, for album: Album) {
         guard let artist = viewModel.user.artist else { return }
         guard let album = artist.albums?.first(where: { $0 == album }) else { return }

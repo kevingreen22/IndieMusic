@@ -21,15 +21,17 @@ struct UploadSongView: View {
             NavigationView {
                 Form {
                     HStack {
+                        Spacer()
                         Button(action: {
                             uploadVM.showDocumentPicker.toggle()
                         }, label: {
-                            Text("Attach Mp3")
+                            Text(uploadVM.localFilePath != nil ? String(uploadVM.localFilePath!.lastPathComponent) : "Attach Mp3")
                         })
                         .frame(width: 200, height: 50)
                         .foregroundColor(.white)
                         .background(Color.mainApp)
                         .cornerRadius(8)
+                        Spacer()
                     }
                     
                     TextField("Song Title*", text: $uploadVM.songTitle)

@@ -13,12 +13,12 @@ class ProfileViewModel: ObservableObject {
         UserDefaults.standard.string(forKey: "email") ?? ""
     }
     @Published var activeSheet: ActiveSheet?
+    @Published var alertItem: MyAlertItem?
     @Published var showArtistOwnerInfo: Bool = false
-    @Published var showImagePicker = false
+//    @Published var showImagePicker = false
     @Published var selectedImage: UIImage? = nil
     @Published var showImagePickerPopover = false
     @Published var showSettings = false
-    var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
     
     
@@ -39,7 +39,6 @@ class ProfileViewModel: ObservableObject {
             }
         }
     }
-    
     
     
     func fetchUserProfilePicture(_ user: User) {
@@ -65,20 +64,84 @@ class ProfileViewModel: ObservableObject {
     
     
     
-    
-    func fetchPosts() {
+    func removeUsersOwnerPrivilage(viewModel: ViewModel) {
+        print("Removing User Artist owner privilage...")
+        var errors: [Error]? = nil
+        let group = DispatchGroup()
         
-    }
-    
-    
-    
-    
-    
-    func removeUsersOwnerPrivelage(viewModel: ViewModel) {
-        // remove artist, albums, songs from DatabaseManager
-        // remove uploaded MP3's from StorageManager
+        group.enter()
+        // remove uploaded MP3's from Firebase Storage
+        for album in viewModel.user.artist!.albums! {
+            for song in album.songs {
+                StorageManager.shared.delete(song: song) { error in
+                    if let error = error {
+                        errors?.append(error)
+                    }
+                    group.leave()
+                }
+            }
+            
+            group.enter()
+            // remove uploaded album artworks from Firebase Storage
+            StorageManager.shared.deleteAlbumArtwork(album) { error in
+                if let error = error {
+                    errors?.append(error)
+                }
+                group.leave()
+            }
+        }
         
-        viewModel.user.artist = nil
+        group.enter()
+        // remove artist from Firebase DB
+        DatabaseManger.shared.delete(artist: viewModel.user.artist!) { _, error in
+            if let error = error {
+                errors?.append(error)
+            }
+            group.leave()
+        }
+        
+        let result1 = group.wait(timeout: DispatchTime.now())
+        switch result1 {
+        case .success:
+            viewModel.user.artist = nil
+            print("Artist deleted from User Model")
+        case .timedOut:
+            // try again
+            print("dispatch group timed out. trying again.")
+            removeUsersOwnerPrivilage(viewModel: viewModel)
+        }
+        
+        group.enter()
+        // save user to Firebase DB
+        DatabaseManger.shared.update(user: viewModel.user) { _, error in
+            if let error = error {
+                errors?.append(error)
+            }
+            group.leave()
+        }
+        
+        
+        group.enter()
+        // then re-cache user
+        viewModel.cacheUser { success in
+            guard success else { return }
+            print("User re-cached after removing owner artist")
+            group.leave()
+        }
+        
+        let result2 = group.wait(timeout: DispatchTime.now())
+        switch result2 {
+        case .success:
+            print("remove Users Owner Privelage and artist completed.")
+        case .timedOut:
+            // try again
+            print("dispatch group timed out.")
+            alertItem = MyStandardAlertContext.test(action1: {
+                self.removeUsersOwnerPrivilage(viewModel: viewModel)
+            })
+            
+        }
+
     }
     
     
@@ -99,20 +162,21 @@ class ProfileViewModel: ObservableObject {
     
     
     
-    func imagePickerActionSheet() -> ActionSheet {
+    func imagePickerActionSheet(viewModel: ViewModel) -> ActionSheet {
         ActionSheet(title: Text("Choose Photo from"), message: nil, buttons: [
             .default(Text("Photo Library"), action: {
-                self.sourceType = .photoLibrary
-                self.showImagePicker.toggle()
+//                self.sourceType = .photoLibrary
+//                self.showImagePicker.toggle()
+                self.activeSheet = .imagePicker(sourceType: .photoLibrary)
             }),
             .default(Text("Camera"), action: {
-                self.sourceType = .camera
-                self.showImagePicker.toggle()
+//                self.sourceType = .camera
+//                self.showImagePicker.toggle()
+                self.activeSheet = .imagePicker(sourceType: .camera)
             }),
             .cancel()
         ])
     }
-    
     
     
     

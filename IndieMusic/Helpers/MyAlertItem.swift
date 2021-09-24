@@ -66,9 +66,9 @@ struct MyStandardAlertContext {
     
     
     
-    static func test(action1: ((Alert.Button.Type) -> Void)? = { arg in }) -> MyAlertItem {
+    static func test(action1: (() -> Void)? = { }) -> MyAlertItem {
         MyAlertItem(title: Text("Test"), message: Text("Test"), primaryButton: .default(Text("test"), action: {
-            action1!(Alert.Button.self)
+            action1!()
         }))
     }
 }

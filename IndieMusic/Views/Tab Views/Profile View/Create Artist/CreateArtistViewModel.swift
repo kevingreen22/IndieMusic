@@ -21,12 +21,12 @@ class CreateArtistViewModel: ObservableObject {
     func createArtist(viewModel: ViewModel) {
         // Validate info
         guard artistName != "" else {
-            print("Required Song info not completed.")
-            viewModel.alertItem = MyStandardAlertContext.infoIncomplete
+            print("Required artist info not completed.")
+//            viewModel.alertItem = MyStandardAlertContext.infoIncomplete
             return
         }
               
-        let ownerArtist = Artist(name: artistName, genre: genre, imageURL: nil, albums: nil)
+        let ownerArtist = Artist(name: artistName, genre: genre, imageURL: nil, albums: [])
         DatabaseManger.shared.insert(artist: ownerArtist) { success in
             if success {
                 print("New owner artist inserted into DB.")
@@ -48,7 +48,12 @@ class CreateArtistViewModel: ObservableObject {
                 viewModel.alertItem = MyStandardAlertContext.createOwnerArtistFailed
             }
         }
+        
+        self.presentationMode.wrappedValue.dismiss()
     }
+    
+    
+    
     
     fileprivate func reverseCreateArtistIfError(viewModel: ViewModel) {
         

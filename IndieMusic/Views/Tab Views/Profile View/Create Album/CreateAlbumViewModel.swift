@@ -34,7 +34,6 @@ class CreateAlbumViewModel: ObservableObject {
     }
     
     
-    
     func createAlbum(viewModel: ViewModel/*, completion: @escaping (Bool) -> Void*/) {
         // validate
         guard viewModel.user.artist != nil,
@@ -51,18 +50,18 @@ class CreateAlbumViewModel: ObservableObject {
         // create a new instance of Album
         let album = Album(title: albumName, artistName: viewModel.user.artist!.name, artistID: viewModel.user.artist!.id, artworkURL: artworkURL, songs: [], year: String(year), genre: genre)
         
-        // append new album to user's artist
+        // Append new album to user's artist
         viewModel.user.artist!.albums?.append(album)
         
-        // save user to database
-        DatabaseManger.shared.insert(user: viewModel.user) { success in
-            if success {
-                print("User model updated")
+        // Save album to FireStore DB
+        DatabaseManger.shared.insert(albums: [album], for: viewModel.user.artist!) { error in
+            if error == nil {
+                print("Owner album inserted into DB.")
                 
-                // save album to database
-                DatabaseManger.shared.insert(albums: [album], for: viewModel.user.artist!) { error in
-                    if error == nil {
-                        print("Owner album inserted into DB.")
+                // Save user to Firestore DB
+                DatabaseManger.shared.insert(user: viewModel.user) { success in
+                    if success {
+                        print("User model updated.")
                         
                         // Upload album artwork to stroage.
                         guard let image = self.selectedImage else { return }

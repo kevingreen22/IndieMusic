@@ -16,6 +16,7 @@ enum TabTitle: String {
 
 struct MainTabView: View {
     @Environment(\.defaultMinListRowHeight) var listRowHeight
+    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
