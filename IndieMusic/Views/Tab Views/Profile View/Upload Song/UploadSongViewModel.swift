@@ -25,7 +25,7 @@ class UploadSongViewModel: ObservableObject {
     
     
     func uploadSong(viewModel: ViewModel) {
-        print("Starting song upload...")
+        print("Verifying song info...")
         
         // Validate info
         guard !songTitle.isEmpty,
@@ -45,13 +45,17 @@ class UploadSongViewModel: ObservableObject {
         
         // Create new instance of Song object
         let song = Song(title: songTitle, genre: songGenre, artistID: artist.id, albumID: album.id, lyrics: lyrics, url: songURL)
-          
+        
+        // verify the user has an artist ownership
         guard viewModel.user.artist != nil else { return }
+        
+        // add the song to the albums array of songs
         if let album = viewModel.user.artist!.albums.first(where: { $0.id == song.albumID }) {
             album.songs.append(song)
         }
         
-        // Upload song to storage container
+        // Upload song to storage
+        print("Attempting to upload song to storage...")
         StorageManager.shared.upload(song: song, localFilePath: localFilePath) { snapshot in
             print(snapshot.status)
             switch snapshot.status {
@@ -76,8 +80,8 @@ class UploadSongViewModel: ObservableObject {
                 fatalError()
             }
         }
-        
     }
+    
     
     // Update Artist in Firestore DB
     fileprivate func updateArtist(viewModel: ViewModel, song: Song, album: Album, image: UIImage?) {
@@ -96,7 +100,10 @@ class UploadSongViewModel: ObservableObject {
     }
     
     
+    // Upload album artwork to storage
     fileprivate func uploadAlbumArtwork(image: UIImage?, album: Album, viewModel: ViewModel) {
+        print("Attempting to upload album artwork to storage...")
+        
         StorageManager.shared.uploadAlbumArtworkImage(album: album, image: image) { success in
             if success {
                 print("Album artwork uploaded successfully.")
@@ -107,13 +114,13 @@ class UploadSongViewModel: ObservableObject {
                 viewModel.alertItem = MyStandardAlertContext.generalErrorAlert
             }
         }
-        
-        
     }
     
     
     // Update user in Firestore DB
     fileprivate func updateUser(user: User, viewModel: ViewModel) {
+        print("Attempting to update/insert User to the DB...")
+        
         DatabaseManger.shared.insert(user: user) { success in
             if success {
                 print("User model updated.")

@@ -430,8 +430,8 @@
             filePath = "IndieMusic/Views/Tab Views/Profile View/Upload Song/UploadSongViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "132"
-            endingLineNumber = "132"
+            startingLineNumber = "139"
+            endingLineNumber = "139"
             landmarkName = "reverseUploadSongIfError(viewModel:)"
             landmarkType = "7">
          </BreakpointContent>
