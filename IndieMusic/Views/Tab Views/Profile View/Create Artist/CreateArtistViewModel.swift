@@ -37,41 +37,22 @@ class CreateArtistViewModel: ObservableObject {
         let ownerArtist = Artist(name: artistName, genre: genre, imageURL: nil, albums: [])
         let defaultAlbum = Album(title: "Untitled", artistName: artistName, artistID: ownerArtist.id, artworkURL: nil, songs: [], year: "2021", genre: genre)
         ownerArtist.albums.append(defaultAlbum)
+        viewModel.user.artist = ownerArtist
         
-        DatabaseManger.shared.insert(artist: ownerArtist) { success in
+        DatabaseManger.shared.insert(user: viewModel.user) { success in
             if success {
-                print("New artist inserted into DB.")
+                print("User model updated.")
                 
-                viewModel.user.artist = ownerArtist
-                DatabaseManger.shared.insert(user: viewModel.user) { success in
-                    if success {
-                        print("User model updated.")
-                        self.presentationMode.wrappedValue.dismiss()
-                    } else {
-                        print("Error updating user model witn new artist.")
-                        self.reverseCreateArtistIfError(viewModel: viewModel)
-                        viewModel.alertItem = MyStandardAlertContext.createOwnerArtistFailed
-                    }
-                }
             } else {
-                print("Error inserting new owner artist into DB.")
+                print("Error updating user model witn new artist.")
                 self.reverseCreateArtistIfError(viewModel: viewModel)
                 viewModel.alertItem = MyStandardAlertContext.createOwnerArtistFailed
             }
+            self.presentationMode.wrappedValue.dismiss()
         }
-        
-//        self.presentationMode.wrappedValue.dismiss()
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     
     
     fileprivate func reverseCreateArtistIfError(viewModel: ViewModel) {
