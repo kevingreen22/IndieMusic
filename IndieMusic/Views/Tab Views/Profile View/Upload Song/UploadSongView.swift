@@ -81,7 +81,13 @@ struct UploadSongView: View {
                     .ignoresSafeArea(edges: .bottom)
                     .overlay(
                         Button(action: {
-                            uploadVM.uploadSong(viewModel: vm)
+                            uploadVM.uploadSong(viewModel: vm, completion: { success, error in
+                                guard success, error == nil else {
+                                    vm.alertItem = MySongUploadAlertsContext.getError(error: error!)
+                                    return
+                                }
+                                presentationMode.wrappedValue.dismiss()
+                            })
                         }, label: {
                             Text("Upload")
                         })

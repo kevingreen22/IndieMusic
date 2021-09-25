@@ -77,17 +77,26 @@ struct MyStandardAlertContext {
 
 
 
+
+
+enum MySongError {
+    case songInfoIncomplete
+    case uploadSongFailied
+}
+
 struct MySongUploadAlertsContext {
-        
-    static let songInfoIncomplete = MyAlertItem(title: Text("All fields marked with an \"*\" must be filled."), primaryButton: .default(Text("Dismiss")))
-        
-    static let creatingURLError = MyAlertItem(title: Text("Problem creating song url path/id's"), primaryButton: .default(Text("Dismiss")))
-        
-    static func uploadSongError(_ error: Error) -> MyAlertItem {
-        MyAlertItem(title: Text("Error uploading song"), message: Text("Please try again.\n\(error.localizedDescription)"), primaryButton: .default(Text("Dismiss")))
+    
+    static func getError(error: MySongError) -> MyAlertItem {
+        switch error {
+        case .songInfoIncomplete:
+            return MySongUploadAlertsContext().songInfoIncomplete
+        case .uploadSongFailied:
+            return MySongUploadAlertsContext().uploadSongFailied
+        }
     }
+        
+    private let songInfoIncomplete = MyAlertItem(title: Text("All fields marked with an \"*\" must be filled."), primaryButton: .default(Text("Dismiss")))
     
-    static let insertSongToDBError = MyAlertItem(title: Text("Database Error."), message: Text("Failed to insert new song into database."), primaryButton: .default(Text("Dismiss")))
-    
-    
+    private let uploadSongFailied = MyAlertItem(title: Text("Error uploading song"), message: Text("Please try again."), primaryButton: .default(Text("Dismiss")))
+  
 }
