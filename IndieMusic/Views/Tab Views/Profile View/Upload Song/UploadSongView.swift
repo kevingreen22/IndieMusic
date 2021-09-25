@@ -83,7 +83,7 @@ struct UploadSongView: View {
                         Button(action: {
                             uploadVM.uploadSong(viewModel: vm, completion: { success, error in
                                 guard success, error == nil else {
-                                    vm.alertItem = MySongUploadAlertsContext.getError(error: error!)
+                                    vm.alertItem = MySongUploadErrorContext.getError(error: error!)
                                     return
                                 }
                                 presentationMode.wrappedValue.dismiss()

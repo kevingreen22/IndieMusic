@@ -65,7 +65,7 @@ struct MyStandardAlertContext {
     
     
     
-    
+    // Basic alert with action.
     static func test(action1: (() -> Void)? = { }) -> MyAlertItem {
         MyAlertItem(title: Text("Test"), message: Text("Test"), primaryButton: .default(Text("test"), action: {
             action1!()
@@ -84,14 +84,14 @@ enum MySongError {
     case uploadSongFailied
 }
 
-struct MySongUploadAlertsContext {
+struct MySongUploadErrorContext {
     
     static func getError(error: MySongError) -> MyAlertItem {
         switch error {
         case .songInfoIncomplete:
-            return MySongUploadAlertsContext().songInfoIncomplete
+            return MySongUploadErrorContext().songInfoIncomplete
         case .uploadSongFailied:
-            return MySongUploadAlertsContext().uploadSongFailied
+            return MySongUploadErrorContext().uploadSongFailied
         }
     }
         
