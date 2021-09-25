@@ -17,8 +17,8 @@ class MockData {
                            profilePictureData: nil,
                            songListData: [],
                            favoriteArtists: [data.first!],
-                           favoriteAlbums: [data.first!.albums!.first!],
-                           favoriteSongs: [data.first!.albums!.first!.songs.first!],
+                           favoriteAlbums: [data.first!.albums.first!],
+                           favoriteSongs: [data.first!.albums.first!.songs.first!],
                            recentlyAdded: nil,
                            artist: data.first!
     )
@@ -163,7 +163,7 @@ class MockData {
     static func Albums() -> [Album] {
         var albumNames: [Album] = []
         for artist in data {
-            for album in artist.albums! {
+            for album in artist.albums {
                 albumNames.append(album)
             }
         }
@@ -174,7 +174,7 @@ class MockData {
     static func Songs() -> [Song] {
         var songs: [Song] = []
         for artist in data {
-            for album in artist.albums! {
+            for album in artist.albums {
                 for song in album.songs {
                     songs.append(song)
                 }

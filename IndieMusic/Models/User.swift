@@ -41,16 +41,14 @@ class User: Codable {
     func getOwnerAlbums() -> [Album] {
         let nilAlbum: [Album] = []
         guard let _artist = artist else { return nilAlbum }
-        guard let albums = _artist.albums else { return nilAlbum }
-        return albums
+        return _artist.albums
     }
     
     func getOwnerSongs() -> [UIImage? : [Song]] {
         var songs: [UIImage? : [Song]] = [:]
         guard let artist = artist else { return songs }
-        guard let albums = artist.albums else { return songs }
         
-        for album in albums {
+        for album in artist.albums {
             StorageManager.shared.downloadAlbumArtwork(for: album.id, artistID: album.artistID) { image in
                 if let image = image {
                     songs.updateValue(album.songs, forKey: image)

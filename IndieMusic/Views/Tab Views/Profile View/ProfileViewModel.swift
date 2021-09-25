@@ -70,7 +70,7 @@ class ProfileViewModel: ObservableObject {
         
         group.enter()
         // remove uploaded MP3's from Firebase Storage
-        for album in viewModel.user.artist!.albums! {
+        for album in viewModel.user.artist!.albums {
             for song in album.songs {
                 StorageManager.shared.delete(song: song) { error in
                     if let error = error {

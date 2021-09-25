@@ -46,6 +46,10 @@ class UploadSongViewModel: ObservableObject {
         // Create new instance of Song object
         let song = Song(title: songTitle, genre: songGenre, artistID: artist.id, albumID: album.id, lyrics: lyrics, url: songURL)
           
+        guard viewModel.user.artist != nil else { return }
+        if let album = viewModel.user.artist!.albums.first(where: { $0.id == song.albumID }) {
+            album.songs.append(song)
+        }
         
         // Upload song to storage container
         StorageManager.shared.upload(song: song, localFilePath: localFilePath) { snapshot in
@@ -57,8 +61,8 @@ class UploadSongViewModel: ObservableObject {
                 self.uploadProgress = percentComplete
                 
             case .success:
-                print("Song MP3 uploaded.")
-                self.insertSongToDB(viewModel: viewModel, song: song, album: album, image: self.selectedImage)
+                print("Song .mp3 uploaded.")
+                self.updateArtist(viewModel: viewModel, song: song, album: album, image: self.selectedImage)
                 
             case .failure:
                 guard let error = snapshot.error else { return }
@@ -75,29 +79,42 @@ class UploadSongViewModel: ObservableObject {
         
     }
     
-    // Insert song into Firestore DB
-    fileprivate func insertSongToDB(viewModel: ViewModel, song: Song, album: Album, image: UIImage?) {
-        print("Attempting to insert song into DB...")
-        
-        DatabaseManger.shared.insert(song: song, completion: { error in
-            if error == nil {
-                print("Song object inserted into DB.")
-                self.updateUser(viewModel: viewModel, with: song, for: album)
+    // Update Artist in Firestore DB
+    fileprivate func updateArtist(viewModel: ViewModel, song: Song, album: Album, image: UIImage?) {
+        print("Attempting to update artist in DB...")
+
+        DatabaseManger.shared.insert(artist: viewModel.user.artist!) { success in
+            if success {
+                print("Artist object updated in DB.")
+                self.uploadAlbumArtwork(image: image, album: album, viewModel: viewModel)
             } else {
-                print("Failed to insert new song into DB.")
+                print("Failed to update artist with new song in DB.")
                 self.reverseUploadSongIfError(viewModel: viewModel)
                 viewModel.alertItem = MySongUploadAlertsContext.insertSongToDBError
             }
-        })
+        }
     }
     
-    // Update user in Firestore DB
-    fileprivate func updateUser(viewModel: ViewModel, with song: Song, for album: Album) {
-        guard let artist = viewModel.user.artist else { return }
-        guard let album = artist.albums?.first(where: { $0 == album }) else { return }
-        album.songs.append(song)
+    
+    fileprivate func uploadAlbumArtwork(image: UIImage?, album: Album, viewModel: ViewModel) {
+        StorageManager.shared.uploadAlbumArtworkImage(album: album, image: image) { success in
+            if success {
+                print("Album artwork uploaded successfully.")
+                self.updateUser(user: viewModel.user, viewModel: viewModel)
+            } else {
+                print("Error uploading album artwork.")
+                self.reverseUploadSongIfError(viewModel: viewModel)
+                viewModel.alertItem = MyStandardAlertContext.generalErrorAlert
+            }
+        }
         
-        DatabaseManger.shared.insert(user: viewModel.user) { success in
+        
+    }
+    
+    
+    // Update user in Firestore DB
+    fileprivate func updateUser(user: User, viewModel: ViewModel) {
+        DatabaseManger.shared.insert(user: user) { success in
             if success {
                 print("User model updated.")
                 self.presentationMode.wrappedValue.dismiss()

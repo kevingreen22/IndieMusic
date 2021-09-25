@@ -25,10 +25,10 @@ class Artist: Hashable, Codable {
     var name: String
     var genre: String
     var imageURL: URL?
-    var albums: [Album]?
+    var albums: [Album]
     var timeStamp: TimeInterval
     
-    init(name: String, genre: String, imageURL: URL?, albums: [Album]?) {
+    init(name: String, genre: String, imageURL: URL?, albums: [Album]) {
         self.id = UUID().uuidString
         self.name = name
         self.genre = genre
@@ -38,7 +38,8 @@ class Artist: Hashable, Codable {
     }
     
     public var mostRecentAlbumArtworkURL: URL {
-        if let album = albums?.sorted(), let mostRecentArtwork = album.last?.artworkURL {
+        let sortedAlbums = albums.sorted()
+        if let mostRecentArtwork = sortedAlbums.last?.artworkURL {
             return mostRecentArtwork
         } else {
             return URL(fileURLWithPath: "album_artwork_placeholder")

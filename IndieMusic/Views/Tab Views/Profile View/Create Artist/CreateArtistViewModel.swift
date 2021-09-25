@@ -25,11 +25,22 @@ class CreateArtistViewModel: ObservableObject {
 //            viewModel.alertItem = MyStandardAlertContext.infoIncomplete
             return
         }
-              
+                
+//        DatabaseManger.shared.checkForExistingArtist(name: artistName) { exists in
+//            guard exists else {
+//                print("Artist already exists.")
+////                viewModel.alertItem = MyStandardAlertContext.artistAlreadyExists
+//                return
+//            }
+//        }
+             
         let ownerArtist = Artist(name: artistName, genre: genre, imageURL: nil, albums: [])
+        let defaultAlbum = Album(title: "Untitled", artistName: artistName, artistID: ownerArtist.id, artworkURL: nil, songs: [], year: "2021", genre: genre)
+        ownerArtist.albums.append(defaultAlbum)
+        
         DatabaseManger.shared.insert(artist: ownerArtist) { success in
             if success {
-                print("New owner artist inserted into DB.")
+                print("New artist inserted into DB.")
                 
                 viewModel.user.artist = ownerArtist
                 DatabaseManger.shared.insert(user: viewModel.user) { success in
@@ -49,8 +60,16 @@ class CreateArtistViewModel: ObservableObject {
             }
         }
         
-        self.presentationMode.wrappedValue.dismiss()
+//        self.presentationMode.wrappedValue.dismiss()
     }
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

@@ -51,12 +51,12 @@ class CreateAlbumViewModel: ObservableObject {
         let album = Album(title: albumName, artistName: viewModel.user.artist!.name, artistID: viewModel.user.artist!.id, artworkURL: artworkURL, songs: [], year: String(year), genre: genre)
         
         // Append new album to user's artist
-        viewModel.user.artist!.albums?.append(album)
+        viewModel.user.artist!.albums.append(album)
         
         // Save album to FireStore DB
-        DatabaseManger.shared.insert(albums: [album], for: viewModel.user.artist!) { error in
-            if error == nil {
-                print("Owner album inserted into DB.")
+        DatabaseManger.shared.insert(artist: viewModel.user.artist!) { success in
+            if success {
+                print("Updated artist inserted into DB.")
                 
                 // Save user to Firestore DB
                 DatabaseManger.shared.insert(user: viewModel.user) { success in
@@ -64,10 +64,14 @@ class CreateAlbumViewModel: ObservableObject {
                         print("User model updated.")
                         
                         // Upload album artwork to stroage.
-                        guard let image = self.selectedImage else { return }
+                        guard let image = self.selectedImage else {
+                            self.presentationMode.wrappedValue.dismiss()
+                            return
+                        }
                         StorageManager.shared.uploadAlbumArtworkImage(album: album, image: image) { success in
                             if success {
-                                print("Owner album artwork uploaded.")
+                                print("Album artwork uploaded.")
+                                self.presentationMode.wrappedValue.dismiss()
                             } else {
                                 print("Error uploading album artwork.")
                                 self.reverseCreateAlbumIfError(viewModel: viewModel)
@@ -81,8 +85,7 @@ class CreateAlbumViewModel: ObservableObject {
                     }
                 }
             } else {
-                print("Error inserting owner album into DB.")
-                self.reverseCreateAlbumIfError(viewModel: viewModel)
+                print("Error inserting artist into DB.")
                 viewModel.alertItem = MyStandardAlertContext.createAlbumFailed
             }
         }

@@ -236,6 +236,7 @@ fileprivate struct TopNavButtons: View {
 }
 
 fileprivate struct UseAsArtistProfileButton: View {
+    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     private let shadowColor = Color.black.opacity(0.4)
@@ -262,7 +263,7 @@ fileprivate struct UseAsArtistProfileButton: View {
             y: shadowPosition.y
         )
         
-        // dont move this .onChange
+
         .onChange(of: profileVM.showArtistOwnerInfo, perform: { changed in
             if changed && vm.user.artist == nil {
                 vm.activeSheet = .createArtist
@@ -281,8 +282,8 @@ fileprivate struct UseAsArtistProfileButton: View {
             }
         })
         
-        // dont move this .sheet!!!!
-        .sheet(item: $vm.activeSheet, onDismiss: doStuff, content: { item in
+
+        .fullScreenCover(item: $vm.activeSheet, onDismiss: doStuff, content: { item in
             switch item {
             case .createArtist:
                 CreateArtistView()

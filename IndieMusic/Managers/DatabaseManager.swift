@@ -141,13 +141,11 @@ final class DatabaseManger {
     
     /// Adds an artist to the Firestore database. Either overwriting the current artist with a new instance, or creating a new one.
     public func insert(artist: Artist, completion: @escaping (Bool) -> Void) {
-        let documentID = artist.id
-
         do {
             try database
                 .collection(ContainerNames.artists)
-                .document(documentID)
-                .setData(from: artist) { [weak self] error in
+                .document(artist.id)
+                .setData(from: artist, merge: false) { [weak self] error in
                     completion(error == nil)
                 }
         } catch let error {
@@ -156,45 +154,58 @@ final class DatabaseManger {
     }
     
     
-    /// Adds album(s) to the artist within the Firestore database.
-    public func insert(albums: [Album], for artist: Artist, completion: @escaping (Error?) -> Void) {
-        let documentID = artist.id
-        
+    public func checkForExistingArtist(name: String, completion: @escaping (Bool, Error?) -> Void) {
         database
             .collection(ContainerNames.artists)
-            .document(documentID)
-            .updateData([
-                "albums" : FieldValue.arrayUnion([albums])
-            ]) { [weak self] error in
-                guard error != nil else {
-                    completion(nil)
+            .whereField("name", isEqualTo: name)
+            .getDocuments { snapshot, error in
+                guard error == nil else {
+                    completion(false, error)
                     return
                 }
-                print("Error writing \"album\" to artist within Firestore: \(error!.localizedDescription))")
-                completion(error)
+                if let snapshot = snapshot {
+                    completion(snapshot.isEmpty, nil)
+                }
             }
     }
     
     
+    /// Adds album(s) to the artist within the Firestore database.
+//    public func insert(album: Album, for artist: Artist, completion: @escaping (Error?) -> Void) {
+//        database
+//            .collection(ContainerNames.artists)
+//            .document(artist.id)
+//            .updateData([
+//                "albums" : FieldValue.arrayUnion([album])
+//            ]) { [weak self] error in
+//                guard error != nil else {
+//                    completion(nil)
+//                    return
+//                }
+//                print("Error writing \"album\" to artist within Firestore: \(error!.localizedDescription))")
+//                completion(error)
+//            }
+//    }
+    
+    
     /// Adds song(s) to an artist's album within the Firestore database.
-    public func insert(song: Song, completion: @escaping (Error?) -> Void) {
-        
-            database
-                .collection(ContainerNames.artists)
-                .document(song.artistID)
-                .updateData([
-                    "albums" : [
-                        "songs" : FieldValue.arrayUnion([song])
-                    ]
-                ]) { [weak self] error in
-                    guard error != nil else {
-                        completion(nil)
-                        return
-                    }
-                    print("Error writing \"song\" to Firestore: \(error!.localizedDescription))")
-                    completion(error)
-                }
-    }
+//    public func insert(song: Song, completion: @escaping (Error?) -> Void) {
+//            database
+//                .collection(ContainerNames.artists)
+//                .document(song.artistID)
+//                .updateData([
+//                    "albums" : [
+//                        "songs" : FieldValue.arrayUnion([song])
+//                    ]
+//                ]) { [weak self] error in
+//                    guard error != nil else {
+//                        completion(nil)
+//                        return
+//                    }
+//                    print("Error writing \"song\" to Firestore: \(error!.localizedDescription))")
+//                    completion(error)
+//                }
+//    }
     
     
     
@@ -284,10 +295,8 @@ final class DatabaseManger {
         
         fetchAllArtists { artists in
             for artist in artists {
-                if let albums = artist.albums {
-                    for album in albums {
-                        _albums.append(album)
-                    }
+                for album in artist.albums {
+                    _albums.append(album)
                 }
             }
             completion(_albums)
@@ -298,8 +307,7 @@ final class DatabaseManger {
     public func fetchAlbumsFor(artistID id: String, completion: @escaping ([Album]?) -> Void) {
         fetchArtist(with: id) { artist in
             guard let artist = artist else { completion(nil); return }
-            guard let albums = artist.albums else { completion(nil); return }
-            completion(albums)
+            completion(artist.albums)
         }
     }
     
@@ -307,8 +315,7 @@ final class DatabaseManger {
     public func fetchAlbumWith(id: String, artistID: String, completion: @escaping (Album?) -> Void) {
         fetchArtist(with: artistID) { artist in
             guard let artist = artist else { completion(nil); return }
-            guard let albums = artist.albums else { completion(nil); return }
-            for album in albums {
+            for album in artist.albums {
                 if album.id == id {
                     completion(album)
                     return
@@ -325,10 +332,8 @@ final class DatabaseManger {
         
         fetchAllArtists { artists in
             for artist in artists {
-                if let albums = artist.albums {
-                    for album in albums {
-                        _songs.append(contentsOf: album.songs)
-                    }
+                for album in artist.albums {
+                    _songs.append(contentsOf: album.songs)
                 }
             }
             completion(_songs)
