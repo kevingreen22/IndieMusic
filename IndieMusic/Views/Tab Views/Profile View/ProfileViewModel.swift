@@ -12,7 +12,6 @@ class ProfileViewModel: ObservableObject {
     var email: String {
         UserDefaults.standard.string(forKey: "email") ?? ""
     }
-    @Published var activeSheet: ActiveSheet?
     @Published var alertItem: MyAlertItem?
     @Published var showArtistOwnerInfo: Bool = false
 //    @Published var showImagePicker = false
@@ -165,18 +164,19 @@ class ProfileViewModel: ObservableObject {
     func imagePickerActionSheet(viewModel: ViewModel) -> ActionSheet {
         ActionSheet(title: Text("Choose Photo from"), message: nil, buttons: [
             .default(Text("Photo Library"), action: {
-//                self.sourceType = .photoLibrary
 //                self.showImagePicker.toggle()
-                self.activeSheet = .imagePicker(sourceType: .photoLibrary)
+                viewModel.activeSheet = .imagePicker(sourceType: .photoLibrary)
             }),
             .default(Text("Camera"), action: {
-//                self.sourceType = .camera
 //                self.showImagePicker.toggle()
-                self.activeSheet = .imagePicker(sourceType: .camera)
+                viewModel.activeSheet = .imagePicker(sourceType: .camera)
             }),
             .cancel()
         ])
     }
+    
+    
+    
     
     
     

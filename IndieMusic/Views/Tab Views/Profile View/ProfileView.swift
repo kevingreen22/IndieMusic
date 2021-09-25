@@ -139,14 +139,14 @@ fileprivate struct ProfileViewHeader: View {
                         ExpandableButtonPanel(primaryItem: ExpandableButtonItem(label: nil, imageName: "plus", action: nil), secondaryItems: [
                             ExpandableButtonItem(label: nil, imageName: "rectangle.stack.fill.badge.plus", action: {
                                 // show create album view
-                                profileVM.activeSheet = .createAlbum
+                                vm.activeSheet = .createAlbum
                                 withAnimation {
                                     isExpanded.toggle()
                                 }
                             }),
                             ExpandableButtonItem(label: nil, imageName: "music.note", action: {
                                 // show upload song view
-                                profileVM.activeSheet = .uploadSong
+                                vm.activeSheet = .uploadSong
                                 withAnimation {
                                     isExpanded.toggle()
                                 }
@@ -170,49 +170,13 @@ fileprivate struct ProfileViewHeader: View {
 //            ImagePicker(selectedImage: $profileVM.selectedImage, finishedSelecting: .constant(nil), sourceType: profileVM.sourceType)
 //        })
         
-        .sheet(item: $vm.activeSheet, onDismiss: doStuff, content: { item in
-            switch item {
-            case .createArtist:
-                CreateArtistView()
-                    .environmentObject(vm)
-                
-            case .createAlbum:
-                CreateAlbumView()
-                    .environmentObject(vm)
-                
-            case .uploadSong:
-                UploadSongView()
-                    .environmentObject(vm)
-                
-            case .imagePicker(let sourceType):
-                ImagePicker(selectedImage: $profileVM.selectedImage, finishedSelecting: .constant(nil), sourceType: sourceType)
-                    
-            case .documentPicker:
-                EmptyView()
-            }
-        })
-        
         .actionSheet(isPresented: $profileVM.showImagePickerPopover, content: {
             profileVM.imagePickerActionSheet(viewModel: vm)
         })
         
     }
     
-    func doStuff() {
-        switch profileVM.activeSheet {
-        case .createArtist:
-            if vm.user.artist == nil {
-                profileVM.showArtistOwnerInfo = false
-            }
-            
-        case .imagePicker:
-            guard let image = profileVM.selectedImage else { return }
-            profileVM.uploadUserProfilePicture(viewModel: vm, email: profileVM.email, image: image)
-            
-        case .uploadSong, .createAlbum, .documentPicker, .none:
-            break
-        }
-    }
+    
     
 }
 
@@ -298,6 +262,7 @@ fileprivate struct UseAsArtistProfileButton: View {
             y: shadowPosition.y
         )
         
+        // dont move this .onChange
         .onChange(of: profileVM.showArtistOwnerInfo, perform: { changed in
             if changed && vm.user.artist == nil {
                 vm.activeSheet = .createArtist
@@ -316,7 +281,47 @@ fileprivate struct UseAsArtistProfileButton: View {
             }
         })
         
+        // dont move this .sheet!!!!
+        .sheet(item: $vm.activeSheet, onDismiss: doStuff, content: { item in
+            switch item {
+            case .createArtist:
+                CreateArtistView()
+                    .environmentObject(vm)
+                
+            case .createAlbum:
+                CreateAlbumView()
+                    .environmentObject(vm)
+                
+            case .uploadSong:
+                UploadSongView()
+                    .environmentObject(vm)
+                
+            case .imagePicker(let sourceType):
+                ImagePicker(selectedImage: $profileVM.selectedImage, finishedSelecting: .constant(nil), sourceType: sourceType)
+                    
+            case .documentPicker:
+                EmptyView()
+            }
+        })
+        
     }
+    
+    func doStuff() {
+        switch vm.activeSheet {
+        case .createArtist:
+            if vm.user.artist == nil {
+                profileVM.showArtistOwnerInfo = false
+            }
+            
+        case .imagePicker:
+            guard let image = profileVM.selectedImage else { return }
+            profileVM.uploadUserProfilePicture(viewModel: vm, email: profileVM.email, image: image)
+            
+        case .uploadSong, .createAlbum, .documentPicker, .none:
+            break
+        }
+    }
+    
 }
 
 
