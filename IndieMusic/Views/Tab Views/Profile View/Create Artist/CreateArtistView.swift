@@ -10,6 +10,7 @@ import SwiftUI
 struct CreateArtistView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var profileVM: ProfileViewModel
     @StateObject var createArtistVM = CreateArtistViewModel()
     
     var body: some View {
@@ -83,6 +84,7 @@ struct CreateArtistView: View {
                         .overlay(
                             Button(action: {
                                 createArtistVM.createArtist(viewModel: vm)
+                                self.presentationMode.wrappedValue.dismiss()
                             }, label: {
                                 Text("Create")
                                     .font(.system(size: 25))
@@ -101,9 +103,9 @@ struct CreateArtistView: View {
             } // End ZStack
         } // End geometry reader
         
-        .alert(item: $vm.alertItem) { alert in
-            MyAlertItem.present(alertItem: alert)
-        }
+//        .alert(item: $vm.alertItem) { alert in
+//            MyAlertItem.present(alertItem: alert)
+//        }
         
         .sheet(isPresented: $createArtistVM.showImagePicker, content: {
             ImagePicker(selectedImage: $createArtistVM.bioImage, finishedSelecting: .constant(nil))
@@ -119,5 +121,6 @@ struct CreatArtistAlbumSongView_Previews: PreviewProvider {
     static var previews: some View {
         CreateArtistView()
             .environmentObject(ViewModel())
+            .environmentObject(ProfileViewModel())
     }
 }

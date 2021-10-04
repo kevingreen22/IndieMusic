@@ -18,4 +18,5 @@ struct SuffixNames {
     static var mp3 = ".mp3"
     static var photoPNG = "photo.png"
     static var albumArtworkPNG = "album_artwork.png"
+    static var bioPicture = "bio_picture.png"
 }

@@ -14,7 +14,6 @@ class ProfileViewModel: ObservableObject {
     }
     @Published var alertItem: MyAlertItem?
     @Published var showArtistOwnerInfo: Bool = false
-//    @Published var showImagePicker = false
     @Published var selectedImage: UIImage? = nil
     @Published var showImagePickerPopover = false
     @Published var showSettings = false
@@ -60,7 +59,14 @@ class ProfileViewModel: ObservableObject {
     }
     
     
-    
+    func getAlbumArtworkFor(song: Song) -> UIImage {
+        var _image = UIImage(named: "album_artwork_placeholder")!
+        StorageManager.shared.downloadAlbumArtworkFor(albumID: song.albumID, artistID: song.artistID) { image in
+            guard let image = image else { return }
+            _image = image
+        }
+        return _image
+    }
     
     
     func removeUsersOwnerPrivilage(viewModel: ViewModel) {
@@ -135,18 +141,12 @@ class ProfileViewModel: ObservableObject {
         case .timedOut:
             // try again
             print("dispatch group timed out.")
-            alertItem = MyStandardAlertContext.test(action1: {
-                self.removeUsersOwnerPrivilage(viewModel: viewModel)
-            })
+            alertItem = MyErrorContext.myAlertWith(title: "Process timed out", message: nil, action: { self.removeUsersOwnerPrivilage(viewModel: viewModel) }
+            )
             
         }
 
     }
-    
-    
-    
-    
-    
     
     
     func signOut() {
@@ -158,17 +158,12 @@ class ProfileViewModel: ObservableObject {
     }
     
     
-    
-    
-    
     func imagePickerActionSheet(viewModel: ViewModel) -> ActionSheet {
         ActionSheet(title: Text("Choose Photo from"), message: nil, buttons: [
             .default(Text("Photo Library"), action: {
-//                self.showImagePicker.toggle()
                 viewModel.activeSheet = .imagePicker(sourceType: .photoLibrary)
             }),
             .default(Text("Camera"), action: {
-//                self.showImagePicker.toggle()
                 viewModel.activeSheet = .imagePicker(sourceType: .camera)
             }),
             .cancel()

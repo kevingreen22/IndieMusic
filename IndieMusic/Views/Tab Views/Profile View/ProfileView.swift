@@ -13,33 +13,31 @@ struct ProfileView: View {
     @EnvironmentObject var vm: ViewModel
     @StateObject var profileVM = ProfileViewModel()
     
-    var songsWithImages: [UIImage? : [Song]] {
-        vm.user.getOwnerSongs()
-    }
-    var songCount: Int {
-        songsWithImages.count
-    }
     
     var body: some View {
         ZStack {
-            VStack {
+            VStack(alignment: .leading, spacing: 0) {
                 ProfileViewHeader()
                     .environmentObject(vm)
                     .environmentObject(profileVM)
                 
-                ScrollView {
-                    if vm.user.artist != nil {
-                        VStack {
-                            ForEach(0..<songCount) { element in
-                                getSongCell()
-                                    .environmentObject(vm)
+                List {
+                    ForEach(vm.user.ownerSongs, id: \.self) { song in
+                        HStack {
+                            Image(uiImage: profileVM.getAlbumArtworkFor(song: song))
+                                .resizable()
+                                .frame(width: 40, height: 40, alignment: .leading)
+                                .padding(.trailing)
+                            VStack(alignment: .leading) {
+                                Text(song.title)
+                                    .font(.title3)
+                                Text(song.albumTitle)
+                                    .foregroundColor(.appSecondary)
                             }
+                            
                         }
                     }
-                    
-                } // End ScrollView
-                .ignoresSafeArea()
- 
+                }
             } // End VStack
             
             TopNavButtons()
@@ -54,39 +52,7 @@ struct ProfileView: View {
             }
         }
         
-        .alert(item: $vm.alertItem) { alert in
-            MyAlertItem.present(alertItem: alert)
-        }
-        
     } // End body
-    
-    
-    
-    func getSongCell() -> some View {
-        struct Cell: View {
-            @EnvironmentObject var vm: ViewModel
-            var image: UIImage?
-            var name: String = "Unknown"
-            var song: Song
-            var body: some View {
-                HStack {
-                    Image(uiImage: image ?? UIImage(systemName: "album_artwork_placeholder")!)
-                        .padding(.trailing)
-                    Text(name)
-                }
-            }
-        }
-
-        var cell: Cell?
-        for element in songsWithImages {
-            for song in element.value {
-                cell = Cell.init(image: element.key, name: song.title, song: song)
-            }
-        }
-
-        return cell
-    }
-    
 }
 
 

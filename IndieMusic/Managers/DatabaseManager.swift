@@ -144,7 +144,7 @@ final class DatabaseManger {
         do {
             try database
                 .collection(ContainerNames.artists)
-                .document(artist.id)
+                .document(artist.id.uuidString)
                 .setData(from: artist, merge: false) { [weak self] error in
                     completion(error == nil)
                 }
@@ -154,13 +154,13 @@ final class DatabaseManger {
     }
     
     
-    public func checkForExistingArtist(name: String, completion: @escaping (Bool, Error?) -> Void) {
+    public func checkForExistingArtist(name: String, completion: @escaping (Bool, MyError?) -> Void) {
         database
             .collection(ContainerNames.artists)
             .whereField("name", isEqualTo: name)
             .getDocuments { snapshot, error in
                 guard error == nil else {
-                    completion(false, error)
+                    completion(false, MyError.duplicate)
                     return
                 }
                 if let snapshot = snapshot {
@@ -316,7 +316,7 @@ final class DatabaseManger {
         fetchArtist(with: artistID) { artist in
             guard let artist = artist else { completion(nil); return }
             for album in artist.albums {
-                if album.id == id {
+                if album.id.uuidString == id {
                     completion(album)
                     return
                 }
@@ -353,7 +353,7 @@ final class DatabaseManger {
         fetchAlbumWith(id: albumID, artistID: artistID) { album in
             guard let album = album else { completion(nil); return }
             for song in album.songs {
-                if song.id == id {
+                if song.id.uuidString == id {
                     completion(song)
                     return
                 }
@@ -371,7 +371,7 @@ final class DatabaseManger {
     
     // MARK: Delete music from database
     public func delete(artist: Artist, completion: @escaping (Bool, Error?) -> Void) {
-        let documentID = artist.id
+        let documentID = artist.id.uuidString
         
         database
             .collection(ContainerNames.artists)

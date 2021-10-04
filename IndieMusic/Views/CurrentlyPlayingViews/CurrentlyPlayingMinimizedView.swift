@@ -16,19 +16,25 @@ struct CurrentlyPlayingMinimizedView: View {
     var body: some View {
         VStack {
             ZStack(alignment: .leading) {
-                Capsule().fill(Color.black.opacity(0.08)).frame(height: 3)
-                Capsule().fill(Color.red).frame(width: cpVM.currentPlayTrackWidth, height: 3)
+                Capsule()
+                    .fill(Color.black.opacity(0.08))
+                    .frame(height: 3)
+                Capsule()
+                    .fill(Color.mainApp)
+                    .frame(width: cpVM.currentPlayTrackWidth, height: 3)
             }
-            
+            Spacer()
             HStack {
                 Image(uiImage: cpVM.albumImage)
                     .resizable()
                     .frame(width: 40, height: 40, alignment: .leading)
                     .cornerRadius(5)
+                    .padding(.leading)
                 
-//                MarqueTextView(text: song.title)
-                Text(cpVM.song.title)
-                    .truncationMode(.tail)
+                VStack {
+                    Text(cpVM.song.title).truncationMode(.tail)
+                    Text(cpVM.song.artistName).truncationMode(.tail)
+                }
                 
                 Spacer()
                 Spacer()
@@ -55,11 +61,14 @@ struct CurrentlyPlayingMinimizedView: View {
                 
             }
             .padding(.horizontal)
-            .offset(y: -5)
+            .offset(y: -9)
             
         }
         .frame(height: ViewModel.Constants.currentlyPlayingMinimizedViewHeight)
-        .background(Color.gray)
+        .background(Color.tabBarBackground.opacity(0.7))
+        .clipShape(Capsule())
+        .padding(.horizontal)
+        
         
         .onTapGesture {
             // Show currently playing song full screen view

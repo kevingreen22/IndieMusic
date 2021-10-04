@@ -34,7 +34,7 @@ struct ExpandableButtonPanel: View {
     @Binding var isExpanded: Bool
 
     var body: some View {
-        VStack {
+        VStack(alignment: .center) {
             ForEach(secondaryItems, id: \.id) { item in
                 if let label = item.label {
                     Button(label, action: item.action ?? self.noop)
@@ -72,8 +72,8 @@ struct ExpandableButtonPanel: View {
             .frame(width: size, height: size)
         }
         .background(color)
-        .cornerRadius(cornerRadius)
         .font(.title)
+        .cornerRadius(cornerRadius)
         .shadow(
             color: shadowColor,
             radius: shadowRadius,

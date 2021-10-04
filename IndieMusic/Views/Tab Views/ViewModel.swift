@@ -10,8 +10,7 @@ import SwiftUI
 class ViewModel: ObservableObject {
     
     struct Constants {
-        static let currentlyPlayingMinimizedViewHeight: CGFloat = 53
-        static let exploreCellSize: CGFloat = 130
+        static let currentlyPlayingMinimizedViewHeight: CGFloat = 60
         static let playIndicatorSize: CGFloat = 30
         static let songCellImageSize: CGFloat = 30
     }
@@ -24,7 +23,9 @@ class ViewModel: ObservableObject {
     @Published var showPayWall = false
     @Published var searchText: String = ""
     @Published var selectedSongCell: Song? = nil
-    
+    @Published var uploadProgress: CGFloat = 0
+    @Published var showNotification = false
+    @Published var notificationText = "Uploading..."
     
     
 //    public func setArtworkFor(album: Album) {

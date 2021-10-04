@@ -29,8 +29,13 @@ extension Color {
         Color("SecondaryApp")
     }
     
+    static var tabBarBackground: Color {
+        Color("TabBarBackground")
+    }
     
 }
+
+
 
 
 // MARK: TimeInterval - formatter for currently playing views
@@ -45,6 +50,30 @@ extension TimeInterval {
     }
 
 }
+
+
+
+
+
+// MARK: View
+
+extension View {
+    public func getScreenBounds() -> CGRect {
+        return UIScreen.main.bounds
+    }
+    
+    public func getSafeArea() -> UIEdgeInsets {
+        let null = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        guard let screen = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return null }
+        guard let safeArea = screen.windows.first?.safeAreaInsets else { return null }
+        return safeArea
+    }
+    
+}
+
+
+
+
 
 
 // MARK: UINavigationController Extension. edits NavigationViews
@@ -78,7 +107,7 @@ extension UINavigationController {
 // MARK: UITableView Extension, edits List Views
 extension UITableView {
     
-    func setTableViewBackgroundGradient(_ topColor:UIColor, _ bottomColor:UIColor) {
+    func setTableViewBackgroundGradient(_ topColor: UIColor, _ bottomColor: UIColor) {
         let gradientBackgroundColors = [topColor.cgColor, bottomColor.cgColor]
         let gradientLocations: [NSNumber] = [0.0, 1.0]
 

@@ -12,6 +12,7 @@ import MobileCoreServices
 struct DocumentPicker: UIViewControllerRepresentable {
     @Environment(\.presentationMode) var presentationMode
     @Binding var filePath: URL?
+    @Binding var file: Data?
     var contentTypes: [UTType] = [.audio, .mp3]
     
     func makeCoordinator() -> Coordinator {
@@ -39,7 +40,21 @@ struct DocumentPicker: UIViewControllerRepresentable {
         
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             print("Document picker url(s): \(urls)")
-            parent.filePath = urls[0]
+            guard let url = urls.first, url.startAccessingSecurityScopedResource() else { return }
+            
+            defer {
+                DispatchQueue.main.async {
+                    url.stopAccessingSecurityScopedResource()
+                }
+            }
+            
+            do {
+                let document = try Data(contentsOf: url.absoluteURL)
+                parent.file = document
+                parent.filePath = url
+            } catch {
+                print("Error selecting file: \(error.localizedDescription)")
+            }
         }
         
         func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {

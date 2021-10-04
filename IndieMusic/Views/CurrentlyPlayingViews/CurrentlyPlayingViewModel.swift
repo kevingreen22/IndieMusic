@@ -82,7 +82,7 @@ class CurrentlyPlayingViewModel: ObservableObject {
             // for pre-cloud-storage testing
             //        guard let songUrl = Bundle.main.path(forResource: song.url.absoluteString, ofType: "mp3") else { return nil }
             
-            StorageManager.shared.downloadAlbumArtwork(for: song.albumID, artistID: song.artistID) { image in
+            StorageManager.shared.downloadAlbumArtworkFor(albumID: song.albumID, artistID: song.artistID) { image in
                 guard let img = image else { return }
                 self.dominantColors = DominantColors.getDominantColors(image: img)
                 DispatchQueue.main.async {

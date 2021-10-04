@@ -37,7 +37,7 @@ struct FavoritesView: View {
                             FavoritesNavLinkCell(systemImageName: "music.note", label: "Songs")
                                 .environmentObject(vm)
                            }
-            ).listRowBackground(Color.clear)
+            )
             
             
             Text("Recently Added")
@@ -58,6 +58,7 @@ struct FavoritesView: View {
                 }
             }
         }
+        .listStyle(PlainListStyle())
     }
 }
 

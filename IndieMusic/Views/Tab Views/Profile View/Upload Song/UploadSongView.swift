@@ -13,6 +13,7 @@ import SwiftUI
 struct UploadSongView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var profileVM: ProfileViewModel
     @StateObject var uploadVM = UploadSongViewModel()
     
     
@@ -34,14 +35,22 @@ struct UploadSongView: View {
                         Spacer()
                     }
                     
-                    TextField("Song Title*", text: $uploadVM.songTitle)
-                        .font(.system(size: 24))
-                        .multilineTextAlignment(.center)
-                        .padding(.bottom)
+                    if #available(iOS 15.0, *) {
+                        TextField("Song Title*", text: $uploadVM.songTitle)
+                            .font(.system(size: 24))
+                            .multilineTextAlignment(.center)
+                            .textInputAutocapitalization(.words)
+                            .padding(.bottom)
+                    } else {
+                        // Fallback on earlier versions
+                        TextField("Song Title*", text: $uploadVM.songTitle)
+                            .font(.system(size: 24))
+                            .multilineTextAlignment(.center)
+                            .padding(.bottom)
+                    }
                     
                     Picker("Album*", selection: $uploadVM.album) {
-                        // get all albums for artist picked above
-                        ForEach(vm.user.getOwnerAlbums(), id: \.self) { album in
+                        ForEach(vm.user.ownerAlbums, id: \.self) { album in
                             HStack {
                                 Text(album.title)
                             }
@@ -54,7 +63,7 @@ struct UploadSongView: View {
                             vm.saveNewGenre(newGenreName: uploadVM.newGenreName)
                         })
                         
-                        ForEach(Genres.names, id: \.self) { genre in
+                        ForEach(Genres.names.sorted(), id: \.self) { genre in
                             Text(genre)
                         }
                     }
@@ -81,30 +90,21 @@ struct UploadSongView: View {
                     .ignoresSafeArea(edges: .bottom)
                     .overlay(
                         Button(action: {
-                            uploadVM.uploadSong(viewModel: vm, completion: { success, error in
-                                guard success, error == nil else {
-                                    vm.alertItem = MySongUploadErrorContext.getError(error: error!)
-                                    return
-                                }
-                                presentationMode.wrappedValue.dismiss()
-                            })
+                            uploadVM.uploadSong(viewModel: vm)
+                            self.presentationMode.wrappedValue.dismiss()
                         }, label: {
                             Text("Upload")
                         })
-                        .frame(width: 300, height: 50)
-                        .foregroundColor(.white)
-                        .background(Color.mainApp)
-                        .cornerRadius(8)
+                            .frame(width: 300, height: 50)
+                            .foregroundColor(.white)
+                            .background(Color.mainApp)
+                            .cornerRadius(8)
                     )
             }.ignoresSafeArea(edges: .bottom)
         }
         
-        .alert(item: $vm.alertItem, content: { alertItem in
-            MyAlertItem.present(alertItem: alertItem)
-        }) // End alert
-        
         .sheet(isPresented: $uploadVM.showDocumentPicker) {
-            DocumentPicker(filePath: $uploadVM.localFilePath, contentTypes: [.mp3, .audio])
+            DocumentPicker(filePath: $uploadVM.localFilePath, file: $uploadVM.fileData, contentTypes: [.mp3, .audio])
         }
         
     }
@@ -121,5 +121,6 @@ struct UploadSongView_Previews: PreviewProvider {
     static var previews: some View {
         UploadSongView()
             .environmentObject(ViewModel())
+            .environmentObject(ProfileViewModel())
     }
 }

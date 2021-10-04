@@ -57,7 +57,7 @@ struct CreateAccountView: View {
                                     vm.cacheUser(completion:  { _ in })
                                     self.presentationMode.wrappedValue.dismiss()
                                 } else {
-                                    self.vm.alertItem = MyStandardAlertContext.createAccontFailedAlert
+                                    self.vm.alertItem = MyErrorContext.createAccontFailedAlert
                                 }
                             })
                         }, label: {

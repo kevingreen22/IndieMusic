@@ -22,47 +22,76 @@ struct ExploreView: View {
     @EnvironmentObject var vm: ViewModel
     @StateObject var exploreVM = ExploreViewModel()
     
-    let colums = [GridItem(.flexible(minimum: ViewModel.Constants.exploreCellSize)), GridItem(.flexible(minimum: ViewModel.Constants.exploreCellSize))]
-    
-    let rows = [GridItem(.flexible(minimum: ViewModel.Constants.exploreCellSize)), GridItem(.flexible(minimum: ViewModel.Constants.exploreCellSize))]
+    let colums = [GridItem(.flexible(minimum: 150))]
+    let rows = [GridItem(.flexible(minimum: 150))]
     
     
     var body: some View {
         GeometryReader { proxy in
             ScrollView {
-                SearchBar(text: $vm.searchText).padding(.vertical)
-                
-                if !exploreVM.songs.isEmpty {
-                    ForEach(exploreVM.songs, id: \.self) { song in
-                        Text(song.title)
+                VStack {
+                    if #available(iOS 15, *) {
+                        Text(vm.searchText)
+                            .searchable(text: $exploreVM.searchText, prompt: "Search and explore!")
+                    } else {
+                        SearchBar(text: $exploreVM.searchText)
+                            .padding(.vertical)
                     }
-                } else {
-                    Text("Nothing to Explore")
-                        .font(.largeTitle)
+                    
+                    Divider()
+                    
+                    // ARTISTS
+                    CellWithTitleAndSeeAll(
+                        title: "Artists",
+                        destination:
+                            ArtistsView(artists: exploreVM.artists.sorted()).environmentObject(vm),
+                        grid:
+                            artistGrid(rows: rows, artists: exploreVM.artists.sorted())
+                    )
+                    
+                    Divider()
+                    
+                    //ALBUMS
+                    CellWithTitleAndSeeAll(
+                        title: "Albums",
+                        destination:
+                            AlbumsView(albums: exploreVM.albums.sorted()).environmentObject(vm),
+                        grid:
+                            albumsGrid(rows: rows, albums: exploreVM.albums.sorted())
+                    )
+                        
+                    
+                    Divider()
+                    
+                    //GENRES
+                    CellWithTitleAndSeeAll(
+                        title: "Genres",
+                        destination:
+                            AlbumsView(albums: exploreVM.genreOfAlbums.map{$0.value}[exploreVM.index])
+                            .environmentObject(vm),
+                        grid:
+                            genreGrid(rows: rows, genreOfAlbums: exploreVM.genreOfAlbums)
+                    ).onPreferenceChange(GenreOfAlbumsIndexPreferenceKey.self) { value in
+                        exploreVM.index = value
+                    }
+                    
+                    
+                    Divider()
+                    
+                    // SONGS
+                    List {
+                        ForEach(exploreVM.songs.sorted(), id: \.self) { song in
+                            SongListCell(albumArtwork: UIImage(), song: song, selectedSongCell: .constant(nil))
+                        }
+                    }.listStyle(DefaultListStyle())
+                    
                 }
-                
-                
-                
-                
-//                LazyHGrid(rows: rows) {
-//                    ForEach(exploreVM.genreCells, id: \.self) { cell in
-//                        NavigationLink(
-//                            destination: ArtistsView(artists: exploreVM.genreOfArtists[cell.genre]!)
-//                                .environmentObject(vm),
-//                            label: {
-//                                ExploreViewCell(content: cell)
-//                                    .environmentObject(vm)
-//                            })
-//                    }
-//                }
-                
-                
-
             }
         }
         
+        
         .onAppear {
-            exploreVM.getSongs()
+            exploreVM.fetchExplores()
         }
         
     }
@@ -70,8 +99,63 @@ struct ExploreView: View {
 
 
 
+extension ExploreView {
+    
+    func CellWithTitleAndSeeAll<Dest: View, Grid: View>(title: String, destination: Dest, grid: Grid) -> some View {
+        VStack {
+            HStack {
+                Text(title).font(.title)
+                Spacer()
+                NavigationLink(
+                    destination: destination,
+                    label: {
+                        Text("See All").foregroundColor(.mainApp)
+                    })
+            }
+            grid
+        }
+    }
+    
+    func albumsGrid(rows: [GridItem], albums: [Album]) -> some View {
+        LazyHGrid(rows: rows) {
+            ForEach(albums.sorted(), id: \.self) { album in
+                AlbumNavLinkCellView(album: album)
+                    .environmentObject(vm)
+            }
+        }
+    }
+    
+    func artistGrid(rows: [GridItem], artists: [Artist]) -> some View {
+        LazyHGrid(rows: rows) {
+            ForEach(artists.sorted(), id: \.self) { artist in
+                ArtistNavLinkCell(artist: artist)
+                    .environmentObject(vm)
+            }
+        }
+    }
+    
+    func genreGrid(rows: [GridItem], genreOfAlbums: [String: [Album]]) -> some View {
+        LazyHGrid(rows: rows) {
+            let genre = genreOfAlbums.map{$0.key}
+            ForEach(genre.indices) { index in
+                ExploreCellView(title: genre[index], image: nil)
+                    .environmentObject(vm)
+                    .preference(key: GenreOfAlbumsIndexPreferenceKey.self, value: index)
+            }
+        }
+    }
+    
+}
 
 
+struct GenreOfAlbumsIndexPreferenceKey: PreferenceKey {
+    static var defaultValue: Int = 0
+    
+    static func reduce(value: inout Int, nextValue: () -> Int) {
+        value = nextValue()
+    }
+    
+}
 
 
 

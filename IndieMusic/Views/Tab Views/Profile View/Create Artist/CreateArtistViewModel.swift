@@ -20,39 +20,66 @@ class CreateArtistViewModel: ObservableObject {
     
     func createArtist(viewModel: ViewModel) {
         // Validate info
+        print("Validating info to create artist...")
         guard artistName != "" else {
-            print("Required artist info not completed.")
-//            viewModel.alertItem = MyStandardAlertContext.infoIncomplete
+            print("Validation failed.")
+            DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
+                viewModel.alertItem = MyErrorContext.infoIncomplete
+            }
             return
         }
-                
-//        DatabaseManger.shared.checkForExistingArtist(name: artistName) { exists in
-//            guard exists else {
-//                print("Artist already exists.")
-////                viewModel.alertItem = MyStandardAlertContext.artistAlreadyExists
-//                return
-//            }
-//        }
+            
+        print("Checking for duplicate artist...")
+        DatabaseManger.shared.checkForExistingArtist(name: artistName) { notExists, error in
+            guard notExists, error != nil else {
+                print("Artist already exists.")
+                DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
+                    viewModel.alertItem = MyErrorContext.getErrorWith(error: error!)
+                }
+                return
+            }
+        }
              
+        print("Creating new artist object with default album...")
         let ownerArtist = Artist(name: artistName, genre: genre, imageURL: nil, albums: [])
-        let defaultAlbum = Album(title: "Untitled", artistName: artistName, artistID: ownerArtist.id, artworkURL: nil, songs: [], year: "2021", genre: genre)
+        let defaultAlbum = Album(title: "Untitled", artistName: artistName, artistID: ownerArtist.id.uuidString, artworkURL: nil, songs: [], year: "2021", genre: genre)
         ownerArtist.albums.append(defaultAlbum)
         viewModel.user.artist = ownerArtist
         
+        print("Attempting to update User into Firebase DB...")
         DatabaseManger.shared.insert(user: viewModel.user) { success in
             if success {
-                print("User model updated.")
+                print("User model updated in Firebase DB.")
                 
+                print("Attempting to insert new artist into Firebase DB...")
+                DatabaseManger.shared.insert(artist: viewModel.user.artist!) { success in
+                    guard success else { return }
+                    
+                    print("Attempting to upload artist bio picture if it exists...")
+                    StorageManager.shared.uploadArtistBioImage(self.bioImage, artist: ownerArtist) { _, error in
+                        if error == nil {
+                            print("Uploaded artist bio picture successfully.")
+                            
+                        } else {
+                            print("Error uploading artist bio picture.")
+                            DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
+                                viewModel.alertItem = MyErrorContext.getErrorWith(error: error!)
+                            }
+                        }
+                    }
+                }
             } else {
-                print("Error updating user model witn new artist.")
+                print("Error updating user model with new artist.")
                 self.reverseCreateArtistIfError(viewModel: viewModel)
-                viewModel.alertItem = MyStandardAlertContext.createOwnerArtistFailed
+                DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
+                    viewModel.alertItem = MyErrorContext.getErrorWith(error: MyError.error)
+                }
             }
-            self.presentationMode.wrappedValue.dismiss()
         }
     }
     
 
+    
     
     
     fileprivate func reverseCreateArtistIfError(viewModel: ViewModel) {

@@ -38,10 +38,10 @@ struct ArtistNavLinkCell: View {
     
     var body: some View {
         NavigationLink(
-            destination: AlbumsView(albums: artist.albums ?? []),
+            destination: AlbumsView(albums: artist.albums),
             label: {
                 HStack {
-                    Image(artist.imageURL!.absoluteString)
+                    Image(artist.imageURL?.absoluteString ?? "bio_placeholder")
                         .resizable()
                         .frame(width: imageWidth, height: imageHeight)
                         .aspectRatio(contentMode: .fit)
@@ -194,72 +194,66 @@ struct FarvoriteHeartView: View {
 
 
 
+struct ExploreCellView: View {
+    let title: String
+    let image: Image?
+    let cellSize: CGSize
+    
+    private let imagePlaceholder: UIImage = UIImage(named: "genre_image_placeholder")!
+    
+    init(title: String, image: Image?, cellSize: CGSize = CGSize(width: 130, height: 130)) {
+        self.title = title
+        self.image = image
+        self.cellSize = cellSize
+    }
 
-
-
-
-struct ExploreViewCell: View {
-    let content: ExploreCellModel
-
+    
     var body: some View {
-        Rectangle()
-            .fill(Color.blue)
-            .overlay(
-                Image(content.imageName ?? "genre_image_placeholder")
-                    .resizable()
-            )
-            .cornerRadius(25)
-            .overlay(
-                VStack(alignment: .leading) {
-                    Spacer()
-                    Text(content.genre)
-                        .foregroundColor(.white)
-                        .font(.title3)
-                        .bold()
-                        .lineLimit(2)
-                        .padding(.bottom)
-                }
-            )
-            .frame(height: ViewModel.Constants.exploreCellSize)
-            .padding(.horizontal)
+        VStack(spacing: 8) {
+            (image != nil ?
+             image!.resizable()  :
+                (Image(uiImage:  UIImage(named: title.lowercased()) ?? imagePlaceholder))
+                .resizable())
+                .scaledToFit()
+
+            
+            Text(title)
+                .foregroundColor(.black)
+                .font(.title3)
+                .bold()
+                .lineLimit(2)
+        }
+        .frame(width: cellSize.width, height: cellSize.height)
+        
     }
 }
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-struct FavoritesNavLinkCell_Previews: PreviewProvider {
+struct CellViews_Previews: PreviewProvider {
+    static let rows = [GridItem(.flexible(minimum: 150))]
+    
     static var previews: some View {
         VStack {
             FavoritesNavLinkCell(systemImageName: "album_artwork_placeholder", label: "Favorites Cell")
-            
+
             ArtistNavLinkCell(artist: MockData.Artists().first!)
-            
+
             AlbumNavLinkCellView(album: MockData.Albums().first!)
                 .environmentObject(ViewModel())
                 .frame(width: 200, height: 200, alignment: .center)
-        
+
             SongListCell(albumArtwork: UIImage(imageLiteralResourceName: "album_artwork_placeholder"), song: MockData.Songs().first!, selectedSongCell: .constant(MockData.Songs().first!))
                 .environmentObject(ViewModel())
                 .environmentObject(CurrentlyPlayingViewModel())
         
-//            let em = ExploreViewModel()
-//            ExploreViewCell(content: em.exploreCells.first!)
-//                .environmentObject(ViewModel())
+//            LazyHGrid(rows: self.rows) {
+//                ForEach(0..<10) { _ in
+                    ExploreCellView(title: "Metal", image: nil)
+//                }
+//            }
+            
         }
     }
 }

@@ -34,49 +34,60 @@ class CreateAlbumViewModel: ObservableObject {
     }
     
     
-    func createAlbum(viewModel: ViewModel/*, completion: @escaping (Bool) -> Void*/) {
+    func createAlbum(viewModel: ViewModel) {
         // validate
+        print("Validating album info...")
         guard viewModel.user.artist != nil,
               albumName != "" else {
-//            viewModel.alertItem = MyStandardAlertContext.infoIncomplete
+                  print("Validation failied.")
+                  DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
+                      viewModel.alertItem = MyErrorContext.infoIncomplete
+                  }
             return
         }
         
-        // set artwork URL
+        // Set artwork URL
+        print("Creating album artwork URL...")
         if selectedImage != nil {
             artworkURL = URL(string: "\(viewModel.user.artist!.name)/\(albumName)/\(SuffixNames.albumArtworkPNG)")
         }
         
         // create a new instance of Album
-        let album = Album(title: albumName, artistName: viewModel.user.artist!.name, artistID: viewModel.user.artist!.id, artworkURL: artworkURL, songs: [], year: String(year), genre: genre)
+        print("Creating instance of new album...")
+        let album = Album(title: albumName, artistName: viewModel.user.artist!.name, artistID: viewModel.user.artist!.id.uuidString, artworkURL: artworkURL, songs: [], year: String(year), genre: genre)
         
         // Append new album to user's artist
+        print("Adding new album to User...")
         viewModel.user.artist!.albums.append(album)
         
         // Save user to Firestore DB
+        print("Attempting to update User...")
         DatabaseManger.shared.insert(user: viewModel.user) { success in
             if success {
                 print("User model updated.")
                 
                 // Upload album artwork to stroage.
-                guard let image = self.selectedImage else { return }
-                StorageManager.shared.uploadAlbumArtworkImage(album: album, image: image) { success in
+                print("Attempting to upload album artowork to Firebase storage...")
+                StorageManager.shared.uploadAlbumArtworkImage(album: album, image: self.selectedImage) { success in
                     if success {
                         print("Album artwork uploaded.")
+                        
                     } else {
                         print("Error uploading album artwork.")
                         self.reverseCreateAlbumIfError(viewModel: viewModel)
-                        viewModel.alertItem = MyStandardAlertContext.createAlbumFailed
+                        DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
+                            viewModel.alertItem = MyErrorContext.generalErrorAlert
+                        }
                     }
                 }
             } else {
                 print("Error updating user model with new owner album.")
                 self.reverseCreateAlbumIfError(viewModel: viewModel)
-                viewModel.alertItem = MyStandardAlertContext.createAlbumFailed
+                DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
+                    viewModel.alertItem = MyErrorContext.generalErrorAlert
+                }
             }
-        }
-                
-        self.presentationMode.wrappedValue.dismiss()
+        }                
     }
     
     

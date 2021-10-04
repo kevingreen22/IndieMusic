@@ -22,20 +22,21 @@ final class StorageManager {
     
     
     
-    // MARK: MP3 storage methods
+    // MARK: song storage methods
     
-    public func upload(song: Song, localFilePath: URL?, completion: @escaping (StorageTaskSnapshot) -> Void) {
+    public func upload(song: Song, fileData: Data?, localFilePath: URL?, completion: @escaping (StorageTaskSnapshot) -> Void) {
         // File located on disk
-        guard let localFilePath = localFilePath else { return }
+//        guard let localFilePath = localFilePath else { return }
+        guard let file = fileData else { return }
         
         // Create file metadata including the content type
         let metadata = StorageMetadata()
         metadata.contentType = "audio/mp3"
 
-        let ref = container.reference().child("\(ContainerNames.artists)/\(song.artistID)/\(song.albumID)/\(song.id)\(SuffixNames.mp3)")
+        let ref = container.reference().child("\(ContainerNames.artists)/\(song.artistID)/\(song.albumID)/\(song.title)\(SuffixNames.mp3)")
         
-        let task = ref.putFile(from: localFilePath, metadata: metadata)
-        
+//        let task = ref.putFile(from: localFilePath, metadata: metadata)
+        let task = ref.putData(file, metadata: metadata)
         
         // Listen for state changes, errors, and completion of the upload.
         task.observe(.resume) { snapshot in
@@ -65,6 +66,7 @@ final class StorageManager {
         }
         
         task.observe(.failure) { snapshot in
+            task.cancel()
             if let error = snapshot.error as NSError? {
                 switch (StorageErrorCode(rawValue: error.code)!) {
                 case .objectNotFound:
@@ -99,8 +101,8 @@ final class StorageManager {
         container
             .reference(withPath: path)
             .delete { error in
-                if let error = error {
-                    print("Error deleting song from Firebase Storage: \(error)")
+                if error != nil {
+                    print("Error deleting song from Firebase Storage: \(error!))")
                     completion(error)
                 } else {
                     completion(nil)
@@ -127,23 +129,19 @@ final class StorageManager {
     }
     
     
-    public func downloadAlbumArtwork(for albumID: String, artistID: String, completion: @escaping (UIImage?) -> Void) {
-        DatabaseManger.shared.fetchAlbumWith(id: albumID, artistID: artistID) { album in
-            guard let album = album else { return }
-            
-            let path = "\(ContainerNames.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG)"
-            self.container
-                .reference(withPath: path)
-                .downloadURL { url, _ in
-                    guard let url = url else { return }
-                    let task = URLSession.shared.dataTask(with: url) { (data, _, _) in
-                        guard let _data = data else { return }
-                        guard let uiimage = UIImage(data: _data) else { return }
-                        completion(uiimage)
-                    }
-                    task.resume()
+    public func downloadAlbumArtworkFor(albumID: String, artistID: String, completion: @escaping (UIImage?) -> Void) {
+        let path = "\(ContainerNames.artists)/\(artistID)/\(albumID)/\(SuffixNames.albumArtworkPNG)"
+        self.container
+            .reference(withPath: path)
+            .downloadURL { url, _ in
+                guard let url = url else { return }
+                let task = URLSession.shared.dataTask(with: url) { (data, _, _) in
+                    guard let _data = data else { return }
+                    guard let uiimage = UIImage(data: _data) else { return }
+                    completion(uiimage)
                 }
-        }
+                task.resume()
+            }
     }
     
     
@@ -152,8 +150,8 @@ final class StorageManager {
         container
             .reference(withPath: path)
             .delete { error in
-                if let error = error {
-                    print("Error deleting album artwork in Firebase Storage: \(error)")
+                if error != nil {
+                    print("Error deleting album artwork in Firebase Storage: \(error!)")
                     completion(error)
                 } else {
                     completion(nil)
@@ -191,6 +189,90 @@ final class StorageManager {
     
     
     
+    
+    
+    // MARK: Artist image methods
+    
+    public func uploadArtistBioImage(_ image: UIImage?, artist: Artist, completion: @escaping (Bool, Error?) -> Void) {
+        let path = "\(ContainerNames.artists)/\(artist.id.uuidString)/\(SuffixNames.bioPicture)"
+        guard let pngData = image?.pngData() else { return }
+        
+        container
+            .reference(withPath: path)
+            .putData(pngData, metadata: nil) { metaData, error in
+                guard metaData != nil, error == nil else { completion(false, error); return }
+                completion(true, nil)
+            }
+    }
+    
+    
+    public func downloadArtistBioImageFor(artist: Artist, completion: @escaping (UIImage?) -> Void) {
+        let path = "\(ContainerNames.artists)/\(artist.id.uuidString)/\(SuffixNames.bioPicture)"
+        self.container
+            .reference(withPath: path)
+            .downloadURL { url, _ in
+                guard let url = url else { return }
+                let task = URLSession.shared.dataTask(with: url) { (data, _, _) in
+                    guard let _data = data else { return }
+                    guard let uiimage = UIImage(data: _data) else { return }
+                    completion(uiimage)
+                }
+                task.resume()
+            }
+    }
+    
+    
+    
+    
+    
+    
+    // Universal upload image
+    public func upload(image: UIImage?, path: String, completion: @escaping (Bool, Error?) -> Void) {
+        guard let pngData = image?.pngData() else { return }
+        
+        container
+            .reference(withPath: path)
+            .putData(pngData, metadata: nil) { metaData, error in
+                guard metaData != nil, error == nil else { completion(false, error); return }
+                print("Image successfully uploaded to Firebase Storage.")
+                completion(true, nil)
+            }
+    }
+    
+    
+    // Universal download image
+    public func downloadImageWith(path: String, completion: @escaping (UIImage?, URLResponse?, Error?) -> Void) {
+        self.container
+            .reference(withPath: path)
+            .downloadURL { url, error in
+                guard let url = url, error != nil else {
+                    print("Error downloading image from Firebase storage.")
+                    completion(nil, nil, error)
+                    return
+                }
+                let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                    guard let _data = data, let uiimage = UIImage(data: _data) else { return }
+                    print("Image downloaded from Firebase storage successfully.")
+                    completion(uiimage, response, error)
+                }
+                task.resume()
+            }
+    }
+    
+    // Universal delet image
+    public func deleteImageAt(path: String, completion: @escaping (Error?) -> Void) {
+        container
+            .reference(withPath: path)
+            .delete { error in
+                guard error != nil else {
+                    print("Error deleting image in Firebase Storage: \(error!)")
+                    completion(error)
+                    return
+                }
+                print("Deleting image successful.")
+                completion(nil)
+            }
+    }
     
 }
 

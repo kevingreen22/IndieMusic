@@ -9,58 +9,81 @@ import SwiftUI
 
 class ExploreViewModel: ObservableObject {
     
-    @Published var genreCells: [ExploreCellModel] = MockData.exploreData //[]
-    @Published var genreOfArtists: [String : [Artist]] = [:]
+    @Published var searchText: String = ""
     
-    @Published var artistCells: [ExploreCellModel] = []
+    @Published var genreOfAlbums: [String : [Album]] = [:]
+    @Published var index: Int = 0
     
-    @Published var albumCells: [ExploreCellModel] = []
+    @Published var artists: [Artist] = []
     
-    
-    
+    @Published var albums: [Album] = []
+    @Published var albumArtworks: [UIImage] = []
     
     @Published var songs: [Song] = []
     
-    func getSongs() {
-        DatabaseManger.shared.fetchAllSongs { songs in
-            self.songs = songs
-        }
+    
+    
+    
+    func fetchExplores() {
+        fetchAllArtists()
+        fetchAllAlbums()
+        fetchAllGenres()
+        fetchAllSongs()
     }
     
-    
-    
-    
-    
-    func setAllGenres() {
+    fileprivate func fetchAllArtists() {
         DatabaseManger.shared.fetchAllArtists { artists in
-            for artist in artists {
-                self.genreOfArtists[artist.genre]?.append(artist)
-            }
-            
-            for genre in self.genreOfArtists {
-                let imageString = genre.key.lowercased().replacingOccurrences(of: " ", with: "_")
-                let cell = ExploreCellModel(imageName: imageString, genre: genre.key, artists: genre.value)
-                self.genreCells.append(cell)
-            }
-            
+            self.artists.append(contentsOf: artists)
         }
     }
     
+    fileprivate func fetchAllGenres() {
+        DatabaseManger.shared.fetchAllAlbums { albums in
+            for album in albums {
+                self.genreOfAlbums[album.genre]?.append(album)
+            }
+        }
+    }
+    
+    fileprivate func fetchAllAlbums() {
+        DatabaseManger.shared.fetchAllAlbums { albums in
+            for album in albums {
+                StorageManager.shared.downloadAlbumArtworkFor(albumID: album.id.uuidString, artistID: album.artistID) { image in
+                    guard let image = image else { return }
+                    self.albumArtworks.append(image)
+                }
+                
+                self.albums.append(contentsOf: albums)
+            }
+        }
+    }
+    
+    fileprivate func fetchAllSongs() {
+        DatabaseManger.shared.fetchAllSongs { songs in
+            self.songs.append(contentsOf: songs)
+        }
+    }
+        
     
     
-//    func setAllAlbums() {
-//        DatabaseManger.shared.getAllAlbums { albums in
-//            for album in albums {
-//                let imageString = album.albumArtworkURL
-//                let cell = ExploreCellModel(
-//                self.genreCells.append(cell)
-//            }
-//        }
-//    }
     
+    func fetchBioImageFor(artist: Artist) -> UIImage {
+        var bioImage = UIImage(named: "bio_placeholder")!
+        StorageManager.shared.downloadArtistBioImageFor(artist: artist) { image in
+            guard let image = image else { return }
+            bioImage = image
+        }
+        return bioImage
+    }
     
-    
-    
+    func fetchAlbumArtworkFor(album: Album) -> UIImage {
+        var artwork = UIImage(named: "album_artwork_placeholder")!
+        StorageManager.shared.downloadAlbumArtworkFor(albumID: album.id.uuidString, artistID: album.artistID) { image in
+            guard let image = image else { return }
+            artwork = image
+        }
+        return artwork
+    }
     
     
 }

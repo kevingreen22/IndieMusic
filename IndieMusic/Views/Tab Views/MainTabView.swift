@@ -20,6 +20,10 @@ struct MainTabView: View {
     @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
+    init() {
+        UITabBar.appearance().backgroundColor = UIColor(Color.tabBarBackground)
+    }
+    
     var body: some View {
         ZStack {
             TabView {
@@ -45,15 +49,14 @@ struct MainTabView: View {
                 }.tabItem {
                     Label(TabTitle.explore.rawValue, systemImage: "flashlight.on.fill")
                 }
-                
-                
-                ProfileView()
-                    .environmentObject(vm)
-                    .environmentObject(cpVM)
-                    .environment(\.defaultMinListRowHeight, 60)
-                    .tabItem {
-                        Label("Profile", systemImage: "person.fill")
-                    }
+
+//                ProfileView()
+//                    .environmentObject(vm)
+//                    .environmentObject(cpVM)
+//                    .environment(\.defaultMinListRowHeight, 60)
+//                    .tabItem {
+//                        Label("Profile", systemImage: "person.fill")
+//                    }
                 
             } // End TabView
             .accentColor(.mainApp)
@@ -62,19 +65,42 @@ struct MainTabView: View {
             CurrentlyPlayingMinimizedView()
                 .environmentObject(vm)
                 .environmentObject(cpVM)
-                .offset(y: ((UIScreen.main.bounds.height/2) - UITabBarController().tabBar.frame.height - ViewModel.Constants.currentlyPlayingMinimizedViewHeight + 9))
+                .offset(y: ((getScreenBounds().height/2) - UITabBarController().tabBar.frame.height - ViewModel.Constants.currentlyPlayingMinimizedViewHeight - 10))
+            
+            if vm.showNotification {
+                NonObtrusiveNotificationView {
+                    VStack(spacing: 3) {
+                        Text(vm.notificationText)
+                        ProgressBarView(progress: $vm.uploadProgress, color: .mainApp)
+                    }
+                }
+                .ignoresSafeArea()
+                .offset(y: -280)
+            }
             
         } // End ZStack
-        .edgesIgnoringSafeArea(.top)
+        .edgesIgnoringSafeArea(.vertical)
         
-        .onAppear {            
+//        .onAppear {
+//            withAnimation {
+//                DispatchQueue.main.asyncAfter(wallDeadline: .now() + 0.5) {
+//                    vm.showNotification.toggle()
+//                }
+//                DispatchQueue.main.asyncAfter(wallDeadline: .now() + 4) {
+//                    vm.showNotification.toggle()
+//                }
+//            }
 //            if vm.isOpeningApp && !IAPManager.shared.isPremium() && AuthManager.shared.isSignedIn { vm.showPayWall.toggle() }
-        }
+//        }
         
         .sheet(isPresented: $vm.showPayWall, content: {
             PayWallView()
                 .environmentObject(vm)
         })
+        
+        .alert(item: $vm.alertItem) { alert in
+            MyAlertItem.present(alertItem: alert)
+        }
         
     }
 }

@@ -13,12 +13,13 @@ import SwiftUI
 /// then when you need to display the alert, set that instance
 /// to one of the alert contexts from below. Additional contexts
 /// can be created for more alert options.
-struct MyAlertItem: Identifiable {
+struct MyAlertItem: Identifiable, Error {
     var id = UUID()
     var title: Text
     var message: Text?
     var primaryButton: Alert.Button
     var secondaryButton: Alert.Button?
+    
 
     
     
@@ -41,8 +42,39 @@ struct MyAlertItem: Identifiable {
 
 
 
-/// Standart alerts that do not have an action attached.
-struct MyStandardAlertContext {
+
+enum MyError: Error {
+    case infoIncomplete
+    case error
+    case duplicate
+    case unknown
+}
+
+struct MyErrorContext {
+    
+    static func getErrorWith(error: Error) -> MyAlertItem {
+        switch error {
+        case .infoIncomplete as MyError:
+            return MyErrorContext().infoIncomplete
+        case .error as MyError:
+            return MyErrorContext().actionFailied
+        case .duplicate as MyError:
+            return MyErrorContext().duplicate
+        default:
+            return MyErrorContext().unknown
+        }
+    }
+        
+    private let infoIncomplete = MyAlertItem(title: Text("All fields marked with an \"*\" must be completed."), primaryButton: .default(Text("Dismiss")))
+    
+    private let actionFailied = MyAlertItem(title: Text("Error"), message: Text("An error occiured. Please try again."), primaryButton: .default(Text("Dismiss")))
+  
+    private let duplicate = MyAlertItem(title: Text("Duplicate"), message: Text("Duplicates are not allowed. Please try again."), primaryButton: .default(Text("Dismiss")))
+  
+    private let unknown = MyAlertItem(title: Text("Unknown Error"), message: Text("An unknown error has occured. Please try again."), primaryButton: .default(Text("Dismiss")))
+  
+    
+    
     
     static let generalErrorAlert: MyAlertItem = MyAlertItem(title: Text("Error"), message: Text("There was an error. Please try again."), primaryButton: .cancel(Text("Dismiss")))
     
@@ -65,38 +97,13 @@ struct MyStandardAlertContext {
     
     
     
-    // Basic alert with action.
-    static func test(action1: (() -> Void)? = { }) -> MyAlertItem {
-        MyAlertItem(title: Text("Test"), message: Text("Test"), primaryButton: .default(Text("test"), action: {
-            action1!()
-        }))
+    /// Basic alert with action.
+    /// Creates a MyAlertItem with an action to be completed when the primary "default type" button is pressed.
+    static func myAlertWith(title: String, message: String?, action: @escaping (() -> Void) = { }) -> MyAlertItem {
+        MyAlertItem(title: Text(title),
+                    message: message != nil ? Text(message!) : nil,
+                    primaryButton: .default(Text("test"), action: { action() })
+        )
     }
-}
-
-
-
-
-
-
-
-enum MySongError {
-    case songInfoIncomplete
-    case uploadSongFailied
-}
-
-struct MySongUploadErrorContext {
     
-    static func getError(error: MySongError) -> MyAlertItem {
-        switch error {
-        case .songInfoIncomplete:
-            return MySongUploadErrorContext().songInfoIncomplete
-        case .uploadSongFailied:
-            return MySongUploadErrorContext().uploadSongFailied
-        }
-    }
-        
-    private let songInfoIncomplete = MyAlertItem(title: Text("All fields marked with an \"*\" must be filled."), primaryButton: .default(Text("Dismiss")))
-    
-    private let uploadSongFailied = MyAlertItem(title: Text("Error uploading song"), message: Text("Please try again."), primaryButton: .default(Text("Dismiss")))
-  
 }

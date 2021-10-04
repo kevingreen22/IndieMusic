@@ -8,20 +8,38 @@
 import Foundation
 
 // MARK: Artist Class
-class Artist: Hashable, Codable {
+class Artist: Hashable, Codable, Comparable {
+    static func < (lhs: Artist, rhs: Artist) -> Bool {
+        return
+            lhs.id == rhs.id &&
+            lhs.name == rhs.name &&
+            lhs.genre == rhs.genre &&
+            lhs.imageURL == rhs.imageURL &&
+            lhs.albums == rhs.albums &&
+            lhs.timeStamp == rhs.timeStamp
+    }
+    
     static func == (lhs: Artist, rhs: Artist) -> Bool {
         return
+            lhs.id == rhs.id &&
             lhs.name == rhs.name &&
-            lhs.albums == rhs.albums
+            lhs.genre == rhs.genre &&
+            lhs.imageURL == rhs.imageURL &&
+            lhs.albums == rhs.albums &&
+            lhs.timeStamp == rhs.timeStamp
     }
     
     func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
         hasher.combine(name)
+        hasher.combine(genre)
+        hasher.combine(imageURL)
         hasher.combine(albums)
+        hasher.combine(timeStamp)
        
     }
     
-    let id: String
+    let id: UUID
     var name: String
     var genre: String
     var imageURL: URL?
@@ -29,7 +47,7 @@ class Artist: Hashable, Codable {
     var timeStamp: TimeInterval
     
     init(name: String, genre: String, imageURL: URL?, albums: [Album]) {
-        self.id = UUID().uuidString
+        self.id = UUID()//.uuidString
         self.name = name
         self.genre = genre
         self.imageURL = imageURL
@@ -38,18 +56,12 @@ class Artist: Hashable, Codable {
     }
     
     public var mostRecentAlbumArtworkURL: URL {
-        let sortedAlbums = albums.sorted()
+        let sortedAlbums = albums.sorted(by: { $0.timeStamp < $1.timeStamp })
         if let mostRecentArtwork = sortedAlbums.last?.artworkURL {
             return mostRecentArtwork
         } else {
             return URL(fileURLWithPath: "album_artwork_placeholder")
         }
-        
-//        guard let album = albums.sorted() else { return }
-//        guard let mostRecentArtwork = album.last?.artworkURL else {
-//            return URL(fileURLWithPath: "album_artwork_placeholder")
-//        }
-//        return mostRecentArtwork
     }
     
     
@@ -60,37 +72,46 @@ class Artist: Hashable, Codable {
 
 
 // MARK: Album Class
-class Album: Hashable, Equatable, Comparable, Codable {
+class Album: Hashable, Identifiable, Equatable, Comparable, Codable {
     static func < (lhs: Album, rhs: Album) -> Bool {
         return
+            lhs.id == rhs.id &&
             lhs.title == rhs.title &&
             lhs.artistName == rhs.artistName &&
             lhs.artistID == rhs.artistID &&
             lhs.artworkURL == rhs.artworkURL &&
             lhs.songs == rhs.songs &&
-            lhs.year == rhs.year
+            lhs.year == rhs.year &&
+            lhs.genre == rhs.genre &&
+            lhs.timeStamp == rhs.timeStamp
     }
     
     static func == (lhs: Album, rhs: Album) -> Bool {
         return
+            lhs.id == rhs.id &&
             lhs.title == rhs.title &&
             lhs.artistName == rhs.artistName &&
             lhs.artistID == rhs.artistID &&
             lhs.artworkURL == rhs.artworkURL &&
             lhs.songs == rhs.songs &&
-            lhs.year == rhs.year
+            lhs.year == rhs.year &&
+            lhs.genre == rhs.genre &&
+            lhs.timeStamp == rhs.timeStamp
     }
     
     func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
         hasher.combine(title)
         hasher.combine(artistName)
         hasher.combine(artistID)
         hasher.combine(artworkURL)
         hasher.combine(songs)
         hasher.combine(year)
+        hasher.combine(genre)
+        hasher.combine(timeStamp)
     }
     
-    let id: String
+    let id: UUID
     var title: String
     var artistName: String
     var artistID: String
@@ -101,7 +122,7 @@ class Album: Hashable, Equatable, Comparable, Codable {
     var timeStamp: TimeInterval
     
     init(title: String, artistName: String, artistID: String, artworkURL: URL?, songs: [Song], year: String, genre: String) {
-        self.id = UUID().uuidString
+        self.id = UUID()//.uuidString
         self.title = title
         self.artistName = artistName
         self.artistID = artistID
@@ -113,7 +134,7 @@ class Album: Hashable, Equatable, Comparable, Codable {
     }
     
     init() {
-        self.id = UUID().uuidString
+        self.id = UUID()//.uuidString
         self.title = ""
         self.artistName = ""
         self.artistID = ""
@@ -137,7 +158,17 @@ class Album: Hashable, Equatable, Comparable, Codable {
 
 
 // MARK: Song Class
-class Song: Hashable, Equatable, Codable  {
+class Song: Hashable, Equatable, Codable, Comparable  {
+    static func < (lhs: Song, rhs: Song) -> Bool {
+        return
+            lhs.title == rhs.title &&
+            lhs.artistID == rhs.artistID &&
+            lhs.lyrics == rhs.lyrics &&
+            lhs.albumID == rhs.albumID &&
+            lhs.url == rhs.url &&
+            lhs.timeStamp == rhs.timeStamp
+    }
+    
     static func == (lhs: Song, rhs: Song) -> Bool {
         return
             lhs.title == rhs.title &&
@@ -157,8 +188,10 @@ class Song: Hashable, Equatable, Codable  {
         hasher.combine(timeStamp)
     }
     
-    let id: String
+    let id: UUID
     var title: String
+    var albumTitle: String
+    var artistName: String
     var genre: String
     var artistID: String
     var albumID: String
@@ -166,9 +199,11 @@ class Song: Hashable, Equatable, Codable  {
     var url: URL
     var timeStamp: TimeInterval
     
-    init(title: String, genre: String, artistID: String, albumID: String, lyrics: String?, url: URL) {
-        self.id = UUID().uuidString
+    init(title: String, albumTitle: String, artistName: String, genre: String, artistID: String, albumID: String, lyrics: String?, url: URL) {
+        self.id = UUID()//.uuidString
         self.title = title
+        self.albumTitle = albumTitle
+        self.artistName = artistName
         self.genre = genre
         self.lyrics = lyrics
         self.artistID = artistID
@@ -178,8 +213,10 @@ class Song: Hashable, Equatable, Codable  {
     }
     
     init() {
-        self.id = UUID().uuidString
+        self.id = UUID()//.uuidString
         self.title = ""
+        self.albumTitle = ""
+        self.artistName = ""
         self.genre = ""
         self.lyrics = ""
         self.artistID = ""
@@ -187,6 +224,7 @@ class Song: Hashable, Equatable, Codable  {
         self.url = URL(fileURLWithPath: "")
         self.timeStamp = Date().timeIntervalSince1970
     }
+    
     
     var hasLyrics: Bool {
         if lyrics == "" || lyrics == nil {

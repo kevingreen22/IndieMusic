@@ -20,6 +20,7 @@
 		C74264CA26A1F7080075C8E0 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74264C926A1F7080075C8E0 /* User.swift */; };
 		C74264CC26A1F7CB0075C8E0 /* MusicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74264CB26A1F7CB0075C8E0 /* MusicModel.swift */; };
 		C74264CF26A2320A0075C8E0 /* CurrentlyPlayingMinimizedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74264CE26A2320A0075C8E0 /* CurrentlyPlayingMinimizedView.swift */; };
+		C74A3A47270149DB00C354BF /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74A3A46270149DB00C354BF /* ProgressBarView.swift */; };
 		C75679F926D86E87002661C3 /* ManagerConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75679F826D86E87002661C3 /* ManagerConstants.swift */; };
 		C75679FB26DAAE06002661C3 /* UploadSongViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75679FA26DAAE06002661C3 /* UploadSongViewModel.swift */; };
 		C75679FF26DFFE23002661C3 /* ExploreViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75679FE26DFFE23002661C3 /* ExploreViewModel.swift */; };
@@ -119,6 +120,7 @@
 		C74264C926A1F7080075C8E0 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		C74264CB26A1F7CB0075C8E0 /* MusicModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicModel.swift; sourceTree = "<group>"; };
 		C74264CE26A2320A0075C8E0 /* CurrentlyPlayingMinimizedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentlyPlayingMinimizedView.swift; sourceTree = "<group>"; };
+		C74A3A46270149DB00C354BF /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		C75679F826D86E87002661C3 /* ManagerConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerConstants.swift; sourceTree = "<group>"; };
 		C75679FA26DAAE06002661C3 /* UploadSongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadSongViewModel.swift; sourceTree = "<group>"; };
 		C75679FE26DFFE23002661C3 /* ExploreViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreViewModel.swift; sourceTree = "<group>"; };
@@ -254,6 +256,7 @@
 			isa = PBXGroup;
 			children = (
 				C7AE89EB2696638200B738C6 /* MainTabView.swift */,
+				C7AE8A26269A64E500B738C6 /* ViewModel.swift */,
 				C7567A0626ED549D002661C3 /* Favorites View */,
 				C75679FD26DFFE04002661C3 /* Explore View */,
 				C72FF36726B4818200F3ABC1 /* Profile View */,
@@ -427,6 +430,7 @@
 				C72FF36326B472DF00F3ABC1 /* ImagePicker.swift */,
 				C77F46F326F7DC2400059260 /* DocumentPicker.swift */,
 				C77F46EF26F53A7800059260 /* ExpandableButtonPanel.swift */,
+				C74A3A46270149DB00C354BF /* ProgressBarView.swift */,
 			);
 			path = "Helper Views";
 			sourceTree = "<group>";
@@ -445,7 +449,6 @@
 		C7AE8A2C26A0B14700B738C6 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				C7AE8A26269A64E500B738C6 /* ViewModel.swift */,
 				C74264C926A1F7080075C8E0 /* User.swift */,
 				C74264CB26A1F7CB0075C8E0 /* MusicModel.swift */,
 				C77F46F126F68EBA00059260 /* Genres.swift */,
@@ -765,6 +768,7 @@
 				C7D64ADA26BAE48A001ACB12 /* SigninViewModel.swift in Sources */,
 				C74264CC26A1F7CB0075C8E0 /* MusicModel.swift in Sources */,
 				C7AE89EA2696638200B738C6 /* IndieMusicApp.swift in Sources */,
+				C74A3A47270149DB00C354BF /* ProgressBarView.swift in Sources */,
 				C7AE8A2E26A0B3FF00B738C6 /* CreateAccountView.swift in Sources */,
 				C77F46EC26F3FBA400059260 /* CreateAlbumView.swift in Sources */,
 				C7AE8A23269A63C600B738C6 /* SearchBar.swift in Sources */,

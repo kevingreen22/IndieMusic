@@ -16,8 +16,8 @@ struct ArtistsView: View {
         List {
             ForEach(artists, id: \.self) { artist in
                 ArtistNavLinkCell(artist: artist)
-                        .environmentObject(vm)
-                        .listRowBackground(Color.clear)
+                    .environmentObject(vm)
+                    .listRowBackground(Color.clear)
             }
         }
         .environment(\.defaultMinListRowHeight, 60)

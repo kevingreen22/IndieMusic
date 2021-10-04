@@ -50,7 +50,7 @@ struct PayWallView: View {
                             print("Purchace \(success)")
                             DispatchQueue.main.async {
                                 if success == false {
-                                    vm.alertItem = MyStandardAlertContext.purchasedFailedAlert
+                                    vm.alertItem = MyErrorContext.purchasedFailedAlert
                                 }
                             }
                         }
@@ -73,7 +73,7 @@ struct PayWallView: View {
                         print("Restored \(success)")
                         DispatchQueue.main.async {
                             if success == false {
-                                vm.alertItem = MyStandardAlertContext.restoreFailedAlert
+                                vm.alertItem = MyErrorContext.restoreFailedAlert
                             }
                         }
                     }

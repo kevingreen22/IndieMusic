@@ -34,6 +34,8 @@ class MockData {
                       artworkURL: URL(string: "dillinger"),
                       songs: [
                         Song(title: "Electric Sloth",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
                              genre: "Metal",
                              artistID: UUID().uuidString,
                              albumID: UUID().uuidString,
@@ -42,6 +44,8 @@ class MockData {
                         ),
                         
                         Song(title: "Crush, Kill, Destroy",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
                              genre: "Metal",
                              artistID: UUID().uuidString,
                              albumID: UUID().uuidString,
@@ -50,6 +54,8 @@ class MockData {
                         ),
                         
                         Song(title: "Penguins Are Awfly Cute",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
                              genre: "Metal",
                              artistID: UUID().uuidString,
                              albumID: UUID().uuidString,
@@ -64,6 +70,8 @@ class MockData {
                       artworkURL: URL(string: "dillinger"),
                       songs: [
                         Song(title: "Electric Sloth",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
                              genre: "Metal",
                              artistID: UUID().uuidString,
                              albumID: UUID().uuidString,
@@ -72,6 +80,8 @@ class MockData {
                         ),
                         
                         Song(title: "Crush, Kill, Destroy",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
                              genre: "Metal",
                              artistID: UUID().uuidString,
                              albumID: UUID().uuidString,
@@ -80,6 +90,8 @@ class MockData {
                         ),
                         
                         Song(title: "Penguins Are Awfly Cute",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
                              genre: "Metal",
                              artistID: UUID().uuidString,
                              albumID: UUID().uuidString,
@@ -93,6 +105,8 @@ class MockData {
                       artworkURL: URL(string: "dillinger"),
                       songs: [
                         Song(title: "Electric Sloth",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
                              genre: "Metal",
                              artistID: UUID().uuidString,
                              albumID: UUID().uuidString,
@@ -101,6 +115,8 @@ class MockData {
                         ),
                         
                         Song(title: "Crush, Kill, Destroy",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
                              genre: "Metal",
                              artistID: UUID().uuidString,
                              albumID: UUID().uuidString,
@@ -109,6 +125,8 @@ class MockData {
                         ),
                         
                         Song(title: "Penguins Are Awfly Cute",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
                              genre: "Metal",
                              artistID: UUID().uuidString,
                              albumID: UUID().uuidString,
@@ -122,6 +140,8 @@ class MockData {
                       artworkURL: URL(string: "dillinger"),
                       songs: [
                         Song(title: "Electric Sloth",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
                              genre: "Metal",
                              artistID: UUID().uuidString,
                              albumID: UUID().uuidString,
@@ -130,6 +150,8 @@ class MockData {
                         ),
                         
                         Song(title: "Crush, Kill, Destroy",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
                              genre: "Metal",
                              artistID: UUID().uuidString,
                              albumID: UUID().uuidString,
@@ -138,6 +160,8 @@ class MockData {
                         ),
                         
                         Song(title: "Penguins Are Awfly Cute",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
                              genre: "Metal",
                              artistID: UUID().uuidString,
                              albumID: UUID().uuidString,
@@ -188,11 +212,11 @@ class MockData {
     
     // MARK: Explore mock data
     static let exploreData: [ExploreCellModel] = [
-        ExploreCellModel(imageName: "metal", genre: "Metal", artists: Artists()),
-        ExploreCellModel(imageName: "r&b", genre: "R&B", artists: Artists()),
-        ExploreCellModel(imageName: "hip_hop", genre: "Hip Hop", artists: Artists()),
-        ExploreCellModel(imageName: "rap", genre: "Rap", artists: Artists()),
-        ExploreCellModel(imageName: "blues", genre: "Blues", artists: Artists())
+        ExploreCellModel(imageName: "metal", image: nil, genre: "Metal", albums: Albums(), artists: Artists()),
+        ExploreCellModel(imageName: "r&b", image: nil, genre: "R&B", albums: Albums(), artists: Artists()),
+        ExploreCellModel(imageName: "hip_hop", image: nil, genre: "Hip Hop", albums: Albums(), artists: Artists()),
+        ExploreCellModel(imageName: "rap", image: nil, genre: "Rap", albums: Albums(), artists: Artists()),
+        ExploreCellModel(imageName: "blues", image: nil, genre: "Blues", albums: Albums(), artists: Artists())
     ]
     
     
