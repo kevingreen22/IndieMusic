@@ -35,7 +35,7 @@ class ExploreViewModel: ObservableObject {
     
     fileprivate func fetchAllArtists() {
         DatabaseManger.shared.fetchAllArtists { artists in
-            self.artists.append(contentsOf: artists)
+            self.artists.append(contentsOf: artists.prefix(10))
         }
     }
     
@@ -49,14 +49,7 @@ class ExploreViewModel: ObservableObject {
     
     fileprivate func fetchAllAlbums() {
         DatabaseManger.shared.fetchAllAlbums { albums in
-            for album in albums {
-                StorageManager.shared.downloadAlbumArtworkFor(albumID: album.id.uuidString, artistID: album.artistID) { image in
-                    guard let image = image else { return }
-                    self.albumArtworks.append(image)
-                }
-                
-                self.albums.append(contentsOf: albums)
-            }
+            self.albums.append(contentsOf: albums.prefix(10))
         }
     }
     
