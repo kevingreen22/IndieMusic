@@ -9,10 +9,12 @@ import SwiftUI
 
 class ExploreViewModel: ObservableObject {
     
+    static let gridCellSize: CGFloat = 150
+    
     @Published var searchText: String = ""
     
     @Published var genreOfAlbums: [String : [Album]] = [:]
-    @Published var index: Int = 0
+    @Published var albumsForGenre: [Album] = []
     
     @Published var artists: [Artist] = []
     
@@ -69,7 +71,7 @@ class ExploreViewModel: ObservableObject {
     
     func fetchBioImageFor(artist: Artist) -> UIImage {
         var bioImage = UIImage(named: "bio_placeholder")!
-        StorageManager.shared.downloadArtistBioImageFor(artist: artist) { image in
+        StorageManager.shared.downloadArtistBioImage(artist: artist) { image in
             guard let image = image else { return }
             bioImage = image
         }

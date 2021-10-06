@@ -22,73 +22,63 @@ struct ExploreView: View {
     @EnvironmentObject var vm: ViewModel
     @StateObject var exploreVM = ExploreViewModel()
     
-    let colums = [GridItem(.flexible(minimum: 150))]
-    let rows = [GridItem(.flexible(minimum: 150))]
+    let colums = [GridItem(.flexible(minimum: ExploreViewModel.gridCellSize))]
+    let rows = [GridItem(.flexible(minimum: ExploreViewModel.gridCellSize))]
     
     
     var body: some View {
-        GeometryReader { proxy in
-            ScrollView {
-                VStack {
-                    if #available(iOS 15, *) {
-                        Text(vm.searchText)
-                            .searchable(text: $exploreVM.searchText, prompt: "Search and explore!")
-                    } else {
-                        SearchBar(text: $exploreVM.searchText)
-                            .padding(.vertical)
-                    }
-                    
-                    Divider()
-                    
-                    // ARTISTS
-                    CellWithTitleAndSeeAll(
-                        title: "Artists",
-                        destination:
-                            ArtistsView(artists: exploreVM.artists.sorted()).environmentObject(vm),
-                        grid:
-                            artistGrid(rows: rows, artists: exploreVM.artists.sorted())
-                    )
-                    
-                    Divider()
-                    
-                    //ALBUMS
-                    CellWithTitleAndSeeAll(
-                        title: "Albums",
-                        destination:
-                            AlbumsView(albums: exploreVM.albums.sorted()).environmentObject(vm),
-                        grid:
-                            albumsGrid(rows: rows, albums: exploreVM.albums.sorted())
-                    )
-                        
-                    
-                    Divider()
-                    
-                    //GENRES
-                    CellWithTitleAndSeeAll(
-                        title: "Genres",
-                        destination:
-                            AlbumsView(albums: exploreVM.genreOfAlbums.map{$0.value}[exploreVM.index])
-                            .environmentObject(vm),
-                        grid:
-                            genreGrid(rows: rows, genreOfAlbums: exploreVM.genreOfAlbums)
-                    ).onPreferenceChange(GenreOfAlbumsIndexPreferenceKey.self) { value in
-                        exploreVM.index = value
-                    }
-                    
-                    
-                    Divider()
-                    
-                    // SONGS
-                    List {
-                        ForEach(exploreVM.songs.sorted(), id: \.self) { song in
-                            SongListCell(albumArtwork: UIImage(), song: song, selectedSongCell: .constant(nil))
-                        }
-                    }.listStyle(DefaultListStyle())
-                    
+        ScrollView {
+            VStack {
+                if #available(iOS 15, *) {
+                    Text(vm.searchText)
+                        .searchable(text: $exploreVM.searchText, prompt: "Search and explore!")
+                } else {
+                    SearchBar(text: $exploreVM.searchText)
                 }
+                
+                Divider()
+                
+                // ARTISTS
+                GridWithTitleAndSeeAll(
+                    title: "Artists",
+                    destination:
+                        ArtistsView(artists: exploreVM.artists.sorted()).environmentObject(vm),
+                    grid:
+                        artistGridView()
+                )
+                
+                Divider()
+                
+                //ALBUMS
+                GridWithTitleAndSeeAll(
+                    title: "Albums",
+                    destination:
+                        AlbumsView(albums: exploreVM.albums.sorted()).environmentObject(vm),
+                    grid: albumsGridView()
+                )
+                
+                Divider()
+                
+                //GENRES
+                GridWithTitleAndSeeAll(
+                    title: "Genres",
+                    destination: AlbumsView(albums: exploreVM.albumsForGenre).environmentObject(vm),
+                    grid: genreGridView()
+                ).onPreferenceChange(GenreOfAlbumsIndexPreferenceKey.self) { value in
+                    exploreVM.albumsForGenre = value
+                }
+                
+                Divider()
+                
+                // SONGS
+                GridWithTitleAndSeeAll(
+                    title: "Songs",
+                    destination: EmptyView(),
+                    isActive: false,
+                    grid: songListView()
+                )
             }
         }
-        
         
         .onAppear {
             exploreVM.fetchExplores()
@@ -101,57 +91,72 @@ struct ExploreView: View {
 
 extension ExploreView {
     
-    func CellWithTitleAndSeeAll<Dest: View, Grid: View>(title: String, destination: Dest, grid: Grid) -> some View {
+    func GridWithTitleAndSeeAll<Dest: View, Grid: View>(title: String, destination: Dest, isActive: Bool = false, grid: Grid) -> some View {
         VStack {
             HStack {
-                Text(title).font(.title)
+                Text(title)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .padding(.leading)
                 Spacer()
-                NavigationLink(
-                    destination: destination,
-                    label: {
-                        Text("See All").foregroundColor(.mainApp)
-                    })
+                
+                NavigationLink(isActive: .constant(isActive)) {
+                    destination
+                } label: {
+                    Text("See All")
+                        .foregroundColor(.mainApp)
+                        .padding(.trailing)
+                }
             }
             grid
         }
     }
     
-    func albumsGrid(rows: [GridItem], albums: [Album]) -> some View {
+    func artistGridView() -> some View {
         LazyHGrid(rows: rows) {
-            ForEach(albums.sorted(), id: \.self) { album in
-                AlbumNavLinkCellView(album: album)
-                    .environmentObject(vm)
-            }
-        }
-    }
-    
-    func artistGrid(rows: [GridItem], artists: [Artist]) -> some View {
-        LazyHGrid(rows: rows) {
-            ForEach(artists.sorted(), id: \.self) { artist in
+            ForEach(exploreVM.artists.sorted(), id: \.self) { artist in
                 ArtistNavLinkCell(artist: artist)
                     .environmentObject(vm)
             }
         }
     }
     
-    func genreGrid(rows: [GridItem], genreOfAlbums: [String: [Album]]) -> some View {
+    func albumsGridView() -> some View {
         LazyHGrid(rows: rows) {
-            let genre = genreOfAlbums.map{$0.key}
-            ForEach(genre.indices) { index in
-                ExploreCellView(title: genre[index], image: nil)
+            ForEach(exploreVM.albums.sorted(), id: \.self) { album in
+                AlbumNavLinkCellView(album: album)
                     .environmentObject(vm)
-                    .preference(key: GenreOfAlbumsIndexPreferenceKey.self, value: index)
             }
         }
     }
     
+    func genreGridView() -> some View {
+        LazyHGrid(rows: rows) {
+            let genre = exploreVM.genreOfAlbums.map{$0.key}.sorted()
+            ForEach(genre.indices) { index in
+                ExploreCellView(title: genre[index], image: nil)
+                    .environmentObject(vm)
+                    .preference(key: GenreOfAlbumsIndexPreferenceKey.self, value: exploreVM.genreOfAlbums.map{$0.value}[index])
+            }
+        }
+    }
+    
+    func songListView() -> some View {
+        List {
+            ForEach(exploreVM.songs.sorted(), id: \.self) { song in
+                SongListCell(albumArtwork: UIImage(), song: song, selectedSongCell: .constant(nil))
+            }
+        }.listStyle(DefaultListStyle())
+    }
 }
 
 
+
+
 struct GenreOfAlbumsIndexPreferenceKey: PreferenceKey {
-    static var defaultValue: Int = 0
+    static var defaultValue: [Album] = []
     
-    static func reduce(value: inout Int, nextValue: () -> Int) {
+    static func reduce(value: inout [Album], nextValue: () -> [Album]) {
         value = nextValue()
     }
     

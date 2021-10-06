@@ -161,10 +161,10 @@ class ProfileViewModel: ObservableObject {
     func imagePickerActionSheet(viewModel: ViewModel) -> ActionSheet {
         ActionSheet(title: Text("Choose Photo from"), message: nil, buttons: [
             .default(Text("Photo Library"), action: {
-                viewModel.activeSheet = .imagePicker(sourceType: .photoLibrary)
+                viewModel.activeSheet = .imagePicker(sourceType: .photoLibrary, picking: .bioImage)
             }),
             .default(Text("Camera"), action: {
-                viewModel.activeSheet = .imagePicker(sourceType: .camera)
+                viewModel.activeSheet = .imagePicker(sourceType: .camera, picking: .bioImage)
             }),
             .cancel()
         ])

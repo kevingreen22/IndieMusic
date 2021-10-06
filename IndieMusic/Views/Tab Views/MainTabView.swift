@@ -50,19 +50,20 @@ struct MainTabView: View {
                     Label(TabTitle.explore.rawValue, systemImage: "flashlight.on.fill")
                 }
 
-//                ProfileView()
-//                    .environmentObject(vm)
-//                    .environmentObject(cpVM)
-//                    .environment(\.defaultMinListRowHeight, 60)
-//                    .tabItem {
-//                        Label("Profile", systemImage: "person.fill")
-//                    }
+                ProfileView()
+                    .environmentObject(vm)
+                    .environmentObject(cpVM)
+                    .environment(\.defaultMinListRowHeight, 60)
+                    .tabItem {
+                        Label("Profile", systemImage: "person.fill")
+                    }
                 
             } // End TabView
             .accentColor(.mainApp)
             .transition(.move(edge: .bottom))
             
             CurrentlyPlayingMinimizedView()
+//            NewCurrentlyPlayingView()
                 .environmentObject(vm)
                 .environmentObject(cpVM)
                 .offset(y: ((getScreenBounds().height/2) - UITabBarController().tabBar.frame.height - ViewModel.Constants.currentlyPlayingMinimizedViewHeight - 10))

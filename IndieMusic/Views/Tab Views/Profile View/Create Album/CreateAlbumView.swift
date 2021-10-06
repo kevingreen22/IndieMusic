@@ -22,19 +22,19 @@ struct CreateAlbumView: View {
                         Spacer()
                         Menu(content: {
                             Button {
-                                createAlbumVM.activeSheet = .imagePicker(sourceType: .photoLibrary)
+                                createAlbumVM.activeSheet = .imagePicker(sourceType: .photoLibrary, picking: .albumImage)
                             } label: {
                                 Label("Images", systemImage: "photo")
                             }
                             
                             Button {
-                                createAlbumVM.activeSheet = .imagePicker(sourceType: .camera)
+                                createAlbumVM.activeSheet = .imagePicker(sourceType: .camera, picking: .albumImage)
                             } label: {
                                 Label("Camera", systemImage: "camera.fill")
                             }
                             
                             Button {
-                                createAlbumVM.activeSheet = .documentPicker
+                                createAlbumVM.activeSheet = .documentPicker(picking: .albumImage)
                             } label: {
                                 Label("Browse", systemImage: "folder.fill")
                             }
@@ -112,7 +112,7 @@ struct CreateAlbumView: View {
         
         .sheet(item: $createAlbumVM.activeSheet) { item in
             switch item {
-            case .imagePicker(let sourceType) :
+            case .imagePicker(let sourceType, _) :
                 ImagePicker(selectedImage: $createAlbumVM.selectedImage, finishedSelecting: $createAlbumVM.pickImage, sourceType: sourceType)
             case .documentPicker:
                 DocumentPicker(filePath: $createAlbumVM.url, file: .constant(nil), contentTypes: [.image])

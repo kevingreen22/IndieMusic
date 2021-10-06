@@ -206,7 +206,7 @@ final class StorageManager {
     }
     
     
-    public func downloadArtistBioImageFor(artist: Artist, completion: @escaping (UIImage?) -> Void) {
+    public func downloadArtistBioImage(artist: Artist, completion: @escaping (UIImage?) -> Void) {
         let path = "\(ContainerNames.artists)/\(artist.id.uuidString)/\(SuffixNames.bioPicture)"
         self.container
             .reference(withPath: path)

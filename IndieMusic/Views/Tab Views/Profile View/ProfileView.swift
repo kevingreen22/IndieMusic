@@ -15,43 +15,45 @@ struct ProfileView: View {
     
     
     var body: some View {
-        ZStack {
-            VStack(alignment: .leading, spacing: 0) {
-                ProfileViewHeader()
+        NavigationView {
+            ZStack {
+                VStack(alignment: .leading, spacing: 0) {
+                    ProfileViewHeader()
+                        .environmentObject(vm)
+                        .environmentObject(profileVM)
+                    
+                    List {
+                        ForEach(vm.user.ownerSongs, id: \.self) { song in
+                            HStack {
+                                Image(uiImage: profileVM.getAlbumArtworkFor(song: song))
+                                    .resizable()
+                                    .frame(width: 40, height: 40, alignment: .leading)
+                                    .padding(.trailing)
+                                VStack(alignment: .leading) {
+                                    Text(song.title)
+                                        .font(.title3)
+                                    Text(song.albumTitle)
+                                        .foregroundColor(.appSecondary)
+                                }
+                                
+                            }
+                        }
+                    }
+                } // End VStack
+                
+                TopNavButtons()
                     .environmentObject(vm)
                     .environmentObject(profileVM)
                 
-                List {
-                    ForEach(vm.user.ownerSongs, id: \.self) { song in
-                        HStack {
-                            Image(uiImage: profileVM.getAlbumArtworkFor(song: song))
-                                .resizable()
-                                .frame(width: 40, height: 40, alignment: .leading)
-                                .padding(.trailing)
-                            VStack(alignment: .leading) {
-                                Text(song.title)
-                                    .font(.title3)
-                                Text(song.albumTitle)
-                                    .foregroundColor(.appSecondary)
-                            }
-                            
-                        }
-                    }
-                }
-            } // End VStack
+            } // End ZStack
             
-            TopNavButtons()
-                .environmentObject(vm)
-                .environmentObject(profileVM)
-                
-        } // End ZStack
-        
-        .onAppear {
-            if vm.user.artist != nil {
-                profileVM.showArtistOwnerInfo = true
+            .onAppear {
+                if vm.user.artist != nil {
+                    profileVM.showArtistOwnerInfo = true
+                }
             }
+            .navigationBarHidden(true)
         }
-        
     } // End body
 }
 
@@ -219,27 +221,28 @@ fileprivate struct UseAsArtistProfileButton: View {
                 .foregroundColor(.white)
                 .rotationEffect(.degrees(profileVM.showArtistOwnerInfo ? 0 : 360))
         })
-        .frame(width: 50, height: 50)
-        .background(Color.appSecondary)
-        .cornerRadius(50 / 2)
-        .shadow(
-            color: shadowColor,
-            radius: shadowRadius,
-            x: shadowPosition.x,
-            y: shadowPosition.y
-        )
+            .frame(width: 50, height: 50)
+            .background(Color.appSecondary)
+            .cornerRadius(50 / 2)
+            .shadow(
+                color: shadowColor,
+                radius: shadowRadius,
+                x: shadowPosition.x,
+                y: shadowPosition.y
+            )
         
-
+        
         .onChange(of: profileVM.showArtistOwnerInfo, perform: { changed in
             if changed && vm.user.artist == nil {
                 vm.activeSheet = .createArtist
-            } else if !changed && vm.user.artist != nil {
+            } else
+            if !changed && vm.user.artist != nil {
                 /* Alert user if they turn off "Artist Profile" that all of their albums/songs including thier artist will be deleted from the service, and they'll have to re-upload everything if they want to turn it back on. i.e. no one will be able to listen to it anymore */
                 vm.alertItem = MyAlertItem(
                     title: Text("Are you sure?"),
                     message: Text("This will delete all of your albums/songs including your artist profile from the service. Everyone will no longer be able to listen to your uploaded song(s)"),
                     primaryButton: .cancel(Text("Cancel"), action: {
-                            profileVM.showArtistOwnerInfo = true
+                        profileVM.showArtistOwnerInfo = true
                     }),
                     secondaryButton: .destructive(Text("Confirm"), action: {
                         profileVM.removeUsersOwnerPrivilage(viewModel: vm)
@@ -248,7 +251,7 @@ fileprivate struct UseAsArtistProfileButton: View {
             }
         })
         
-
+        
         .fullScreenCover(item: $vm.activeSheet, onDismiss: doStuff, content: { item in
             switch item {
             case .createArtist:
@@ -263,9 +266,9 @@ fileprivate struct UseAsArtistProfileButton: View {
                 UploadSongView()
                     .environmentObject(vm)
                 
-            case .imagePicker(let sourceType):
+            case .imagePicker(let sourceType, _):
                 ImagePicker(selectedImage: $profileVM.selectedImage, finishedSelecting: .constant(nil), sourceType: sourceType)
-                    
+                
             case .documentPicker:
                 EmptyView()
             }
