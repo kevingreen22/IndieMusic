@@ -16,7 +16,6 @@ class ViewModel: ObservableObject {
     }
     
     @Published var user: User!
-    @Published var albumImage: UIImage = UIImage(systemName: "photo")!
     @Published var showSigninView = false
     @Published var alertItem: MyAlertItem?
     @Published var activeSheet: ActiveSheet?
@@ -28,12 +27,33 @@ class ViewModel: ObservableObject {
     @Published var notificationText = "Uploading..."
     
     
-//    public func setArtworkFor(album: Album) {
-//        StorageManager.shared.downloadAlbumArtwork(for: album.id, artistID: album.artistID) { image in
-//            guard let img = image else { return }
-//            self.albumImage = img
-//        }
-//    }
+    
+    func fetchBioImageFor(artist: Artist) -> UIImage {
+        var bioImage = UIImage(named: "bio_placeholder")!
+        StorageManager.shared.downloadArtistBioImage(artist: artist) { image in
+            guard let image = image else { return }
+            bioImage = image
+        }
+        return bioImage
+    }
+    
+    func fetchAlbumArtworkFor(album: Album) -> UIImage {
+        var artwork = UIImage(named: "album_artwork_placeholder")!
+        StorageManager.shared.downloadAlbumArtworkFor(album: album){ image in
+            guard let image = image else { return }
+            artwork = image
+        }
+        return artwork
+    }
+    
+    func fetchAlbumArtworkFor(song: Song) -> UIImage {
+        var artwork = UIImage(named: "album_artwork_placeholder")!
+        StorageManager.shared.downloadAlbumArtworkFor(albumID: song.albumID, artistID: song.artistID) { image in
+            guard let image = image else { return }
+            artwork = image
+        }
+        return artwork
+    }
     
     
     public func cacheUser(completion: @escaping (Bool) -> Void) {

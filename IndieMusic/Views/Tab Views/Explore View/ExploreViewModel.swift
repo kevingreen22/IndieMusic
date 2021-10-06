@@ -61,24 +61,4 @@ class ExploreViewModel: ObservableObject {
         
     
     
-    
-    func fetchBioImageFor(artist: Artist) -> UIImage {
-        var bioImage = UIImage(named: "bio_placeholder")!
-        StorageManager.shared.downloadArtistBioImage(artist: artist) { image in
-            guard let image = image else { return }
-            bioImage = image
-        }
-        return bioImage
-    }
-    
-    func fetchAlbumArtworkFor(album: Album) -> UIImage {
-        var artwork = UIImage(named: "album_artwork_placeholder")!
-        StorageManager.shared.downloadAlbumArtworkFor(albumID: album.id.uuidString, artistID: album.artistID) { image in
-            guard let image = image else { return }
-            artwork = image
-        }
-        return artwork
-    }
-    
-    
 }

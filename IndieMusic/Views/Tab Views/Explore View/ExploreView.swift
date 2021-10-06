@@ -134,7 +134,7 @@ extension ExploreView {
         LazyHGrid(rows: rows) {
             let genre = exploreVM.genreOfAlbums.map{$0.key}.sorted()
             ForEach(genre.indices) { index in
-                ExploreCellView(title: genre[index], image: nil)
+                ExploreCellView(image: nil, title: genre[index], altText: nil)
                     .environmentObject(vm)
                     .preference(key: GenreOfAlbumsIndexPreferenceKey.self, value: exploreVM.genreOfAlbums.map{$0.value}[index])
             }
@@ -144,7 +144,7 @@ extension ExploreView {
     func songListView() -> some View {
         List {
             ForEach(exploreVM.songs.sorted(), id: \.self) { song in
-                SongListCell(albumArtwork: UIImage(), song: song, selectedSongCell: .constant(nil))
+                SongListCell(song: song, selectedSongCell: .constant(nil))
             }
         }.listStyle(DefaultListStyle())
     }

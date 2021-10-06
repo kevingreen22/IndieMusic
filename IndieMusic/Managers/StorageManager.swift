@@ -118,8 +118,11 @@ final class StorageManager {
     // MARK: Album artwork storage methods
     
     public func uploadAlbumArtworkImage(album: Album, image: UIImage?, completion: @escaping (Bool) -> Void) {
+        //        let path = "\(ContainerNames.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG)"
+        
+        guard let path = album.artworkURL?.absoluteString else { return }
         guard let pngData = image?.pngData() else { return }
-        let path = "\(ContainerNames.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG)"
+
         container
             .reference(withPath: path)
             .putData(pngData, metadata: nil) { metaData, error in
@@ -143,6 +146,24 @@ final class StorageManager {
                 task.resume()
             }
     }
+    
+    
+    public func downloadAlbumArtworkFor(album: Album, completion: @escaping (UIImage?) -> Void) {
+        guard let path = album.artworkURL?.absoluteString else { return }
+        self.container
+            .reference(withPath: path)
+            .downloadURL { url, _ in
+                guard let url = url else { return }
+                let task = URLSession.shared.dataTask(with: url) { (data, _, _) in
+                    guard let _data = data else { return }
+                    guard let uiimage = UIImage(data: _data) else { return }
+                    completion(uiimage)
+                }
+                task.resume()
+            }
+    }
+    
+    
     
     
     public func deleteAlbumArtwork(_ album: Album, completion: @escaping (Error?) -> Void) {
@@ -194,7 +215,8 @@ final class StorageManager {
     // MARK: Artist image methods
     
     public func uploadArtistBioImage(_ image: UIImage?, artist: Artist, completion: @escaping (Bool, Error?) -> Void) {
-        let path = "\(ContainerNames.artists)/\(artist.id.uuidString)/\(SuffixNames.bioPicture)"
+//        let path = "\(ContainerNames.artists)/\(artist.id.uuidString)/\(SuffixNames.bioPicture)"
+        guard let path = artist.imageURL?.absoluteString else { return }
         guard let pngData = image?.pngData() else { return }
         
         container
@@ -207,7 +229,8 @@ final class StorageManager {
     
     
     public func downloadArtistBioImage(artist: Artist, completion: @escaping (UIImage?) -> Void) {
-        let path = "\(ContainerNames.artists)/\(artist.id.uuidString)/\(SuffixNames.bioPicture)"
+//        let path = "\(ContainerNames.artists)/\(artist.id.uuidString)/\(SuffixNames.bioPicture)"
+        guard let path = artist.imageURL?.absoluteString else { return }
         self.container
             .reference(withPath: path)
             .downloadURL { url, _ in

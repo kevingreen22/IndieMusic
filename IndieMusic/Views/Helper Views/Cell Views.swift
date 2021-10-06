@@ -41,7 +41,7 @@ struct ArtistNavLinkCell: View {
             destination: AlbumsView(albums: artist.albums),
             label: {
                 HStack {
-                    Image(artist.imageURL?.absoluteString ?? "bio_placeholder")
+                    Image(uiImage: vm.fetchBioImageFor(artist: artist))
                         .resizable()
                         .frame(width: imageWidth, height: imageHeight)
                         .aspectRatio(contentMode: .fit)
@@ -69,7 +69,7 @@ struct AlbumNavLinkCellView: View {
             destination: SongsListView(songs: album.songs, album: nil),
             label: {
                 VStack {
-                    Image(uiImage: vm.albumImage)
+                    Image(uiImage: vm.fetchAlbumArtworkFor(album: album))
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .cornerRadius(5)
@@ -98,7 +98,6 @@ struct AlbumNavLinkCellView: View {
 struct SongListCell: View {
     @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
-    let albumArtwork: UIImage
     let song: Song
     @Binding var selectedSongCell: Song?
     @State private var isFavorited: Bool = false
@@ -107,7 +106,7 @@ struct SongListCell: View {
     var body: some View {
         ZStack {
             HStack {
-                Image(uiImage: albumArtwork)
+                Image(uiImage: vm.fetchAlbumArtworkFor(song: song))
                     .resizable()
                     .frame(width: constants.songCellImageSize, height: constants.songCellImageSize)
                     .aspectRatio(contentMode: .fit)
@@ -195,16 +194,17 @@ struct FarvoriteHeartView: View {
 
 
 struct ExploreCellView: View {
-    let title: String
     let image: Image?
-    let cellSize: CGSize
+    let title: String
+    let altText: String?
+//    let cellSize: CGSize
     
     private let imagePlaceholder: UIImage = UIImage(named: "genre_image_placeholder")!
     
-    init(title: String, image: Image?, cellSize: CGSize = CGSize(width: 130, height: 130)) {
-        self.title = title
+    init( image: Image?, title: String, altText: String?) {
         self.image = image
-        self.cellSize = cellSize
+        self.title = title
+        self.altText = altText
     }
 
     
@@ -216,15 +216,20 @@ struct ExploreCellView: View {
                 .resizable())
                 .scaledToFit()
 
-            
             Text(title)
                 .foregroundColor(.black)
                 .font(.title3)
-                .bold()
-                .lineLimit(2)
+                .fontWeight(.semibold)
+                .truncationMode(.tail)
+            
+            if altText != nil {
+                Text(altText!)
+                    .foregroundColor(.gray)
+                    .font(.caption2)
+                    .fontWeight(.semibold)
+                    .truncationMode(.tail)
+            }
         }
-        .frame(width: cellSize.width, height: cellSize.height)
-        
     }
 }
 
@@ -244,15 +249,11 @@ struct CellViews_Previews: PreviewProvider {
                 .environmentObject(ViewModel())
                 .frame(width: 200, height: 200, alignment: .center)
 
-            SongListCell(albumArtwork: UIImage(imageLiteralResourceName: "album_artwork_placeholder"), song: MockData.Songs().first!, selectedSongCell: .constant(MockData.Songs().first!))
+            SongListCell(song: MockData.Songs().first!, selectedSongCell: .constant(MockData.Songs().first!))
                 .environmentObject(ViewModel())
                 .environmentObject(CurrentlyPlayingViewModel())
         
-//            LazyHGrid(rows: self.rows) {
-//                ForEach(0..<10) { _ in
-                    ExploreCellView(title: "Metal", image: nil)
-//                }
-//            }
+            ExploreCellView(image: nil, title: "Metal", altText: nil)
             
         }
     }

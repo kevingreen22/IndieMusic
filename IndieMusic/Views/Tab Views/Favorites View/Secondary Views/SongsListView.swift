@@ -19,7 +19,7 @@ struct SongsListView: View {
             VStack {
                 List {
                     ForEach(_songs, id: \.self) { song in
-                        SongListCell(albumArtwork: cpVM.albumImage, song: song, selectedSongCell: $vm.selectedSongCell)
+                        SongListCell(song: song, selectedSongCell: $vm.selectedSongCell)
                             .environmentObject(vm)
                             .environmentObject(cpVM)
                     }
@@ -43,7 +43,7 @@ struct SongsListView: View {
                                 
                 List {
                     ForEach(_album.songs, id: \.self) { song in
-                        SongListCell(albumArtwork: cpVM.albumImage, song: song, selectedSongCell: $vm.selectedSongCell)
+                        SongListCell(song: song, selectedSongCell: $vm.selectedSongCell)
                             .environmentObject(vm)
                             .environmentObject(cpVM)
                     }

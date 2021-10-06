@@ -40,10 +40,20 @@ class CreateArtistViewModel: ObservableObject {
             }
         }
              
+        
+        
         print("Creating new artist object with default album...")
-        let ownerArtist = Artist(name: artistName, genre: genre, imageURL: nil, albums: [])
+        let ownerArtist = Artist(id: UUID(), name: artistName, genre: genre, imageURL: nil, albums: [])
+        
+        if bioImage != nil {
+            let imageURL = URL(string: "\(ContainerNames.artists)/\(ownerArtist.id.uuidString)/\(SuffixNames.bioPicture)")
+            ownerArtist.imageURL = imageURL
+        }
+        
         let defaultAlbum = Album(title: "Untitled", artistName: artistName, artistID: ownerArtist.id.uuidString, artworkURL: nil, songs: [], year: "2021", genre: genre)
         ownerArtist.albums.append(defaultAlbum)
+        
+        
         viewModel.user.artist = ownerArtist
         
         print("Attempting to update User into Firebase DB...")
@@ -55,7 +65,8 @@ class CreateArtistViewModel: ObservableObject {
                 DatabaseManger.shared.insert(artist: viewModel.user.artist!) { success in
                     guard success else { return }
                     
-                    print("Attempting to upload artist bio picture if it exists...")
+                    guard self.bioImage != nil else { return }
+                    print("Attempting to upload artist bio picture...")
                     StorageManager.shared.uploadArtistBioImage(self.bioImage, artist: ownerArtist) { _, error in
                         if error == nil {
                             print("Uploaded artist bio picture successfully.")

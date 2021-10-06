@@ -37,7 +37,7 @@ class CreateAlbumViewModel: ObservableObject {
     func createAlbum(viewModel: ViewModel) {
         // validate
         print("Validating album info...")
-        guard viewModel.user.artist != nil,
+        guard let artist = viewModel.user.artist,
               albumName != "" else {
                   print("Validation failied.")
                   DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
@@ -46,19 +46,19 @@ class CreateAlbumViewModel: ObservableObject {
             return
         }
         
+        // create a new instance of Album
+        print("Creating instance of new album...")
+        let album = Album(id: UUID(), title: albumName, artistName: artist.name, artistID: artist.id.uuidString, artworkURL: artworkURL, songs: [], year: String(year), genre: genre)
+        
         // Set artwork URL
         print("Creating album artwork URL...")
         if selectedImage != nil {
-            artworkURL = URL(string: "\(viewModel.user.artist!.name)/\(albumName)/\(SuffixNames.albumArtworkPNG)")
+            artworkURL = URL(string: "\(ContainerNames.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG)")
         }
         
-        // create a new instance of Album
-        print("Creating instance of new album...")
-        let album = Album(title: albumName, artistName: viewModel.user.artist!.name, artistID: viewModel.user.artist!.id.uuidString, artworkURL: artworkURL, songs: [], year: String(year), genre: genre)
-        
         // Append new album to user's artist
-        print("Adding new album to User...")
-        viewModel.user.artist!.albums.append(album)
+        print("Adding new album to User's artist...")
+        artist.albums.append(album)
         
         // Save user to Firestore DB
         print("Attempting to update User...")

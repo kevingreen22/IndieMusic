@@ -46,8 +46,8 @@ class Artist: Hashable, Codable, Comparable {
     var albums: [Album]
     var timeStamp: TimeInterval
     
-    init(name: String, genre: String, imageURL: URL?, albums: [Album]) {
-        self.id = UUID()//.uuidString
+    init(id: UUID? = nil, name: String, genre: String, imageURL: URL?, albums: [Album]) {
+        self.id = id ?? UUID()
         self.name = name
         self.genre = genre
         self.imageURL = imageURL
@@ -121,8 +121,8 @@ class Album: Hashable, Identifiable, Equatable, Comparable, Codable {
     var genre: String
     var timeStamp: TimeInterval
     
-    init(title: String, artistName: String, artistID: String, artworkURL: URL?, songs: [Song], year: String, genre: String) {
-        self.id = UUID()//.uuidString
+    init(id: UUID? = nil, title: String, artistName: String, artistID: String, artworkURL: URL?, songs: [Song], year: String, genre: String) {
+        self.id = id ?? UUID()
         self.title = title
         self.artistName = artistName
         self.artistID = artistID
@@ -134,7 +134,7 @@ class Album: Hashable, Identifiable, Equatable, Comparable, Codable {
     }
     
     init() {
-        self.id = UUID()//.uuidString
+        self.id = UUID()
         self.title = ""
         self.artistName = ""
         self.artistID = ""
@@ -199,8 +199,8 @@ class Song: Hashable, Equatable, Codable, Comparable  {
     var url: URL
     var timeStamp: TimeInterval
     
-    init(title: String, albumTitle: String, artistName: String, genre: String, artistID: String, albumID: String, lyrics: String?, url: URL) {
-        self.id = UUID()//.uuidString
+    init(id: UUID? = nil, title: String, albumTitle: String, artistName: String, genre: String, artistID: String, albumID: String, lyrics: String?, url: URL) {
+        self.id = id ?? UUID()
         self.title = title
         self.albumTitle = albumTitle
         self.artistName = artistName
@@ -213,7 +213,7 @@ class Song: Hashable, Equatable, Codable, Comparable  {
     }
     
     init() {
-        self.id = UUID()//.uuidString
+        self.id = UUID()
         self.title = ""
         self.albumTitle = ""
         self.artistName = ""
