@@ -185,8 +185,10 @@ final class StorageManager {
     
     // MARK: User profile storage methods
     
-    public func uploadUserProfilePicture(email: String, image: UIImage?, completion: @escaping (Bool) -> Void) {
-        let path = "\(ContainerNames.profilePictures)/\(email.underscoredDotAt())/\(SuffixNames.photoPNG)"
+    public func uploadUserProfilePicture(user: User, image: UIImage?, completion: @escaping (Bool) -> Void) {
+//        let path = "\(ContainerNames.profilePictures)/\(user.email.underscoredDotAt())/\(SuffixNames.photoPNG)"
+        
+        guard let path = user.profilePictureURL?.absoluteString else { return }
         guard let pngData = image?.pngData() else { return }
         
         container
@@ -195,15 +197,21 @@ final class StorageManager {
                 guard metaData != nil, error == nil else { completion(false); return }
                 completion(true)
             }
-        
     }
+        
     
-    
-    public func downloadURLForProfilePicture(path: String, completion: @escaping (URL?) -> Void) {
+    public func downloadProfilePictureFor(user: User, completion: @escaping (UIImage?) -> Void) {
+        guard let path = user.profilePictureURL?.absoluteString else { return }
         container
             .reference(withPath: path)
             .downloadURL { url, _ in
-                completion(url)
+                guard let url = url else { return }
+                let task = URLSession.shared.dataTask(with: url) { (data, _, _) in
+                    guard let _data = data else { return }
+                    guard let uiimage = UIImage(data: _data) else { return }
+                    completion(uiimage)
+                }
+                task.resume()
             }
     }
     

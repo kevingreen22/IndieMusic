@@ -174,7 +174,7 @@ fileprivate struct ProfileViewHeader: View {
             profileVM.fetchUserProfilePicture(vm.user)
         }
         
-        .sheet(item: $profileVM.activeSheet) { item in
+        .sheet(item: $profileVM.activeSheet, onDismiss: { profileVM.updateUsersProfilePicture(user: vm.user) }) { item in
             switch item {
             case .imagePicker(let sourceType, let picking):
                 switch picking {

@@ -15,13 +15,8 @@ class ProfileViewModel: ObservableObject {
     @Published var alertItem: MyAlertItem?
     @Published var activeSheet: ActiveSheet?
     @Published var showArtistOwnerInfo: Bool = false
-    @Published var selectedImage: UIImage? = nil {
-        didSet {
-//            guard let image = selectedImage else { return }
-//            uploadUserProfilePicture(viewModel: vm, email: email, image: image)
-        }
-    }
     @Published var showSettings = false
+    @Published var selectedImage: UIImage? = nil
     @Published var url: URL? = nil {
         didSet {
             if let imageURL = url {
@@ -32,45 +27,26 @@ class ProfileViewModel: ObservableObject {
     }
     
     
-    
-    
-    
-    func uploadUserProfilePicture(viewModel: ViewModel, email: String, image: UIImage?) {
-        guard let image = image else { return }
+    // Updates user profile picture in Firebase storage
+    func updateUsersProfilePicture(user: User) {
+        guard let image = selectedImage else { return }
+        let profilePictureURL = URL(string: "\(ContainerNames.profilePictures)/\(user.email.underscoredDotAt())/\(SuffixNames.photoPNG)")
+        user.profilePictureURL = profilePictureURL
+        
         // save image to storage
-        StorageManager.shared.uploadUserProfilePicture(email: email, image: image) { success in
+        StorageManager.shared.uploadUserProfilePicture(user: user, image: image) { success in
             if success {
-                // update database with users photo reference
-                DatabaseManger.shared.updateProfilePhotoData(email: email, image: image) { updated in
-                    guard updated else { return }
-                    DispatchQueue.main.async {
-                        viewModel.cacheUser(completion: { _ in })
-                    }
-                    
-                    // sets the image cache in the user model
-                    viewModel.user.profilePictureData = image.pngData()
-                }
+                
             }
         }
     }
     
     
+    
     func fetchUserProfilePicture(_ user: User) {
-        if let pngData = user.profilePictureData {
-            self.selectedImage = UIImage(data: pngData)
-        } else {
-            let path = "\(ContainerNames.profilePictures)/\(user.email.underscoredDotAt())/\(SuffixNames.photoPNG)"
-            StorageManager.shared.downloadURLForProfilePicture(path: path) { url in
-                guard let url = url else { return }
-                let task = URLSession.shared.dataTask(with: url) { (data, _, _) in
-                    guard let _data = data else { return }
-                    print("profile picture downloaded from storage")
-                    DispatchQueue.main.async {
-                        self.selectedImage = UIImage(data: _data)
-                    }
-                }
-                task.resume()
-            }
+        StorageManager.shared.downloadProfilePictureFor(user: user) { uiimage in
+            guard let uiimage = uiimage else { return }
+            self.selectedImage = uiimage
         }
     }
     
