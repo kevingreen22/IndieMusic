@@ -15,7 +15,6 @@ class CreateAlbumViewModel: ObservableObject {
     @Published var newGenreName = ""
     @Published var selectedImage: UIImage?
     @Published var year: Int = Calendar.current.component(.year, from: Date())
-    @Published var showPickerSheet = false
     @Published var pickImage: Bool? = false
     @Published var url: URL? = nil {
         didSet {

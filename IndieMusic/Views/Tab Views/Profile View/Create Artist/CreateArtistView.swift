@@ -10,7 +10,6 @@ import SwiftUI
 struct CreateArtistView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var vm: ViewModel
-    @EnvironmentObject var profileVM: ProfileViewModel
     @StateObject var createArtistVM = CreateArtistViewModel()
     
     var body: some View {
@@ -53,15 +52,41 @@ struct CreateArtistView: View {
                             
                             Spacer()
                             
-                            Image(uiImage: createArtistVM.bioImage ?? UIImage(systemName: "person.circle")!)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: 50)
-                                .clipShape(Circle())
-                                .transition(.opacity)
-                                .onTapGesture {
-                                    createArtistVM.showImagePicker.toggle()
+                            Menu(content: {
+                                Button {
+                                    createArtistVM.activeSheet = .imagePicker(sourceType: .photoLibrary, picking: .bioImage)
+                                } label: {
+                                    Label("Images", systemImage: "photo")
                                 }
+                                
+                                Button {
+                                    createArtistVM.activeSheet = .imagePicker(sourceType: .camera, picking: .bioImage)
+                                } label: {
+                                    Label("Camera", systemImage: "camera.fill")
+                                }
+                                
+                                Button {
+                                    createArtistVM.activeSheet = .documentPicker(picking: .bioImage)
+                                } label: {
+                                    Label("Browse", systemImage: "folder.fill")
+                                }
+                            }, label: {
+                                Image(uiImage: createArtistVM.bioImage ?? UIImage(systemName: "person.circle")!)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 50)
+                                    .clipShape(Circle())
+                                    .transition(.opacity)
+                            })
+//                            Image(uiImage: createArtistVM.bioImage ?? UIImage(systemName: "person.circle")!)
+//                                .resizable()
+//                                .aspectRatio(contentMode: .fit)
+//                                .frame(height: 50)
+//                                .clipShape(Circle())
+//                                .transition(.opacity)
+//                                .onTapGesture {
+//                                    createArtistVM.showImagePicker.toggle()
+//                                }
                         }
                         
                     } // End Form
@@ -103,13 +128,15 @@ struct CreateArtistView: View {
             } // End ZStack
         } // End geometry reader
         
-//        .alert(item: $vm.alertItem) { alert in
-//            MyAlertItem.present(alertItem: alert)
-//        }
-        
-        .sheet(isPresented: $createArtistVM.showImagePicker, content: {
-            ImagePicker(selectedImage: $createArtistVM.bioImage, finishedSelecting: .constant(nil))
-        })
+        .sheet(item: $createArtistVM.activeSheet) { item in
+            switch item {
+            case .imagePicker(let sourceType, _) :
+                ImagePicker(selectedImage: $createArtistVM.bioImage, finishedSelecting: .constant(nil), sourceType: sourceType)
+                
+            case .documentPicker:
+                DocumentPicker(filePath: $createArtistVM.url, file: .constant(nil), contentTypes: [.image])
+            }
+        }
     }
     
 }

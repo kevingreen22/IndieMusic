@@ -9,12 +9,20 @@ import SwiftUI
 
 class CreateArtistViewModel: ObservableObject {
     @Environment(\.presentationMode) var presentationMode
+    @Published var activeSheet: ActiveSheet?
     @Published var artistName = ""
     @Published var bio = ""
     @Published var genre = "Unknown"
     @Published var newGenreName = ""
     @Published var bioImage: UIImage? = nil
-    @Published var showImagePicker = false
+    @Published var url: URL? = nil {
+        didSet {
+            if let imageURL = url {
+                guard let image = UIImage(contentsOfFile: imageURL.path) else { return }
+                bioImage = image
+            }
+        }
+    }
     
     
     
@@ -39,8 +47,6 @@ class CreateArtistViewModel: ObservableObject {
                 return
             }
         }
-             
-        
         
         print("Creating new artist object with default album...")
         let ownerArtist = Artist(id: UUID(), name: artistName, genre: genre, imageURL: nil, albums: [])

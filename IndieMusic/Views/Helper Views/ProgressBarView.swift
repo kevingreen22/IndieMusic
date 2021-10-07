@@ -93,7 +93,7 @@ struct ProgressBarView_Previews: PreviewProvider {
         ZStack {
             Color.blue.ignoresSafeArea()
             VStack {
-                NonObtrusiveNotificationView {
+                NonObstructiveNotificationView {
                     ProgressBarView(progress: .constant(50), color: Color.mainApp)
                 }
                 
@@ -111,7 +111,7 @@ struct ProgressBarView_Previews: PreviewProvider {
 
 
 
-struct NonObtrusiveNotificationView<Content: View>: View {
+struct NonObstructiveNotificationView<Content: View>: View {
     let content: Content
     let width: CGFloat = 280
     let height: CGFloat = 45

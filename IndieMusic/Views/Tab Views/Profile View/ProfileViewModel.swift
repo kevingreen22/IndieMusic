@@ -13,14 +13,30 @@ class ProfileViewModel: ObservableObject {
         UserDefaults.standard.string(forKey: "email") ?? ""
     }
     @Published var alertItem: MyAlertItem?
+    @Published var activeSheet: ActiveSheet?
     @Published var showArtistOwnerInfo: Bool = false
-    @Published var selectedImage: UIImage? = nil
-    @Published var showImagePickerPopover = false
+    @Published var selectedImage: UIImage? = nil {
+        didSet {
+//            guard let image = selectedImage else { return }
+//            uploadUserProfilePicture(viewModel: vm, email: email, image: image)
+        }
+    }
     @Published var showSettings = false
+    @Published var url: URL? = nil {
+        didSet {
+            if let imageURL = url {
+                guard let image = UIImage(contentsOfFile: imageURL.path) else { return }
+                selectedImage = image
+            }
+        }
+    }
     
     
     
-    func uploadUserProfilePicture(viewModel: ViewModel, email: String, image: UIImage) {
+    
+    
+    func uploadUserProfilePicture(viewModel: ViewModel, email: String, image: UIImage?) {
+        guard let image = image else { return }
         // save image to storage
         StorageManager.shared.uploadUserProfilePicture(email: email, image: image) { success in
             if success {
@@ -156,21 +172,6 @@ class ProfileViewModel: ObservableObject {
             UserDefaults.standard.setValue(nil, forKey: "name")            
         }
     }
-    
-    
-    func imagePickerActionSheet(viewModel: ViewModel) -> ActionSheet {
-        ActionSheet(title: Text("Choose Photo from"), message: nil, buttons: [
-            .default(Text("Photo Library"), action: {
-                viewModel.activeSheet = .imagePicker(sourceType: .photoLibrary, picking: .bioImage)
-            }),
-            .default(Text("Camera"), action: {
-                viewModel.activeSheet = .imagePicker(sourceType: .camera, picking: .bioImage)
-            }),
-            .cancel()
-        ])
-    }
-    
-    
     
     
     

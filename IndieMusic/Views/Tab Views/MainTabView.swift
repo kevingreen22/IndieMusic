@@ -16,7 +16,6 @@ enum TabTitle: String {
 
 struct MainTabView: View {
     @Environment(\.defaultMinListRowHeight) var listRowHeight
-    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var vm: ViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
@@ -69,7 +68,7 @@ struct MainTabView: View {
                 .offset(y: ((getScreenBounds().height/2) - UITabBarController().tabBar.frame.height - ViewModel.Constants.currentlyPlayingMinimizedViewHeight - 10))
             
             if vm.showNotification {
-                NonObtrusiveNotificationView {
+                NonObstructiveNotificationView {
                     VStack(spacing: 3) {
                         Text(vm.notificationText)
                         ProgressBarView(progress: $vm.uploadProgress, color: .mainApp)
@@ -94,10 +93,10 @@ struct MainTabView: View {
 //            if vm.isOpeningApp && !IAPManager.shared.isPremium() && AuthManager.shared.isSignedIn { vm.showPayWall.toggle() }
 //        }
         
-        .sheet(isPresented: $vm.showPayWall, content: {
-            PayWallView()
-                .environmentObject(vm)
-        })
+//        .sheet(isPresented: $vm.showPayWall, content: {
+//            PayWallView()
+//                .environmentObject(vm)
+//        })
         
         .alert(item: $vm.alertItem) { alert in
             MyAlertItem.present(alertItem: alert)

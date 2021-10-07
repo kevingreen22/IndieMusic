@@ -19,6 +19,7 @@ class ViewModel: ObservableObject {
     @Published var showSigninView = false
     @Published var alertItem: MyAlertItem?
     @Published var activeSheet: ActiveSheet?
+    @Published var activeFullScreen: ActiveFullScreen?
     @Published var showPayWall = false
     @Published var searchText: String = ""
     @Published var selectedSongCell: Song? = nil

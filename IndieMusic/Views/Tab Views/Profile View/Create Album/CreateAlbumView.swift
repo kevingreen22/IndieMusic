@@ -10,7 +10,6 @@ import SwiftUI
 struct CreateAlbumView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var vm: ViewModel
-    @EnvironmentObject var profileVM: ProfileViewModel
     @StateObject var createAlbumVM = CreateAlbumViewModel()
     
     
@@ -106,21 +105,15 @@ struct CreateAlbumView: View {
             
         }
         
-//        .alert(item: $vm.alertItem, content: { alertItem in
-//            MyAlertItem.present(alertItem: alertItem)
-//        }) // End alert
-        
         .sheet(item: $createAlbumVM.activeSheet) { item in
             switch item {
             case .imagePicker(let sourceType, _) :
                 ImagePicker(selectedImage: $createAlbumVM.selectedImage, finishedSelecting: $createAlbumVM.pickImage, sourceType: sourceType)
+                
             case .documentPicker:
                 DocumentPicker(filePath: $createAlbumVM.url, file: .constant(nil), contentTypes: [.image])
-            default:
-                EmptyView()
             }
         }
-        
     }
 }
 

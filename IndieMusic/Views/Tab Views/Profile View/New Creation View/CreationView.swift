@@ -192,55 +192,55 @@ struct CreationView: View {
 //            MyAlertItem.present(alertItem: alert)
 //        }
         
-        .sheet(item: $createVM.activeSheet) { item in
-            switch item {
-            case .imagePicker(let sourceType, let picking):
-                switch picking {
-                case .bioImage:
-                    ImagePicker(selectedImage: $createVM.bioImage, finishedSelecting: $createVM.finishedPickingImage)
-                    
-                case .albumImage:
-                    ImagePicker(selectedImage: $createVM.selectedAlbumImage, finishedSelecting: $createVM.finishedPickingImage, sourceType: sourceType)
-                case .mp3:
-                    EmptyView()
-                }
-                
-            case .documentPicker(let picking):
-                switch picking {
-                case .bioImage, .albumImage:
-                    DocumentPicker(filePath: $createVM.url, file: .constant(nil), contentTypes: [.image])
-                    
-                case .mp3:
-                    DocumentPicker(filePath: $createVM.songLocalFilePath, file: $createVM.songFileData, contentTypes: [.mp3, .audio])
-                }
-                
-            case .createArtist, .createAlbum, .uploadSong:
-                EmptyView()
-            }
-        }
+//        .sheet(item: $createVM.activeSheet) { item in
+//            switch item {
+//            case .imagePicker(let sourceType, let picking):
+//                switch picking {
+//                case .bioImage:
+//                    ImagePicker(selectedImage: $createVM.bioImage, finishedSelecting: $createVM.finishedPickingImage)
+//
+//                case .albumImage:
+//                    ImagePicker(selectedImage: $createVM.selectedAlbumImage, finishedSelecting: $createVM.finishedPickingImage, sourceType: sourceType)
+//                case .mp3:
+//                    EmptyView()
+//                }
+//
+//            case .documentPicker(let picking):
+//                switch picking {
+//                case .bioImage, .albumImage:
+//                    DocumentPicker(filePath: $createVM.url, file: .constant(nil), contentTypes: [.image])
+//
+//                case .mp3:
+//                    DocumentPicker(filePath: $createVM.songLocalFilePath, file: $createVM.songFileData, contentTypes: [.mp3, .audio])
+//                }
+//
+//            case .createArtist, .createAlbum, .uploadSong:
+//                EmptyView()
+//            }
+//        }
     }
     
     private func PickImageSourceMenuContent(picking: PickingType) -> some View {
         VStack {
-                Button {
-                    createVM.activeSheet = .imagePicker(sourceType: .photoLibrary, picking: picking)
-                } label: {
-                    Label("Images", systemImage: "photo")
-                }
-                
-                Button {
-                    createVM.activeSheet = .imagePicker(sourceType: .camera, picking: picking)
-                } label: {
-                    Label("Camera", systemImage: "camera.fill")
-                }
-                
-                Button {
-                    createVM.activeSheet = .documentPicker(picking: picking)
-                } label: {
-                    Label("Choose File", systemImage: "folder.fill")
-                }
+            Button {
+                createVM.activeSheet = .imagePicker(sourceType: .photoLibrary, picking: picking)
+            } label: {
+                Label("Images", systemImage: "photo")
+            }
+            
+            Button {
+                createVM.activeSheet = .imagePicker(sourceType: .camera, picking: picking)
+            } label: {
+                Label("Camera", systemImage: "camera.fill")
+            }
+            
+            Button {
+                createVM.activeSheet = .documentPicker(picking: picking)
+            } label: {
+                Label("Choose File", systemImage: "folder.fill")
             }
         }
+    }
     
 }
 
