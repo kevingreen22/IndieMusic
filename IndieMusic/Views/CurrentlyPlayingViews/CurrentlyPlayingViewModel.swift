@@ -10,13 +10,20 @@ import AVKit
 
 class CurrentlyPlayingViewModel: ObservableObject {
     
-    @AppStorage("currentSongIndex") var currentSongIndex: Int = 0
+    @AppStorage("currentSongRefString") var currentSongRefString: String = ""
     @State private var delegate = AVDelegate()
     
-    var album: Album = Album()
-    var song: Song = Song()
-    @Published var audioPlayer = AVAudioPlayer()
+    var song: Song = Song() {
+        didSet {
+            changeSong()
+            playState = .play
+            currentSongRefString = songPersistentRef()
+        }
+    }
+    @Published var album: Album = Album()
     @Published var albumImage = UIImage(systemName: "photo")!
+    
+    @Published var audioPlayer = AVAudioPlayer()
     @Published var playState: SwimplyPlayIndicator.AudioState = .stop
     @Published var trackPlaying = false
     @Published var trackEnded = false
@@ -29,30 +36,24 @@ class CurrentlyPlayingViewModel: ObservableObject {
     
     var dominantColors: (UIColor, UIColor) = (UIColor.gray, UIColor.black)
     
-    
-    
-    func initialize(with user: User) {
-        if !user.songListData.isEmpty {
-            let song = user.songListData[currentSongIndex]
-            
-            DatabaseManger.shared.fetchAlbumWith(id: song.albumID, artistID: song.artistID, completion: { album in
-                guard album != nil else { return }
-                self.song = song
-                self.album = album!
-            })
+    init() {
+        if currentSongRefString != "" {
+            setCurrentPlayingSongFromRef()
         }
-        
-        preparePlayer(user: user)
+        preparePlayer()
     }
     
     
     
-    func preparePlayer(user: User) {
-        guard let songURL = prepareInfoForSong(user: user) else { return }
+    func preparePlayer() {
+        prepareInfoForSong()
         
+        //for pre-cloud-storage testing
+//        guard let songUrl = Bundle.main.path(forResource: song.url.absoluteString, ofType: "mp3") else { return nil }
+         
         do {
             try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
-            audioPlayer = try AVAudioPlayer(contentsOf: songURL)
+            audioPlayer = try AVAudioPlayer(contentsOf: song.url)
             audioPlayer.delegate = delegate
             audioPlayer.prepareToPlay()
             
@@ -71,29 +72,6 @@ class CurrentlyPlayingViewModel: ObservableObject {
             }
         } catch {
             print(error)
-        }
-    }
-    
-    
-    /// Prepares song info for playing. i.e. album artwork, stream url, etc.
-    fileprivate func prepareInfoForSong(user: User) -> URL? {
-        if !user.songListData.isEmpty {
-            let song = user.songListData[currentSongIndex]
-            
-            // for pre-cloud-storage testing
-            //        guard let songUrl = Bundle.main.path(forResource: song.url.absoluteString, ofType: "mp3") else { return nil }
-            
-            StorageManager.shared.downloadAlbumArtworkFor(albumID: song.albumID, artistID: song.artistID) { image in
-                guard let img = image else { return }
-                self.dominantColors = DominantColors.getDominantColors(image: img)
-                DispatchQueue.main.async {
-                    self.albumImage = img
-                }
-            }
-            
-            return song.url
-        } else {
-            return nil
         }
     }
     
@@ -120,28 +98,40 @@ class CurrentlyPlayingViewModel: ObservableObject {
     }
     
     
-    func playNextSong(user: User) {
-        if user.songListData.count - 1 < currentSongIndex {
-            currentSongIndex += 1
-            changeSong(user: user)
+    func playNextSong(songList: [Song]) {
+        if !songList.isEmpty {
+            guard let currentSongIndex = songList.firstIndex(where: { $0 == song }) else { return }
+            let nextSongIndex = songList.index(after: currentSongIndex)
+            self.song = album.songs[nextSongIndex]
+        } else {
+            guard let currentSongIndex = album.songs.firstIndex(where: { $0 == song }) else { return }
+            let nextSongIndex = album.songs.index(after: currentSongIndex)
+            self.song = album.songs[nextSongIndex]
         }
     }
     
     
-    func playPreviousSong(user: User) {
-        if currentSongIndex > 0 {
-            currentSongIndex -= 1
+    func playPreviousSong(songList: [Song]) {
+        if !songList.isEmpty {
+            // previous song in play list
+            guard let currentSongIndex = songList.firstIndex(where: { $0 == song }) else { return }
+            let previousSongIndex = songList.index(before: currentSongIndex)
+            self.song = album.songs[previousSongIndex]
+        } else {
+            // previous song in album
+            guard let currentSongIndex = album.songs.firstIndex(where: { $0 == song }) else { return }
+            let previousSongIndex = album.songs.index(before: currentSongIndex)
+            self.song = album.songs[previousSongIndex]
         }
-        changeSong(user: user)
     }
     
     
-    fileprivate func changeSong(user: User) {
-        guard let songURL = prepareInfoForSong(user: user) else { return }
+    func changeSong() {
+        prepareInfoForSong()
         
         do {
             try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
-            audioPlayer = try AVAudioPlayer(contentsOf: songURL)
+            audioPlayer = try AVAudioPlayer(contentsOf: song.url)
             audioPlayer.delegate = delegate
             audioPlayer.prepareToPlay()
             trackPlaying = true
@@ -154,26 +144,43 @@ class CurrentlyPlayingViewModel: ObservableObject {
     }
     
     
-    func addSongToUserSongList(user: User, song: Song) {
-        user.songListData.append(song)
-        currentSongIndex += 1
+    /// Prepares song info for playing song.
+    fileprivate func prepareInfoForSong() {
+        DatabaseManger.shared.fetchAlbumWith(id: self.song.albumID, artistID: self.song.artistID) { album in
+            guard let album = album else { return }
+            self.album = album
+            
+            StorageManager.shared.downloadAlbumArtworkFor(album: album) { uiimage in
+                guard let image = uiimage else { return }
+                self.dominantColors = DominantColors.getDominantColors(image: image)
+                DispatchQueue.main.async {
+                    self.albumImage = image
+                }
+            }
+        }
     }
-    
     
     
     func doSomething() {
-        
+
     }
     
     
     
+    func songPersistentRef() -> String {
+        return "\(song.id)_\(song.albumID)_\(song.artistID)"
+    }
+    
+    func setCurrentPlayingSongFromRef() {
+        let refSlice = currentSongRefString.components(separatedBy: "_")
+        DatabaseManger.shared.fetchSong(with: refSlice[0], albumID: refSlice[1], artistID: refSlice[2]) { song in
+            guard let song = song else { return }
+            self.song = song
+        }
+    }
+    
     
 }
-
-
-
-
-
 
 
 

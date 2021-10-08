@@ -51,6 +51,8 @@ class User: Codable {
         return songs
     }
    
-    
+    func addSongToUserSongList(song: Song) {
+        songListData.append(song)
+    }
 }
 

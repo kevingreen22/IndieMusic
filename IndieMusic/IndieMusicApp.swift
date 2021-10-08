@@ -111,7 +111,6 @@ private extension IndieMusicApp {
                 if success {
                     print("user cached")
                     successes += 1
-                    cpVM.initialize(with: vm.user)
                 } else {
                     print("user NOT cached")
                 }

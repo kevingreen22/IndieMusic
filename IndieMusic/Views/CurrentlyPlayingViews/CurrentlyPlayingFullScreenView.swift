@@ -101,7 +101,7 @@ fileprivate struct PlayControlButtons: View {
     var body: some View {
         HStack {
             Button(action: {
-                cpVM.playPreviousSong(user: vm.user)
+                cpVM.playPreviousSong(songList: vm.user.songListData)
             }, label: {
                 Image(systemName: "backward.fill")
                     .scaleEffect(2.3)
@@ -124,7 +124,7 @@ fileprivate struct PlayControlButtons: View {
             Spacer()
             
             Button(action: {
-                cpVM.playNextSong(user: vm.user)
+                cpVM.playNextSong(songList: vm.user.songListData)
             }, label: {
                 Image(systemName: "forward.fill")
                     .scaleEffect(2.3)

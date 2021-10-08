@@ -94,28 +94,6 @@ final class DatabaseManger {
             }
     }
     
-        
-    // THIS DOESNT WORK BECAUSE THE IMAGE DATA IS TO LARGE FOR THE DATABASE
-//    public func updateProfilePhotoData(email: String, image: UIImage, completion: @escaping (Bool) -> Void) {
-//        let documentID = email.underscoredDotAt()
-//
-//        guard let photoData = image.pngData() else { return }
-//
-//        let dbRef = database
-//            .collection(ContainerNames.users)
-//            .document(documentID)
-//
-//        dbRef.updateData(["profile_photo" : photoData], completion: { [weak self] error in
-//            guard error == nil else  {
-//                print("Error updating document: \(error.debugDescription))")
-//                return
-//            }
-//            print("Profile photo ref successfully updated for user")
-//
-//        })
-//
-//    }
-    
     
     /// Removes a user from the database.
     public func delete(user: User, completion: @escaping (Bool) -> Void) {
@@ -360,9 +338,6 @@ final class DatabaseManger {
             }
         }
     }
-    
-    
-    
     
     
     

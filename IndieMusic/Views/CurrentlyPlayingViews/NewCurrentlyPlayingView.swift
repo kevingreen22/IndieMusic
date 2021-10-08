@@ -90,7 +90,7 @@ struct NewCurrentlyPlayingView: View {
                             Spacer()
                             
                             Button(action: {
-                                cpVM.playNextSong(user: vm.user)
+                                cpVM.playNextSong(songList: vm.user.songListData)
                             }, label: {
                                 Image(systemName: "forward.fill")
                                     .foregroundColor(.black)
@@ -149,7 +149,7 @@ extension NewCurrentlyPlayingView {
     private var playControlButtons: some View {
         HStack {
             Button(action: {
-                cpVM.playPreviousSong(user: vm.user)
+                cpVM.playPreviousSong(songList: vm.user.songListData)
             }, label: {
                 Image(systemName: "backward.fill")
                     .scaleEffect(2.3)
@@ -172,7 +172,7 @@ extension NewCurrentlyPlayingView {
             Spacer()
             
             Button(action: {
-                cpVM.playNextSong(user: vm.user)
+                cpVM.playNextSong(songList: vm.user.songListData)
             }, label: {
                 Image(systemName: "forward.fill")
                     .scaleEffect(2.3)

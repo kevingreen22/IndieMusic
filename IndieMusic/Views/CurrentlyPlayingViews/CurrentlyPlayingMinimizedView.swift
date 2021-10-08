@@ -50,7 +50,7 @@ struct CurrentlyPlayingMinimizedView: View {
                 Spacer()
                 
                 Button(action: {
-                    cpVM.playNextSong(user: vm.user)
+                    cpVM.playNextSong(songList: vm.user.songListData)
                 }, label: {
                     Image(systemName: "forward.fill")
                         .foregroundColor(.black)
@@ -93,7 +93,7 @@ struct CurrentlyPlayingView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             CurrentlyPlayingMinimizedView()
-                .environmentObject(CurrentlyPlayingViewModel())                
+                .environmentObject(CurrentlyPlayingViewModel())
         }
     }
 }
