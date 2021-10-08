@@ -26,15 +26,22 @@ struct MainTabView: View {
     var body: some View {
         ZStack {
             TabView {
-                NavigationView {
-                    FavoritesView()
-                        .environmentObject(vm)
-                        .environmentObject(cpVM)
-                        .environment(\.defaultMinListRowHeight, 60)
-                        .navigationBarTitleDisplayMode(.large)
-                        .navigationBarTitle(TabTitle.favorites.rawValue)
-                }.tabItem {
-                    Label(TabTitle.favorites.rawValue, systemImage: "heart.fill")
+                if AuthManager.shared.isSignedIn {
+                    NavigationView {
+                        FavoritesView()
+                            .environmentObject(vm)
+                            .environmentObject(cpVM)
+                            .environment(\.defaultMinListRowHeight, 60)
+                            .navigationBarTitleDisplayMode(.large)
+                            .navigationBarTitle(TabTitle.favorites.rawValue)
+                    }.tabItem {
+                        Label(TabTitle.favorites.rawValue, systemImage: "heart.fill")
+                    }
+                } else {
+                    SignInView()
+                        .tabItem {
+                            Label("Profile", systemImage: "person.fill")
+                        }
                 }
                 
                 
@@ -49,13 +56,20 @@ struct MainTabView: View {
                     Label(TabTitle.explore.rawValue, systemImage: "flashlight.on.fill")
                 }
 
-                ProfileView()
-                    .environmentObject(vm)
-                    .environmentObject(cpVM)
-                    .environment(\.defaultMinListRowHeight, 60)
-                    .tabItem {
-                        Label("Profile", systemImage: "person.fill")
-                    }
+                if AuthManager.shared.isSignedIn {
+                    ProfileView()
+                        .environmentObject(vm)
+                        .environmentObject(cpVM)
+                        .environment(\.defaultMinListRowHeight, 60)
+                        .tabItem {
+                            Label("Profile", systemImage: "person.fill")
+                        }
+                } else {
+                    SignInView()
+                        .tabItem {
+                            Label("Profile", systemImage: "person.fill")
+                        }
+                }
                 
             } // End TabView
             .accentColor(.mainApp)
