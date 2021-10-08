@@ -16,6 +16,9 @@ class ViewModel: ObservableObject {
     }
     
     @Published var user: User!
+    @Published var showSplash = true
+    @Published var initProgress: CGFloat = 0.0
+    @Published var initProgressText = "fetching..."
     @Published var showSigninView = false
     @Published var alertItem: MyAlertItem?
     @Published var activeSheet: ActiveSheet?

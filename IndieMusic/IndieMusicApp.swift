@@ -13,35 +13,30 @@ import RQPermissions
 @main
 struct IndieMusicApp: App {
     
-    init() { setupFirebase() }
+    init() {
+        setupFirebase()
+        cacheDataFromFirebase()
+    }
     
     @Environment(\.scenePhase) var scenePhase
     @StateObject var  vm: ViewModel = ViewModel()
     @StateObject var cpVM: CurrentlyPlayingViewModel = CurrentlyPlayingViewModel()
+    
+    @State private var retrycount = 0
+    private let retryCacheAmount = 2
+    
     
     var body: some Scene {
         WindowGroup {
             MainTabView()
                 .environmentObject(vm)
                 .environmentObject(cpVM)
-                .onAppear {
-                    cacheDataFromFirebase(completion: { success in
-                        if success {
-                            // turn loader off
-                            print("Caching completed")
-                        } else {
-                            // alert the user something went wrong and then retry the query
-                            print("Error caching from DB")
-                        }
-                    })
-                }
                 .fullScreenCover(isPresented: $vm.showSigninView, onDismiss: requestPermissionsIfNeeded) {
                     SignInView()
                         .environmentObject(vm)
                         .environmentObject(cpVM)
                 }
         }
-        
         
         .onChange(of: scenePhase) { phase in
             switch phase {
@@ -59,45 +54,98 @@ struct IndieMusicApp: App {
         }
     }
     
-    
-    fileprivate func cacheDataFromFirebase(completion: @escaping (Bool) -> Void) {
-        vm.cacheGenres { _, _ in
-            if AuthManager.shared.isSignedIn {
-                vm.cacheUser { success in
-                    if success {
-                        print("user cached")
-                        cpVM.initialize(with: vm.user)
-                        completion(true)
-                    } else {
-                        print("user NOT cached")
-                        completion(false)
-                    }
-                }
-            } else {
-                vm.showSigninView = true
-                completion(true)
-            }
-        }
-        
-    }
-    
-    
-    fileprivate func requestPermissionsIfNeeded() {
-        RQPermissions.requestPermissions(for: [.camera, .photoAndMediaLibrary], healthOptions: nil) { permissionType in
-            // handel error or alert to user here
-            
-        }
-    }
-    
 }
 
 
 
 
 private extension IndieMusicApp {
+    
     func setupFirebase() {
         FirebaseApp.configure()
         Purchases.configure(withAPIKey: "GobhVybjkizZSkHJxoQlEBCESnHHAjGC")
         IAPManager.shared.getSubscriptionStatus(completion: nil)
     }
+    
+    func cacheDataFromFirebase() {
+//        vm.cacheGenres { _, error in
+//            if error == nil {
+//                vm.initProgress += 0.5
+//                if AuthManager.shared.isSignedIn {
+//                    vm.cacheUser { success in
+//                        if success {
+//                            print("user cached")
+//                            vm.initProgress += 0.5
+//                            cpVM.initialize(with: vm.user)
+//                            completion(true)
+//                        } else {
+//                            print("user NOT cached")
+//                            completion(false)
+//                        }
+//                    }
+//                } else {
+//                    print("User not signed in.")
+//                    vm.showSigninView = true
+//                    completion(true)
+//                }
+//            } else {
+//                print("Error caching genres")
+//                completion(false)
+//            }
+//        }
+
+        var successes = 0
+        let group = DispatchGroup()
+        group.enter()
+        vm.cacheGenres { _, error in
+            if error == nil {
+                print("genres cached")
+                successes += 1
+            }
+            group.leave()
+        }
+
+        group.enter()
+        if AuthManager.shared.isSignedIn {
+            vm.cacheUser { success in
+                if success {
+                    print("user cached")
+                    successes += 1
+                    cpVM.initialize(with: vm.user)
+                } else {
+                    print("user NOT cached")
+                }
+                group.leave()
+            }
+        }
+//        else {
+//            vm.showSigninView = true
+//            group.leave()
+//        }
+
+        group.notify(queue: .global()) {
+            if  successes == 2 {
+                print("Caching completed")
+            } else {
+                // Something went wrong retry the query.
+                print("Error caching from DB")
+                retrycount += 1
+                if retrycount <= retryCacheAmount {
+                    self.cacheDataFromFirebase()
+                } else {
+                    // show error, check internet connection, retry
+                    
+                }
+            }
+        }
+    }
+    
+    
+    func requestPermissionsIfNeeded() {
+        RQPermissions.requestPermissions(for: [.camera, .photoAndMediaLibrary], healthOptions: nil) { permissionType in
+            // handel error or alert to user here
+            
+        }
+    }
+    
 }

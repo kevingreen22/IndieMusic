@@ -78,6 +78,10 @@ struct MainTabView: View {
                 .offset(y: -280)
             }
             
+            AnimatedSplashScreen()
+                .environmentObject(vm)
+                .opacity(vm.showSplash ? 1 : 0)
+            
         } // End ZStack
         .edgesIgnoringSafeArea(.vertical)
         
