@@ -24,7 +24,7 @@ class UploadSongViewModel: ObservableObject {
     
     
     
-    func uploadSong(viewModel: ViewModel) {
+    func uploadSong(viewModel: MainViewModel) {
         // Validate info
         withAnimation {
             viewModel.showNotification.toggle()
@@ -113,7 +113,7 @@ class UploadSongViewModel: ObservableObject {
     
     
     // Update Artist in Firestore DB
-    fileprivate func updateArtist(viewModel: ViewModel, song: Song, album: Album, image: UIImage?) {
+    fileprivate func updateArtist(viewModel: MainViewModel, song: Song, album: Album, image: UIImage?) {
         print("Attempting to update artist in DB...")
         viewModel.notificationText = "Updating artist..."
         DatabaseManger.shared.insert(artist: viewModel.user.artist!) { success in
@@ -133,7 +133,7 @@ class UploadSongViewModel: ObservableObject {
     
     
     // Upload album artwork to storage
-    fileprivate func uploadAlbumArtwork(image: UIImage?, album: Album, viewModel: ViewModel) {
+    fileprivate func uploadAlbumArtwork(image: UIImage?, album: Album, viewModel: MainViewModel) {
         guard image != nil else {
             self.updateUser(user: viewModel.user, viewModel: viewModel)
             return
@@ -158,7 +158,7 @@ class UploadSongViewModel: ObservableObject {
     
     
     // Update user in Firestore DB
-    fileprivate func updateUser(user: User, viewModel: ViewModel) {
+    fileprivate func updateUser(user: User, viewModel: MainViewModel) {
         print("Attempting to update User to the DB...")
         viewModel.notificationText = "Updating user..."
         DatabaseManger.shared.insert(user: user) { success in
@@ -180,7 +180,7 @@ class UploadSongViewModel: ObservableObject {
     
     
     
-    fileprivate func reverseUploadSongIfError(viewModel: ViewModel) {
+    fileprivate func reverseUploadSongIfError(viewModel: MainViewModel) {
         
     }
     

@@ -10,8 +10,9 @@ import AVKit
 
 struct MainTabView: View {
     @Environment(\.defaultMinListRowHeight) var listRowHeight
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
+    @EnvironmentObject var profileVM: ProfileViewModel
     
     init() {
         UITabBar.appearance().backgroundColor = UIColor(Color.tabBarBackground)
@@ -21,18 +22,6 @@ struct MainTabView: View {
         ZStack {
             TabView(selection: $vm.selectedTab) {
                 NavigationView {
-                    ExploreView()
-                        .environmentObject(vm)
-                        .environmentObject(cpVM)
-                        .environment(\.defaultMinListRowHeight, 60)
-                        .navigationBarTitleDisplayMode(.large)
-                        .navigationBarTitle(TabTitle.explore.rawValue)
-                }.tabItem {
-                    Label(TabTitle.explore.rawValue, systemImage: TabImage.explore.rawValue)
-                }
-                
-                
-                NavigationView {
                     FavoritesView()
                         .environmentObject(vm)
                         .environmentObject(cpVM)
@@ -41,21 +30,29 @@ struct MainTabView: View {
                         .navigationBarTitle(TabTitle.favorites.rawValue)
                 }.tabItem {
                     Label(TabTitle.favorites.rawValue, systemImage: TabImage.favorites.rawValue)
-                        .gesture(ShowSignInGesture())
+                }.tag(1)
+                
+                
+                NavigationView {
+                    ExploreView()
                         .environmentObject(vm)
-                }
+                        .environmentObject(cpVM)
+                        .environment(\.defaultMinListRowHeight, 60)
+                        .navigationBarTitleDisplayMode(.large)
+                        .navigationBarTitle(TabTitle.explore.rawValue)
+                }.tabItem {
+                    Label(TabTitle.explore.rawValue, systemImage: TabImage.explore.rawValue)
+                }.tag(2)
                 
                 
                 ProfileView()
                     .environmentObject(vm)
                     .environmentObject(cpVM)
+                    .environmentObject(profileVM)
                     .environment(\.defaultMinListRowHeight, 60)
                     .tabItem {
                         Label(TabTitle.profile.rawValue, systemImage: TabImage.profile.rawValue)
-                            .gesture(ShowSignInGesture())
-                            .environmentObject(vm)
-                    }
-                
+                    }.tag(3)
                 
             } // End TabView
             .accentColor(.mainApp)
@@ -66,7 +63,7 @@ struct MainTabView: View {
 //            NewCurrentlyPlayingView()
                 .environmentObject(vm)
                 .environmentObject(cpVM)
-                .offset(y: ((getScreenBounds().height/2) - UITabBarController().tabBar.frame.height - ViewModel.Constants.currentlyPlayingMinimizedViewHeight - 10))
+                .offset(y: ((getScreenBounds().height/2) - UITabBarController().tabBar.frame.height - MainViewModel.Constants.currentlyPlayingMinimizedViewHeight - 10))
             
             if vm.showNotification {
                 NonObstructiveNotificationView {
@@ -99,14 +96,32 @@ struct MainTabView: View {
 //        }
         
         
-        .sheet(item: $vm.activeSheet) { item in
+        .sheet(item: $vm.activeSheet, onDismiss: { profileVM.updateUsersProfilePicture(user: vm.user) }) { item in
             switch item {
             case .signIn:
                 SignInView()
+                    .environmentObject(vm)
+                    .environmentObject(cpVM)
+                
             case .paywall:
                 PayWallView()
-            case .imagePicker(sourceType: _, picking: _), .documentPicker(picking: _):
-                EmptyView()
+                
+            case .imagePicker(let sourceType, let picking):
+                switch picking {
+                case .bioImage:
+                    ImagePicker(selectedImage: $profileVM.selectedImage, finishedSelecting: .constant(nil), sourceType: sourceType)
+                case .albumImage, .mp3:
+                    EmptyView()
+                }
+                
+            case .documentPicker(let picking):
+                switch picking {
+                case .bioImage, .albumImage:
+                    DocumentPicker(filePath: $profileVM.url, file: .constant(nil), contentTypes: [.image])
+                case .mp3:
+                    EmptyView()
+                }
+
             }
         }
         
@@ -126,7 +141,7 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             MainTabView()
-                .environmentObject(ViewModel())
+                .environmentObject(MainViewModel())
                 .environmentObject(CurrentlyPlayingViewModel())
         }
     }
@@ -145,17 +160,4 @@ fileprivate enum TabImage: String {
     case favorites = "heart.fill"
     case explore = "flashlight.on.fill"
     case profile = "person.fill"
-}
-
-fileprivate struct ShowSignInGesture: Gesture {
-    @EnvironmentObject var vm: ViewModel
-    
-    var body: some Gesture {
-        TapGesture()
-            .onEnded { _ in
-                if !AuthManager.shared.isSignedIn {
-                    vm.activeSheet = .signIn
-                }
-            }
-    }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FavoritesNavLinkCell: View {
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @State private var isFavorited: Bool = false
     let systemImageName: String
     let label: String
@@ -30,7 +30,7 @@ struct FavoritesNavLinkCell: View {
 
 
 struct ArtistNavLinkCell: View {
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @State private var isFavorited: Bool = false
     let artist: Artist
     let imageWidth: CGFloat = 30
@@ -58,7 +58,7 @@ struct ArtistNavLinkCell: View {
 
 
 struct AlbumNavLinkCellView: View {
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @State private var isFavorited: Bool = false
     let album: Album
     let imageWidth: CGFloat = 30
@@ -96,12 +96,12 @@ struct AlbumNavLinkCellView: View {
 
 
 struct SongListCell: View {
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     let song: Song
     @Binding var selectedSongCell: Song?
     @State private var isFavorited: Bool = false
-    let constants = ViewModel.Constants.self
+    let constants = MainViewModel.Constants.self
     
     var body: some View {
         ZStack {
@@ -140,7 +140,7 @@ struct SongListCell: View {
 }
 
 fileprivate struct CellTapped: Gesture {
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     let song: Song
     @Binding var selectedSongCell: Song?
@@ -160,7 +160,7 @@ fileprivate struct CellTapped: Gesture {
 
 
 struct FarvoriteHeartView: View {
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     let typeOfFavorite: Any?
     @Binding var isFavorited: Bool
     
@@ -244,11 +244,11 @@ struct CellViews_Previews: PreviewProvider {
             ArtistNavLinkCell(artist: MockData.Artists().first!)
 
             AlbumNavLinkCellView(album: MockData.Albums().first!)
-                .environmentObject(ViewModel())
+                .environmentObject(MainViewModel())
                 .frame(width: 200, height: 200, alignment: .center)
 
             SongListCell(song: MockData.Songs().first!, selectedSongCell: .constant(MockData.Songs().first!))
-                .environmentObject(ViewModel())
+                .environmentObject(MainViewModel())
                 .environmentObject(CurrentlyPlayingViewModel())
         
             ExploreCellView(image: nil, title: "Metal", altText: nil)

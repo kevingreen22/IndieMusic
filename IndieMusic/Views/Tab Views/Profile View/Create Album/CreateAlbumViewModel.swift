@@ -33,7 +33,7 @@ class CreateAlbumViewModel: ObservableObject {
     }
     
     
-    func createAlbum(viewModel: ViewModel) {
+    func createAlbum(viewModel: MainViewModel) {
         // validate
         print("Validating album info...")
         guard let artist = viewModel.user.artist,
@@ -92,7 +92,7 @@ class CreateAlbumViewModel: ObservableObject {
     
     
     
-    fileprivate func reverseCreateAlbumIfError(viewModel: ViewModel) {
+    fileprivate func reverseCreateAlbumIfError(viewModel: MainViewModel) {
         
     }
     

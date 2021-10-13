@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CurrentlyPlayingFullScreen: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
     var body: some View {
@@ -95,7 +95,7 @@ fileprivate struct BackgroundGradient: View {
 }
 
 fileprivate struct PlayControlButtons: View {
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
     var body: some View {
@@ -342,7 +342,7 @@ fileprivate struct AlbumArtwork: View {
 struct CurrentlyPlayingFullScreenView_Previews: PreviewProvider {
     static var previews: some View {
         CurrentlyPlayingFullScreen()
-            .environmentObject(ViewModel())
+            .environmentObject(MainViewModel())
             .environmentObject(CurrentlyPlayingViewModel())
     }
 }

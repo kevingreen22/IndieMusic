@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AlbumsView: View {
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     var albums: [Album]
     var direction: Axis.Set = .vertical
     
@@ -41,6 +41,6 @@ struct AlbumsView: View {
 struct AlbumsView_Previews: PreviewProvider {
     static var previews: some View {
         AlbumsView(albums: MockData.Albums())
-            .environmentObject(ViewModel())
+            .environmentObject(MainViewModel())
     }
 }

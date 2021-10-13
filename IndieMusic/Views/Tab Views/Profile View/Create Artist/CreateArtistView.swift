@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CreateArtistView: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @StateObject var createArtistVM = CreateArtistViewModel()
     
     var body: some View {
@@ -149,7 +149,7 @@ struct CreateArtistView: View {
 struct CreatArtistAlbumSongView_Previews: PreviewProvider {
     static var previews: some View {
         CreateArtistView()
-            .environmentObject(ViewModel())
+            .environmentObject(MainViewModel())
             .environmentObject(ProfileViewModel())
     }
 }

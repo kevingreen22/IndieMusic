@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SongsListView: View {
     @Environment(\.defaultMinListRowHeight) var listRowHeight
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     let songs: [Song]?
     let album: Album?
@@ -61,11 +61,11 @@ struct SongsListView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             SongsListView(songs: MockData.Songs(), album: nil)
-                .environmentObject(ViewModel())
+                .environmentObject(MainViewModel())
                 .environmentObject(CurrentlyPlayingViewModel())
             
             SongsListView(songs: nil, album: MockData.Albums().first!)
-                .environmentObject(ViewModel())
+                .environmentObject(MainViewModel())
                 .environmentObject(CurrentlyPlayingViewModel())
         }
     }

@@ -13,7 +13,6 @@ class ProfileViewModel: ObservableObject {
         UserDefaults.standard.string(forKey: "email") ?? ""
     }
     @Published var alertItem: MyAlertItem?
-    @Published var activeSheet: ActiveSheet?
     @Published var showArtistOwnerInfo: Bool = false
     @Published var showSettings = false
     @Published var selectedImage: UIImage? = nil
@@ -27,7 +26,7 @@ class ProfileViewModel: ObservableObject {
     }
     
     
-    // Updates user profile picture in Firebase storage
+    // Updates user profile picture in Firebase storage, then updates the User in Firebase DB.
     func updateUsersProfilePicture(user: User) {
         guard let image = selectedImage else { return }
         let profilePictureURL = URL(string: "\(ContainerNames.profilePictures)/\(user.email.underscoredDotAt())/\(SuffixNames.photoPNG)")
@@ -37,6 +36,10 @@ class ProfileViewModel: ObservableObject {
         StorageManager.shared.uploadUserProfilePicture(user: user, image: image) { success in
             if success {
                 
+                // update user in DB
+                DatabaseManger.shared.update(user: user) { success, error in
+                    
+                }
             }
         }
     }
@@ -61,7 +64,7 @@ class ProfileViewModel: ObservableObject {
     }
     
     
-    func removeUsersOwnerPrivilage(viewModel: ViewModel) {
+    func removeUsersOwnerPrivilage(viewModel: MainViewModel) {
         print("Removing User Artist owner privilage...")
         var errors: [Error]? = nil
         let group = DispatchGroup()

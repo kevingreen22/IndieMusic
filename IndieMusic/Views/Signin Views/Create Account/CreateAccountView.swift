@@ -10,7 +10,7 @@ import SwiftUI
 struct CreateAccountView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @StateObject var createAccountVM = CreateAccountVM()
     
     var body: some View {
@@ -119,10 +119,10 @@ struct CreateAccountView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             CreateAccountView()
-                .environmentObject(ViewModel())
+                .environmentObject(MainViewModel())
             CreateAccountView()
                 .preferredColorScheme(.dark)
-                .environmentObject(ViewModel())
+                .environmentObject(MainViewModel())
         }
     }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AnimatedSplashScreen: View {
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     
     var body: some View {
         ZStack {

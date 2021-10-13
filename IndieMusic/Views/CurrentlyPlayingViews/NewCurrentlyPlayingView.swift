@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NewCurrentlyPlayingView: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
     var body: some View {
@@ -104,7 +104,7 @@ struct NewCurrentlyPlayingView: View {
                         .offset(y: -9)
                         
                     }
-                    .frame(height: ViewModel.Constants.currentlyPlayingMinimizedViewHeight)
+                    .frame(height: MainViewModel.Constants.currentlyPlayingMinimizedViewHeight)
                     .background(Color.tabBarBackground.opacity(0.7))
                     .clipShape(Capsule())
                     .padding(.horizontal)

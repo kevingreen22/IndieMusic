@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CreateAlbumView: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @StateObject var createAlbumVM = CreateAlbumViewModel()
     
     
@@ -127,7 +127,7 @@ struct CreateAlbumView: View {
 struct CreateAlbumView_Previews: PreviewProvider {
     static var previews: some View {
         CreateAlbumView()
-            .environmentObject(ViewModel())
+            .environmentObject(MainViewModel())
             .environmentObject(ProfileViewModel())
     }
 }

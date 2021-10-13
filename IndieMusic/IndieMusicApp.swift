@@ -19,8 +19,9 @@ struct IndieMusicApp: App {
     }
     
     @Environment(\.scenePhase) var scenePhase
-    @StateObject var  vm: ViewModel = ViewModel()
+    @StateObject var  vm: MainViewModel = MainViewModel()
     @StateObject var cpVM: CurrentlyPlayingViewModel = CurrentlyPlayingViewModel()
+    @StateObject var profileVM: ProfileViewModel = ProfileViewModel()
     
     @State private var retrycount = 0
     private let retryCacheAmount = 2
@@ -31,13 +32,10 @@ struct IndieMusicApp: App {
             MainTabView()
                 .environmentObject(vm)
                 .environmentObject(cpVM)
+                .environmentObject(profileVM)
                 .onAppear {
+                    requestPermissionsIfNeeded()
                     cacheDataFromFirebase()
-                }
-                .fullScreenCover(isPresented: $vm.showSigninView, onDismiss: requestPermissionsIfNeeded) {
-                    SignInView()
-                        .environmentObject(vm)
-                        .environmentObject(cpVM)
                 }
         }
         
@@ -51,7 +49,6 @@ struct IndieMusicApp: App {
                 UserDefaults.standard.setValue(true, forKey: "openingApp")
             @unknown default:
                 print("Unknown scenePhase")
-                fatalError("Unknown scenePhase")
                 break
             }
         }
@@ -91,13 +88,20 @@ private extension IndieMusicApp {
 //            }
 //        }
 
-        var successes = 0
+        enum Caches: CaseIterable {
+            case genres
+            case user
+        }
+        
+        var successes: [Caches] = []
         let group = DispatchGroup()
         group.enter()
         vm.cacheGenres { _, error in
             if error == nil {
-                print("genres cached")
-                successes += 1
+                print("Genres cached")
+                successes.append(Caches.genres)
+            } else {
+                print("Genres NOT cached.")
             }
             group.leave()
         }
@@ -106,10 +110,10 @@ private extension IndieMusicApp {
         if AuthManager.shared.isSignedIn && firstAppLaunch == false {
             vm.cacheUser { success in
                 if success {
-                    print("user cached")
-                    successes += 1
+                    print("User cached.")
+                    successes.append(Caches.user)
                 } else {
-                    print("user NOT cached")
+                    print("User NOT cached.")
                 }
                 group.leave()
             }
@@ -119,18 +123,23 @@ private extension IndieMusicApp {
         }
 
         group.notify(queue: .global()) {
-            if  successes == 2 {
-                print("Caching completed")
-            } else {
-                // Something went wrong retry the query.
-                print("Error caching from DB")
-                retrycount += 1
-                if retrycount <= retryCacheAmount {
-                    self.cacheDataFromFirebase()
+            if AuthManager.shared.isSignedIn {
+                if  successes.count == Caches.allCases.count  {
+                    print("Caching completed")
                 } else {
-                    // show error, check internet connection, retry
-
+                    // Something went wrong retry the query.
+                    print("Caching from DB incomplete. Only completed: \(successes)")
+                    retrycount += 1
+                    if retrycount <= retryCacheAmount {
+                        print("Retrying cacheing attempt: \(retrycount)")
+                        self.cacheDataFromFirebase()
+                    } else {
+                        // show error, check internet connection, retry
+                        
+                    }
                 }
+            } else if successes.contains(Caches.genres) {
+                print("Caching completed, no need to retry, as the user is NOT signed in.")
             }
         }
     }

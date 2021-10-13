@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PayWallView: View {
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
@@ -128,6 +128,6 @@ struct PayWallView: View {
 struct PayWallView_Previews: PreviewProvider {
     static var previews: some View {
         PayWallView()
-            .environmentObject(ViewModel())
+            .environmentObject(MainViewModel())
     }
 }

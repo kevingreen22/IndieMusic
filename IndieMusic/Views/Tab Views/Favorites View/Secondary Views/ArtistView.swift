@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ArtistsView: View {
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @Environment(\.defaultMinListRowHeight) var listRowHeight
     let artists: [Artist]
     
@@ -34,6 +34,6 @@ struct ArtistsView: View {
 struct ArtistView_Previews: PreviewProvider {
     static var previews: some View {
         ArtistsView(artists: MockData.Artists())
-            .environmentObject(ViewModel())
+            .environmentObject(MainViewModel())
     }
 }

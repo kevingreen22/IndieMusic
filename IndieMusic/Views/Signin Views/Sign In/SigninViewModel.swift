@@ -12,12 +12,14 @@ class SigninViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var isSigningIn: Bool = false
-    @Published var showCreateAccount = false
+    @Published var activeFullScreen: ActiveFullScreen?
     
     
     func signIn(completion: @escaping (Bool) -> Void) {
-        isSigningIn.toggle()
-        guard !email.trimmingCharacters(in: .whitespaces).isEmpty, !password.isEmpty else { isSigningIn.toggle(); return }
+        guard !email.trimmingCharacters(in: .whitespaces).isEmpty, !password.isEmpty else {
+            completion(false)
+            return
+        }
         
         email = email.trimmingCharacters(in: .whitespaces)
         
@@ -28,7 +30,6 @@ class SigninViewModel: ObservableObject {
             } else {
                 completion(false)
             }
-            self.isSigningIn.toggle()
         }
     }
 }

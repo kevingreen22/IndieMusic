@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class ViewModel: ObservableObject {
+class MainViewModel: ObservableObject {
     
     struct Constants {
         static let currentlyPlayingMinimizedViewHeight: CGFloat = 60
@@ -23,12 +23,13 @@ class ViewModel: ObservableObject {
     @Published var alertItem: MyAlertItem?
     @Published var activeSheet: ActiveSheet?
     @Published var activeFullScreen: ActiveFullScreen?
-    @Published var selectedTab: Int = 0
+    @Published var selectedTab: Int = 2
     @Published var searchText: String = ""
     @Published var selectedSongCell: Song? = nil
     @Published var uploadProgress: CGFloat = 0
     @Published var showNotification = false
     @Published var notificationText = "Uploading..."
+
     
     
     

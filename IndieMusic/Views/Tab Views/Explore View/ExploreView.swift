@@ -19,7 +19,7 @@
 import SwiftUI
 
 struct ExploreView: View {
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @StateObject var exploreVM = ExploreViewModel()
     
     let colums = [GridItem(.flexible(minimum: ExploreViewModel.gridCellSize))]
@@ -171,7 +171,7 @@ struct GenreOfAlbumsIndexPreferenceKey: PreferenceKey {
 struct ExploreView_Previews: PreviewProvider {
     static var previews: some View {
         ExploreView()
-            .environmentObject(ViewModel())
+            .environmentObject(MainViewModel())
             .environmentObject(ExploreViewModel())
     }
 }

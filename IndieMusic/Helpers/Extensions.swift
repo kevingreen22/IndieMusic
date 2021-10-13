@@ -12,10 +12,9 @@ extension App {
     
     func isFirstAppRun() -> Bool {
         if UserDefaults.standard.bool(forKey: "first_app_run") {
-            UserDefaults.standard.set(false, forKey: "first_app_run")
+            UserDefaults.standard.set(true, forKey: "first_app_run")
             return false
         } else {
-            UserDefaults.standard.set(true, forKey: "first_app_run")
             return true
         }
     }
@@ -96,6 +95,12 @@ extension View {
         guard let safeArea = screen.windows.first?.safeAreaInsets else { return null }
         return safeArea
     }
+    
+    #if canImport(UIKit)
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    #endif
     
 }
 

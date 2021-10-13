@@ -12,7 +12,7 @@ import SwiftUI
 
 struct UploadSongView: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @StateObject var uploadVM = UploadSongViewModel()
     
@@ -123,7 +123,7 @@ struct UploadSongView: View {
 struct UploadSongView_Previews: PreviewProvider {
     static var previews: some View {
         UploadSongView()
-            .environmentObject(ViewModel())
+            .environmentObject(MainViewModel())
             .environmentObject(ProfileViewModel())
     }
 }

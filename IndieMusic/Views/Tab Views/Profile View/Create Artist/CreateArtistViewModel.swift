@@ -26,7 +26,7 @@ class CreateArtistViewModel: ObservableObject {
     
     
     
-    func createArtist(viewModel: ViewModel) {
+    func createArtist(viewModel: MainViewModel) {
         // Validate info
         print("Validating info to create artist...")
         guard artistName != "" else {
@@ -99,7 +99,7 @@ class CreateArtistViewModel: ObservableObject {
     
     
     
-    fileprivate func reverseCreateArtistIfError(viewModel: ViewModel) {
+    fileprivate func reverseCreateArtistIfError(viewModel: MainViewModel) {
         
     }
     

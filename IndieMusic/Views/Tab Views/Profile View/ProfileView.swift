@@ -9,52 +9,37 @@ import SwiftUI
 import UIKit
 
 struct ProfileView: View {
-    @EnvironmentObject var vm: ViewModel
-    @StateObject var profileVM = ProfileViewModel()
+    @EnvironmentObject var vm: MainViewModel
+    @EnvironmentObject var profileVM: ProfileViewModel
     
     
     var body: some View {
-        NavigationView {
-            ZStack {
+        ZStack {
+            if vm.user != nil {
                 VStack(alignment: .leading, spacing: 0) {
                     ProfileViewHeader()
                         .environmentObject(vm)
                         .environmentObject(profileVM)
                     
-                    List {
-                        ForEach(vm.user.ownerSongs, id: \.self) { song in
-                            HStack {
-                                Image(uiImage: profileVM.getAlbumArtworkFor(song: song))
-                                    .resizable()
-                                    .frame(width: 40, height: 40, alignment: .leading)
-                                    .padding(.trailing)
-                                VStack(alignment: .leading) {
-                                    Text(song.title)
-                                        .font(.title3)
-                                    Text(song.albumTitle)
-                                        .foregroundColor(.appSecondary)
-                                }
-                            }
-                        }
-                    }
-                } // End VStack
-                
-                TopNavButtons()
-                    .environmentObject(vm)
-                    .environmentObject(profileVM)
-                
-            } // End ZStack
-            
-            .navigationBarHidden(true)
-            
-            .onAppear {
-                if vm.user.artist != nil {
-                    profileVM.showArtistOwnerInfo = true
+                    ownerSongsList
                 }
+            } else {
+                showSignInViewButton
+            }
+            
+            topNavButtons
+        }
+        
+        .onAppear {
+            profileVM.fetchUserProfilePicture(vm.user)
+            
+            if vm.user?.artist != nil {
+                profileVM.showArtistOwnerInfo = true
             }
         }
         
-        .fullScreenCover(item: $vm.activeFullScreen, onDismiss: doStuff, content: { item in
+        
+        .fullScreenCover(item: $vm.activeFullScreen, onDismiss: onDismissOfActiveFullScreenCover, content: { item in
             switch item {
             case .createArtist:
                 CreateArtistView()
@@ -67,31 +52,103 @@ struct ProfileView: View {
             case .uploadSong:
                 UploadSongView()
                     .environmentObject(vm)
+            case .forgotPassword, .createAccount:
+                EmptyView()
             }
         })
         
     } // End body
+}
+
+
+extension ProfileView {
     
-    func doStuff() {
+    var ownerSongsList: some View {
+        List {
+            ForEach(vm.user.ownerSongs, id: \.self) { song in
+                HStack {
+                    Image(uiImage: profileVM.getAlbumArtworkFor(song: song))
+                        .resizable()
+                        .frame(width: 40, height: 40, alignment: .leading)
+                        .padding(.trailing)
+                    VStack(alignment: .leading) {
+                        Text(song.title)
+                            .font(.title3)
+                        Text(song.albumTitle)
+                            .foregroundColor(.appSecondary)
+                    }
+                }
+            }
+        }
+    }
+    
+    // Add this at the end of ZStack.
+    var topNavButtons: some View {
+        VStack {
+            HStack {
+                settingsButton
+                    
+                Spacer()
+                
+                signOutButton
+            }
+            Spacer()
+        }.padding([.top, .horizontal])
+    }
+    
+    var settingsButton: some View {
+        Button(action: {
+            profileVM.showSettings.toggle()
+        }, label: {
+            Image(systemName: "gear")
+                .foregroundColor(.white)
+        })
+    }
+    
+    var signOutButton: some View {
+        Button(action: {
+            vm.alertItem = MyAlertItem(title: Text("Sign Out?"), message: Text("Are you sure you want to sign out?"), primaryButton: .cancel(), secondaryButton: .destructive(Text("Sign Out"), action: {
+                profileVM.signOut()
+                vm.showSigninView.toggle()
+            }))
+        }, label: {
+            Text("Sign Out")
+                .foregroundColor(.white)
+                .bold()
+        })
+    }
+    
+    var showSignInViewButton: some View {
+        Button {
+            vm.activeSheet = .signIn
+        } label: {
+            Text("Sign In")
+                .font(.title)
+                .foregroundColor(.white)
+                .frame(width: 300, height: 55)
+                .background(Color.mainApp)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+    
+    
+    func onDismissOfActiveFullScreenCover() {
         switch vm.activeFullScreen {
         case .createArtist:
             if vm.user.artist == nil {
                 profileVM.showArtistOwnerInfo = false
             }
             
-        case .uploadSong, .createAlbum, .none:
+        case .uploadSong, .createAlbum, .forgotPassword, .createAccount, .none:
             break
         }
     }
     
 }
 
-
-
-
 fileprivate struct ProfileViewHeader: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @State private var isExpanded = false
     
@@ -105,19 +162,19 @@ fileprivate struct ProfileViewHeader: View {
             VStack {
                 Menu(content: {
                     Button {
-                        profileVM.activeSheet = .imagePicker(sourceType: .photoLibrary, picking: .bioImage)
+                        vm.activeSheet = .imagePicker(sourceType: .photoLibrary, picking: .bioImage)
                     } label: {
                         Label("Images", systemImage: "photo")
                     }
                     
                     Button {
-                        profileVM.activeSheet = .imagePicker(sourceType: .camera, picking: .bioImage)
+                        vm.activeSheet = .imagePicker(sourceType: .camera, picking: .bioImage)
                     } label: {
                         Label("Camera", systemImage: "camera.fill")
                     }
                     
                     Button {
-                        profileVM.activeSheet = .documentPicker(picking: .bioImage)
+                        vm.activeSheet = .documentPicker(picking: .bioImage)
                     } label: {
                         Label("Browse", systemImage: "folder.fill")
                     }
@@ -170,93 +227,34 @@ fileprivate struct ProfileViewHeader: View {
             }
         }.frame(height: 260)
         
-        .onAppear {
-            profileVM.fetchUserProfilePicture(vm.user)
-        }
+//        .sheet(item: $profileVM.activeSheet, onDismiss: { profileVM.updateUsersProfilePicture(user: vm.user) }) { item in
+//            switch item {
+//            case .imagePicker(let sourceType, let picking):
+//                switch picking {
+//                case .bioImage:
+//                    ImagePicker(selectedImage: $profileVM.selectedImage, finishedSelecting: .constant(nil), sourceType: sourceType)
+//                case .albumImage, .mp3:
+//                    EmptyView()
+//                }
+//                
+//            case .documentPicker(let picking):
+//                switch picking {
+//                case .bioImage, .albumImage:
+//                    DocumentPicker(filePath: $profileVM.url, file: .constant(nil), contentTypes: [.image])
+//                case .mp3:
+//                    EmptyView()
+//                }
+//            case .signIn, .paywall:
+//                EmptyView()
+//            }
+//        }
         
-        .sheet(item: $profileVM.activeSheet, onDismiss: { profileVM.updateUsersProfilePicture(user: vm.user) }) { item in
-            switch item {
-            case .imagePicker(let sourceType, let picking):
-                switch picking {
-                case .bioImage:
-                    ImagePicker(selectedImage: $profileVM.selectedImage, finishedSelecting: .constant(nil), sourceType: sourceType)
-                case .albumImage, .mp3:
-                    EmptyView()
-                }
-                
-            case .documentPicker(let picking):
-                switch picking {
-                case .bioImage, .albumImage:
-                    DocumentPicker(filePath: $profileVM.url, file: .constant(nil), contentTypes: [.image])
-                case .mp3:
-                    EmptyView()
-                }
-            case .signIn, .paywall:
-                EmptyView()
-            }
-        }
-        
-    }
-}
-
-fileprivate struct SignOutButton: View {
-    @EnvironmentObject var vm: ViewModel
-    @EnvironmentObject var profileVM: ProfileViewModel
-    
-    var body: some View {
-        Button(action: {
-            vm.alertItem = MyAlertItem(title: Text("Sign Out?"), message: Text("Are you sure you want to sign out?"), primaryButton: .cancel(), secondaryButton: .destructive(Text("Sign Out"), action: {
-                profileVM.signOut()
-                vm.showSigninView.toggle()
-            }))
-        }, label: {
-            Text("Sign Out")
-                .foregroundColor(.white)
-                .bold()
-        })
-    }
-}
-
-fileprivate struct SettingsButton: View {
-    @EnvironmentObject var vm: ViewModel
-    @EnvironmentObject var profileVM: ProfileViewModel
-    
-    var body: some View {
-        Button(action: {
-            profileVM.showSettings.toggle()
-        }, label: {
-            Image(systemName: "gear")
-                .foregroundColor(.white)
-        })
-    }
-}
-
-// Add this at the end of ZStack.
-fileprivate struct TopNavButtons: View {
-    @EnvironmentObject var vm: ViewModel
-    @EnvironmentObject var profileVM: ProfileViewModel
-    
-    var body: some View {
-        VStack {
-            HStack {
-                SettingsButton()
-                    .environmentObject(vm)
-                    .environmentObject(profileVM)
-                
-                Spacer()
-                
-                SignOutButton()
-                    .environmentObject(vm)
-                    .environmentObject(profileVM)
-            }
-            Spacer()
-        }.padding([.top, .horizontal])
     }
 }
 
 fileprivate struct UseAsArtistProfileButton: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var vm: ViewModel
+    @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     private let shadowColor = Color.black.opacity(0.4)
     private let shadowPosition: (x: CGFloat, y: CGFloat) = (x: 2, y: 2)
@@ -309,7 +307,7 @@ fileprivate struct UseAsArtistProfileButton: View {
 
 
 struct ProfileView_Previews: PreviewProvider {
-    static let vm = ViewModel()
+    static let vm = MainViewModel()
     
     static var previews: some View {
         vm.user = MockData.user
@@ -318,3 +316,10 @@ struct ProfileView_Previews: PreviewProvider {
             .environmentObject(vm)
     }
 }
+
+
+
+
+
+
+
