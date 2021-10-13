@@ -14,8 +14,8 @@ import RQPermissions
 struct IndieMusicApp: App {
     
     init() {
+        self.firstAppLaunch = isFirstAppRun()
         setupFirebase()
-        cacheDataFromFirebase()
     }
     
     @Environment(\.scenePhase) var scenePhase
@@ -24,13 +24,16 @@ struct IndieMusicApp: App {
     
     @State private var retrycount = 0
     private let retryCacheAmount = 2
-    
+    private var firstAppLaunch = true
     
     var body: some Scene {
         WindowGroup {
             MainTabView()
                 .environmentObject(vm)
                 .environmentObject(cpVM)
+                .onAppear {
+                    cacheDataFromFirebase()
+                }
                 .fullScreenCover(isPresented: $vm.showSigninView, onDismiss: requestPermissionsIfNeeded) {
                     SignInView()
                         .environmentObject(vm)
@@ -70,27 +73,21 @@ private extension IndieMusicApp {
     func cacheDataFromFirebase() {
 //        vm.cacheGenres { _, error in
 //            if error == nil {
-//                vm.initProgress += 0.5
 //                if AuthManager.shared.isSignedIn {
 //                    vm.cacheUser { success in
 //                        if success {
 //                            print("user cached")
-//                            vm.initProgress += 0.5
-//                            cpVM.initialize(with: vm.user)
-//                            completion(true)
 //                        } else {
 //                            print("user NOT cached")
-//                            completion(false)
 //                        }
 //                    }
-//                } else {
-//                    print("User not signed in.")
-//                    vm.showSigninView = true
-//                    completion(true)
 //                }
+////                else {
+////                    print("User not signed in.")
+////                    vm.showSigninView = true
+////                }
 //            } else {
 //                print("Error caching genres")
-//                completion(false)
 //            }
 //        }
 
@@ -106,7 +103,7 @@ private extension IndieMusicApp {
         }
 
         group.enter()
-        if AuthManager.shared.isSignedIn {
+        if AuthManager.shared.isSignedIn && firstAppLaunch == false {
             vm.cacheUser { success in
                 if success {
                     print("user cached")
@@ -116,11 +113,10 @@ private extension IndieMusicApp {
                 }
                 group.leave()
             }
+        } else {
+            AuthManager.shared.signOutUserOnAppFirstLaunch()
+            group.leave()
         }
-//        else {
-//            vm.showSigninView = true
-//            group.leave()
-//        }
 
         group.notify(queue: .global()) {
             if  successes == 2 {
@@ -133,7 +129,7 @@ private extension IndieMusicApp {
                     self.cacheDataFromFirebase()
                 } else {
                     // show error, check internet connection, retry
-                    
+
                 }
             }
         }

@@ -55,12 +55,12 @@ class Artist: Hashable, Codable, Comparable {
         self.timeStamp = Date().timeIntervalSince1970
     }
     
-    public var mostRecentAlbumArtworkURL: URL {
+    public var mostRecentAlbumArtworkURL: URL? {
         let sortedAlbums = albums.sorted(by: { $0.timeStamp < $1.timeStamp })
         if let mostRecentArtwork = sortedAlbums.last?.artworkURL {
             return mostRecentArtwork
         } else {
-            return URL(fileURLWithPath: "album_artwork_placeholder")
+            return nil
         }
     }
     
@@ -145,12 +145,12 @@ class Album: Hashable, Identifiable, Equatable, Comparable, Codable {
         self.timeStamp = Date().timeIntervalSince1970
     }
     
-    var albumArtworkURL: URL {
-        guard let artworkURL = artworkURL else {
-            return URL(fileURLWithPath: "album_artwork_placeholder")
-        }
-        return artworkURL
-    }
+//    var albumArtworkURL: URL {
+//        guard let artworkURL = artworkURL else {
+//            return URL(fileURLWithPath: "album_artwork_placeholder")
+//        }
+//        return artworkURL
+//    }
     
 }
 

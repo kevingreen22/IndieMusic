@@ -18,9 +18,15 @@ final class AuthManager {
     
     /// Returns whether or not a user is signed in.
     public var isSignedIn: Bool {
+        print("Is signed in: \(auth.currentUser != nil) ")
         return auth.currentUser != nil
     }
     
+    
+    func signOutUserOnAppFirstLaunch() {
+        print("sign out on first launch")
+        signOut(completion: nil)
+    }
     
     
     
@@ -62,12 +68,12 @@ final class AuthManager {
     
     
     /// Signs a user out.
-    func signOut(completion: (Bool) -> Void) {
+    func signOut(completion: ((Bool) -> Void)?) {
         do {
             try auth.signOut()
-            completion(true)
+            completion?(true)
         } catch {
-            completion(false)
+            completion?(false)
             print(error)
         }
     }

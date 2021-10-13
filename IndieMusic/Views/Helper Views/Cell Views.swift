@@ -196,9 +196,8 @@ struct ExploreCellView: View {
     let image: Image?
     let title: String
     let altText: String?
-//    let cellSize: CGSize
     
-    private let imagePlaceholder: UIImage = UIImage(named: "genre_image_placeholder")!
+    private let imagePlaceholder: UIImage = UIImage.genreImagePlaceholder
     
     init( image: Image?, title: String, altText: String?) {
         self.image = image
@@ -240,7 +239,7 @@ struct CellViews_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack {
-            FavoritesNavLinkCell(systemImageName: "album_artwork_placeholder", label: "Favorites Cell")
+            FavoritesNavLinkCell(systemImageName: "photo", label: "Favorites Cell")
 
             ArtistNavLinkCell(artist: MockData.Artists().first!)
 

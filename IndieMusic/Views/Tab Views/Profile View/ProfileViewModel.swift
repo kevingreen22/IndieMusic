@@ -52,7 +52,7 @@ class ProfileViewModel: ObservableObject {
     
     
     func getAlbumArtworkFor(song: Song) -> UIImage {
-        var _image = UIImage(named: "album_artwork_placeholder")!
+        var _image = UIImage.albumArtworkPlaceholder
         StorageManager.shared.downloadAlbumArtworkFor(albumID: song.albumID, artistID: song.artistID) { image in
             guard let image = image else { return }
             _image = image

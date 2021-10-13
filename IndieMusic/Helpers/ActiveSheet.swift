@@ -8,9 +8,8 @@
 import SwiftUI
 
 enum ActiveSheet: Identifiable {
-//    case createArtist
-//    case createAlbum
-//    case uploadSong
+    case signIn
+    case paywall
     case imagePicker(sourceType: UIImagePickerController.SourceType, picking: PickingType)
     case documentPicker(picking: PickingType)
     

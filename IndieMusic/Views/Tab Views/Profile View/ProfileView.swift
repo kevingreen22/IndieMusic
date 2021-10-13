@@ -191,6 +191,8 @@ fileprivate struct ProfileViewHeader: View {
                 case .mp3:
                     EmptyView()
                 }
+            case .signIn, .paywall:
+                EmptyView()
             }
         }
         

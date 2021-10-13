@@ -23,7 +23,7 @@ class ViewModel: ObservableObject {
     @Published var alertItem: MyAlertItem?
     @Published var activeSheet: ActiveSheet?
     @Published var activeFullScreen: ActiveFullScreen?
-    @Published var showPayWall = false
+    @Published var selectedTab: Int = 0
     @Published var searchText: String = ""
     @Published var selectedSongCell: Song? = nil
     @Published var uploadProgress: CGFloat = 0
@@ -33,7 +33,7 @@ class ViewModel: ObservableObject {
     
     
     func fetchBioImageFor(artist: Artist) -> UIImage {
-        var bioImage = UIImage(named: "bio_placeholder")!
+        var bioImage = UIImage.bioPlaceholder
         StorageManager.shared.downloadArtistBioImage(artist: artist) { image in
             guard let image = image else { return }
             bioImage = image
@@ -42,7 +42,7 @@ class ViewModel: ObservableObject {
     }
     
     func fetchAlbumArtworkFor(album: Album) -> UIImage {
-        var artwork = UIImage(named: "album_artwork_placeholder")!
+        var artwork = UIImage.albumArtworkPlaceholder
         StorageManager.shared.downloadAlbumArtworkFor(album: album){ image in
             guard let image = image else { return }
             artwork = image
@@ -51,7 +51,7 @@ class ViewModel: ObservableObject {
     }
     
     func fetchAlbumArtworkFor(song: Song) -> UIImage {
-        var artwork = UIImage(named: "album_artwork_placeholder")!
+        var artwork = UIImage.albumArtworkPlaceholder
         StorageManager.shared.downloadAlbumArtworkFor(albumID: song.albumID, artistID: song.artistID) { image in
             guard let image = image else { return }
             artwork = image

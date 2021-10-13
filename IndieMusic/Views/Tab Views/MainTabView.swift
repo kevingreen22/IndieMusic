@@ -8,12 +8,6 @@
 import SwiftUI
 import AVKit
 
-enum TabTitle: String {
-    case favorites = "Favorites"
-    case explore = "Explore"
-    case profile = "Profile"
-}
-
 struct MainTabView: View {
     @Environment(\.defaultMinListRowHeight) var listRowHeight
     @EnvironmentObject var vm: ViewModel
@@ -25,26 +19,7 @@ struct MainTabView: View {
     
     var body: some View {
         ZStack {
-            TabView {
-                if AuthManager.shared.isSignedIn {
-                    NavigationView {
-                        FavoritesView()
-                            .environmentObject(vm)
-                            .environmentObject(cpVM)
-                            .environment(\.defaultMinListRowHeight, 60)
-                            .navigationBarTitleDisplayMode(.large)
-                            .navigationBarTitle(TabTitle.favorites.rawValue)
-                    }.tabItem {
-                        Label(TabTitle.favorites.rawValue, systemImage: "heart.fill")
-                    }
-                } else {
-                    SignInView()
-                        .tabItem {
-                            Label("Profile", systemImage: "person.fill")
-                        }
-                }
-                
-                
+            TabView(selection: $vm.selectedTab) {
                 NavigationView {
                     ExploreView()
                         .environmentObject(vm)
@@ -53,27 +28,39 @@ struct MainTabView: View {
                         .navigationBarTitleDisplayMode(.large)
                         .navigationBarTitle(TabTitle.explore.rawValue)
                 }.tabItem {
-                    Label(TabTitle.explore.rawValue, systemImage: "flashlight.on.fill")
+                    Label(TabTitle.explore.rawValue, systemImage: TabImage.explore.rawValue)
                 }
-
-                if AuthManager.shared.isSignedIn {
-                    ProfileView()
+                
+                
+                NavigationView {
+                    FavoritesView()
                         .environmentObject(vm)
                         .environmentObject(cpVM)
                         .environment(\.defaultMinListRowHeight, 60)
-                        .tabItem {
-                            Label("Profile", systemImage: "person.fill")
-                        }
-                } else {
-                    SignInView()
-                        .tabItem {
-                            Label("Profile", systemImage: "person.fill")
-                        }
+                        .navigationBarTitleDisplayMode(.large)
+                        .navigationBarTitle(TabTitle.favorites.rawValue)
+                }.tabItem {
+                    Label(TabTitle.favorites.rawValue, systemImage: TabImage.favorites.rawValue)
+                        .gesture(ShowSignInGesture())
+                        .environmentObject(vm)
                 }
+                
+                
+                ProfileView()
+                    .environmentObject(vm)
+                    .environmentObject(cpVM)
+                    .environment(\.defaultMinListRowHeight, 60)
+                    .tabItem {
+                        Label(TabTitle.profile.rawValue, systemImage: TabImage.profile.rawValue)
+                            .gesture(ShowSignInGesture())
+                            .environmentObject(vm)
+                    }
+                
                 
             } // End TabView
             .accentColor(.mainApp)
             .transition(.move(edge: .bottom))
+            
             
             CurrentlyPlayingMinimizedView()
 //            NewCurrentlyPlayingView()
@@ -111,10 +98,17 @@ struct MainTabView: View {
 //            if vm.isOpeningApp && !IAPManager.shared.isPremium() && AuthManager.shared.isSignedIn { vm.showPayWall.toggle() }
 //        }
         
-//        .sheet(isPresented: $vm.showPayWall, content: {
-//            PayWallView()
-//                .environmentObject(vm)
-//        })
+        
+        .sheet(item: $vm.activeSheet) { item in
+            switch item {
+            case .signIn:
+                SignInView()
+            case .paywall:
+                PayWallView()
+            case .imagePicker(sourceType: _, picking: _), .documentPicker(picking: _):
+                EmptyView()
+            }
+        }
         
         .alert(item: $vm.alertItem) { alert in
             MyAlertItem.present(alertItem: alert)
@@ -140,3 +134,28 @@ struct ContentView_Previews: PreviewProvider {
 
 
 
+
+fileprivate enum TabTitle: String {
+    case favorites = "Favorites"
+    case explore = "Explore"
+    case profile = "Profile"
+}
+
+fileprivate enum TabImage: String {
+    case favorites = "heart.fill"
+    case explore = "flashlight.on.fill"
+    case profile = "person.fill"
+}
+
+fileprivate struct ShowSignInGesture: Gesture {
+    @EnvironmentObject var vm: ViewModel
+    
+    var body: some Gesture {
+        TapGesture()
+            .onEnded { _ in
+                if !AuthManager.shared.isSignedIn {
+                    vm.activeSheet = .signIn
+                }
+            }
+    }
+}

@@ -113,12 +113,12 @@ struct CreateArtistView: View {
                             }, label: {
                                 Text("Create")
                                     .font(.system(size: 25))
+                                    .frame(width: 300, height: 50)
+                                    .foregroundColor(.white)
+                                    .background(Color.mainApp)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
                             })
                             .padding()
-                            .frame(width: 300, height: 50)
-                            .foregroundColor(.white)
-                            .background(Color.mainApp)
-                            .cornerRadius(8)
                             .shadow(radius: 10)
                         )
                 }.ignoresSafeArea(edges: .bottom)
@@ -135,6 +135,8 @@ struct CreateArtistView: View {
                 
             case .documentPicker:
                 DocumentPicker(filePath: $createArtistVM.url, file: .constant(nil), contentTypes: [.image])
+            case .signIn, .paywall:
+                EmptyView()
             }
         }
     }

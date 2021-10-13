@@ -7,6 +7,22 @@
 
 import SwiftUI
 
+
+extension App {
+    
+    func isFirstAppRun() -> Bool {
+        if UserDefaults.standard.bool(forKey: "first_app_run") {
+            UserDefaults.standard.set(false, forKey: "first_app_run")
+            return false
+        } else {
+            UserDefaults.standard.set(true, forKey: "first_app_run")
+            return true
+        }
+    }
+}
+
+
+
 // MARK: String Extension
 extension String {
     
@@ -32,6 +48,18 @@ extension Color {
     static var tabBarBackground: Color {
         Color("TabBarBackground")
     }
+    
+}
+
+
+extension UIImage {
+    
+    static var albumArtworkPlaceholder = UIImage(named: "album_artwork_placeholder")!
+    
+    static var bioPlaceholder = UIImage(named: "bio_placeholder")!
+    
+    static var genreImagePlaceholder = UIImage(named: "genre_image_placeholder")!
+    
     
 }
 

@@ -79,7 +79,7 @@ struct CreationView: View {
                                 Menu(content: {
                                     PickImageSourceMenuContent(picking: .albumImage)
                                 }, label: {
-                                    Image(uiImage: createVM.selectedAlbumImage ?? UIImage(named: "album_artwork_placeholder")!)
+                                    Image(uiImage: createVM.selectedAlbumImage ?? UIImage.albumArtworkPlaceholder)
                                         .resizable()
                                         .frame(width: 260, height: 260)
                                         .aspectRatio(contentMode: .fit)

@@ -39,7 +39,7 @@ struct CreateAlbumView: View {
                             }
                             
                         }, label: {
-                            Image(uiImage: createAlbumVM.selectedImage ?? UIImage(named: "album_artwork_placeholder")!)
+                            Image(uiImage: createAlbumVM.selectedImage ?? UIImage.albumArtworkPlaceholder)
                                 .resizable()
                                 .frame(width: 260, height: 260)
                                 .aspectRatio(contentMode: .fit)
@@ -93,12 +93,12 @@ struct CreateAlbumView: View {
                         }, label: {
                             Text("Create")
                                 .font(.system(size: 25))
+                                .frame(width: 300, height: 50)
+                                .foregroundColor(.white)
+                                .background(Color.mainApp)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                         })
                         .padding()
-                        .frame(width: 300, height: 50)
-                        .foregroundColor(.white)
-                        .background(Color.mainApp)
-                        .cornerRadius(8)
                         .shadow(radius: 10)
                     )
             }.ignoresSafeArea(edges: .bottom)
@@ -112,6 +112,8 @@ struct CreateAlbumView: View {
                 
             case .documentPicker:
                 DocumentPicker(filePath: $createAlbumVM.url, file: .constant(nil), contentTypes: [.image])
+            case .signIn, .paywall:
+                EmptyView()
             }
         }
     }

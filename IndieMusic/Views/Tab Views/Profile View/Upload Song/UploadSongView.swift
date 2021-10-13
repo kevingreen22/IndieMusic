@@ -94,11 +94,14 @@ struct UploadSongView: View {
                             self.presentationMode.wrappedValue.dismiss()
                         }, label: {
                             Text("Upload")
+                                .font(.system(size: 25))
+                                .frame(width: 300, height: 50)
+                                .foregroundColor(.white)
+                                .background(Color.mainApp)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                         })
-                            .frame(width: 300, height: 50)
-                            .foregroundColor(.white)
-                            .background(Color.mainApp)
-                            .cornerRadius(8)
+                            .padding()
+                            .shadow(radius: 10)
                     )
             }.ignoresSafeArea(edges: .bottom)
         }

@@ -21,7 +21,7 @@ class CurrentlyPlayingViewModel: ObservableObject {
         }
     }
     @Published var album: Album = Album()
-    @Published var albumImage = UIImage(systemName: "photo")!
+    @Published var albumImage = UIImage.albumArtworkPlaceholder
     
     @Published var audioPlayer = AVAudioPlayer()
     @Published var playState: SwimplyPlayIndicator.AudioState = .stop
@@ -37,10 +37,10 @@ class CurrentlyPlayingViewModel: ObservableObject {
     var dominantColors: (UIColor, UIColor) = (UIColor.gray, UIColor.black)
     
     init() {
-        if currentSongRefString != "" {
+        if currentSongRefString != "" || song.artistID != "" {
             setCurrentPlayingSongFromRef()
+            preparePlayer()
         }
-        preparePlayer()
     }
     
     
