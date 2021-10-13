@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CreateAccountView: View {
+    @Environment(\.colorScheme) var colorScheme
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var vm: ViewModel
     @StateObject var createAccountVM = CreateAccountVM()
@@ -20,29 +21,36 @@ struct CreateAccountView: View {
                     Group {
                         TextField("Name", text: $createAccountVM.name)
                             .frame(width: 330, height: 60, alignment: .center)
-                            .background(Color.blue)
                             .font(.title)
-                            .foregroundColor(.white)
+                            .foregroundColor(colorScheme == .light ? .black : .white)
                             .accentColor(.gray)
                             .multilineTextAlignment(.center)
                             .lineLimit(1)
                         
                         TextField("Email", text: $createAccountVM.email)
                             .frame(width: 330, height: 60, alignment: .center)
-                            .background(Color.blue)
                             .font(.title)
-                            .foregroundColor(.white)
+                            .foregroundColor(colorScheme == .light ? .black : .white)
                             .accentColor(.gray)
                             .multilineTextAlignment(.center)
                             .autocapitalization(.none)
                             .disableAutocorrection(true)
                             .lineLimit(1)
                         
-                        SecureField("Password", text: $createAccountVM.password)
+                        SecureField("Password", text: $createAccountVM.password1)
                             .frame(width: 330, height: 60, alignment: .center)
-                            .background(Color.blue)
                             .font(.title)
-                            .foregroundColor(.white)
+                            .foregroundColor(colorScheme == .light ? .black : .white)
+                            .accentColor(.gray)
+                            .multilineTextAlignment(.center)
+                            .autocapitalization(.none)
+                            .disableAutocorrection(true)
+                            .lineLimit(1)
+                        
+                        SecureField("Re-enter Password", text: $createAccountVM.password2)
+                            .frame(width: 330, height: 60, alignment: .center)
+                            .font(.title)
+                            .foregroundColor(colorScheme == .light ? .black : .white)
                             .accentColor(.gray)
                             .multilineTextAlignment(.center)
                             .autocapitalization(.none)
@@ -51,25 +59,29 @@ struct CreateAccountView: View {
                     }
                     
                     ZStack {
-                        Button(action: {
+                        Button {
+                            createAccountVM.isSigningIn.toggle()
                             createAccountVM.createAccount(completion: { success in
                                 if success {
                                     vm.cacheUser(completion:  { _ in })
+                                    createAccountVM.isSigningIn.toggle()
                                     self.presentationMode.wrappedValue.dismiss()
                                 } else {
+                                    createAccountVM.isSigningIn.toggle()
                                     self.vm.alertItem = MyErrorContext.createAccontFailedAlert
                                 }
                             })
-                        }, label: {
-                            Text("Create Account")
+                        } label: {
+                            Text("Create")
                                 .font(.title)
-                        })
-                        .padding(.top)
-                        .opacity(createAccountVM.isSigningIn ? 0.0 : 1.0)
-                        
-                        if createAccountVM.isSigningIn {
-                            ProgressView()
+                                .foregroundColor(.white)
+                                .frame(width: 300, height: 55)
+                                .background(Color.mainApp)
                         }
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .buttonStyle(ActivityIndicatorButtonStyle(start: createAccountVM.isSigningIn))
+                        .padding(.top)
+                        
                     }
                     
                     Spacer()
@@ -105,7 +117,12 @@ struct CreateAccountView: View {
 
 struct CreateAccountView_Previews: PreviewProvider {
     static var previews: some View {
-        CreateAccountView()
-            .environmentObject(ViewModel())
+        Group {
+            CreateAccountView()
+                .environmentObject(ViewModel())
+            CreateAccountView()
+                .preferredColorScheme(.dark)
+                .environmentObject(ViewModel())
+        }
     }
 }
