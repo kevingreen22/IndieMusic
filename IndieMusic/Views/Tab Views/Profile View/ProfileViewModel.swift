@@ -15,6 +15,7 @@ class ProfileViewModel: ObservableObject {
     @Published var alertItem: MyAlertItem?
     @Published var showArtistOwnerInfo: Bool = false
     @Published var showSettings = false
+    @Published var showLoader = false
     @Published var selectedImage: UIImage? = nil
     @Published var url: URL? = nil {
         didSet {
@@ -45,11 +46,12 @@ class ProfileViewModel: ObservableObject {
     }
     
     
-    
     func fetchUserProfilePicture(_ user: User) {
         StorageManager.shared.downloadProfilePictureFor(user: user) { uiimage in
             guard let uiimage = uiimage else { return }
-            self.selectedImage = uiimage
+            DispatchQueue.main.async {
+                self.selectedImage = uiimage
+            }
         }
     }
     
@@ -65,7 +67,7 @@ class ProfileViewModel: ObservableObject {
     
     
     func removeUsersOwnerPrivilage(viewModel: MainViewModel) {
-        print("Removing User Artist owner privilage...")
+        print("Attempting to removing User Artist owner privilage...")
         var errors: [Error]? = nil
         let group = DispatchGroup()
         
@@ -77,7 +79,8 @@ class ProfileViewModel: ObservableObject {
                     if let error = error {
                         errors?.append(error)
                     }
-                    group.leave()
+                    print("Deleted song from storage")
+                    group.wait()
                 }
             }
             
@@ -87,7 +90,8 @@ class ProfileViewModel: ObservableObject {
                 if let error = error {
                     errors?.append(error)
                 }
-                group.leave()
+                print("Deleted album artwork from stroage")
+                group.wait()
             }
         }
         
@@ -97,10 +101,11 @@ class ProfileViewModel: ObservableObject {
             if let error = error {
                 errors?.append(error)
             }
+            print("Deleted artist from DB")
             group.leave()
         }
         
-        let result1 = group.wait(timeout: DispatchTime.now())
+        let result1 = group.wait(timeout: .now() + 30)
         switch result1 {
         case .success:
             viewModel.user.artist = nil
@@ -117,10 +122,11 @@ class ProfileViewModel: ObservableObject {
             if let error = error {
                 errors?.append(error)
             }
-            group.leave()
+            print("User updated in DB")
+            group.wait()
         }
-        
-        
+
+
         group.enter()
         // then re-cache user
         viewModel.cacheUser { success in
@@ -128,27 +134,27 @@ class ProfileViewModel: ObservableObject {
             print("User re-cached after removing owner artist")
             group.leave()
         }
-        
-        let result2 = group.wait(timeout: DispatchTime.now())
+
+        let result2 = group.wait(timeout: .now() + 10)
         switch result2 {
         case .success:
-            print("remove Users Owner Privelage and artist completed.")
+            print("removal of User's Owner Privelage and artist completed.")
         case .timedOut:
             // try again
             print("dispatch group timed out.")
             alertItem = MyErrorContext.myAlertWith(title: "Process timed out", message: nil, action: { self.removeUsersOwnerPrivilage(viewModel: viewModel) }
             )
-            
         }
 
     }
     
     
-    func signOut() {
+    func signOut(viewModel: MainViewModel, completion: @escaping (Bool) -> Void) {
         AuthManager.shared.signOut { success in
-            guard success else { return }
+            guard success else { completion(false); return }
             UserDefaults.standard.setValue(nil, forKey: "email")
-            UserDefaults.standard.setValue(nil, forKey: "name")            
+            UserDefaults.standard.setValue(nil, forKey: "name")
+            completion(true)
         }
     }
     

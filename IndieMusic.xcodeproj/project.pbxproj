@@ -48,6 +48,7 @@
 		C78ECE53270F9BA000223E77 /* AnimatedSplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78ECE52270F9BA000223E77 /* AnimatedSplashScreen.swift */; };
 		C78ECE552716836100223E77 /* ActivityIndicatorButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78ECE542716836100223E77 /* ActivityIndicatorButtonStyle.swift */; };
 		C78ECE732716AC2A00223E77 /* ForgotPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78ECE722716AC2900223E77 /* ForgotPasswordView.swift */; };
+		C7A0389B27189C98006E5FEC /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A0389A27189C98006E5FEC /* LoaderView.swift */; };
 		C7AAF57526A34BD800AAAFDE /* ExploreCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AAF57426A34BD800AAAFDE /* ExploreCellModel.swift */; };
 		C7AAF57726A6955000AAAFDE /* Cell Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AAF57626A6955000AAAFDE /* Cell Views.swift */; };
 		C7AAF57A26A7321000AAAFDE /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AAF57926A7321000AAAFDE /* FavoritesView.swift */; };
@@ -153,6 +154,7 @@
 		C78ECE52270F9BA000223E77 /* AnimatedSplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedSplashScreen.swift; sourceTree = "<group>"; };
 		C78ECE542716836100223E77 /* ActivityIndicatorButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorButtonStyle.swift; sourceTree = "<group>"; };
 		C78ECE722716AC2900223E77 /* ForgotPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordView.swift; sourceTree = "<group>"; };
+		C7A0389A27189C98006E5FEC /* LoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderView.swift; sourceTree = "<group>"; };
 		C7AAF57426A34BD800AAAFDE /* ExploreCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreCellModel.swift; sourceTree = "<group>"; };
 		C7AAF57626A6955000AAAFDE /* Cell Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cell Views.swift"; sourceTree = "<group>"; };
 		C7AAF57926A7321000AAAFDE /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
@@ -445,6 +447,7 @@
 				C77F46EF26F53A7800059260 /* ExpandableButtonPanel.swift */,
 				C74A3A46270149DB00C354BF /* ProgressBarView.swift */,
 				C78ECE542716836100223E77 /* ActivityIndicatorButtonStyle.swift */,
+				C7A0389A27189C98006E5FEC /* LoaderView.swift */,
 			);
 			path = "Helper Views";
 			sourceTree = "<group>";
@@ -758,6 +761,7 @@
 				C7D64ADD26BAE696001ACB12 /* CreateAccountVM.swift in Sources */,
 				C74264C526A1F52E0075C8E0 /* StorageManager.swift in Sources */,
 				C7AE8A192697970F00B738C6 /* SongsListView.swift in Sources */,
+				C7A0389B27189C98006E5FEC /* LoaderView.swift in Sources */,
 				C74264C326A1F5100075C8E0 /* AuthManager.swift in Sources */,
 				C78ECE552716836100223E77 /* ActivityIndicatorButtonStyle.swift in Sources */,
 				C7AAF57726A6955000AAAFDE /* Cell Views.swift in Sources */,

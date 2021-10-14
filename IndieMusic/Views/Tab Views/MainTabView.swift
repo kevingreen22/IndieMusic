@@ -57,7 +57,11 @@ struct MainTabView: View {
             } // End TabView
             .accentColor(.mainApp)
             .transition(.move(edge: .bottom))
-            
+            .onChange(of: vm.selectedTab) { newValue in
+                if newValue == 2 && AuthManager.shared.isSignedIn == false {
+                    vm.user = nil
+                }
+            }
             
             CurrentlyPlayingMinimizedView()
 //            NewCurrentlyPlayingView()
@@ -85,18 +89,16 @@ struct MainTabView: View {
         
 //        .onAppear {
 //            withAnimation {
-//                DispatchQueue.main.asyncAfter(wallDeadline: .now() + 0.5) {
-//                    vm.showNotification.toggle()
-//                }
 //                DispatchQueue.main.asyncAfter(wallDeadline: .now() + 4) {
 //                    vm.showNotification.toggle()
 //                }
 //            }
+        
 //            if vm.isOpeningApp && !IAPManager.shared.isPremium() && AuthManager.shared.isSignedIn { vm.showPayWall.toggle() }
 //        }
         
         
-        .sheet(item: $vm.activeSheet, onDismiss: { profileVM.updateUsersProfilePicture(user: vm.user) }) { item in
+        .sheet(item: $vm.activeSheet, onDismiss: onDismissOfActiveSheet) { item in
             switch item {
             case .signIn:
                 SignInView()
@@ -125,11 +127,61 @@ struct MainTabView: View {
             }
         }
         
+        
+        .fullScreenCover(item: $vm.activeFullScreen, onDismiss: onDismissOfActiveFullScreenCover, content: { item in
+            switch item {
+            case .createArtist:
+                CreateArtistView()
+                    .environmentObject(vm)
+                
+            case .createAlbum:
+                CreateAlbumView()
+                    .environmentObject(vm)
+                
+            case .uploadSong:
+                UploadSongView()
+                    .environmentObject(vm)
+                
+            case .forgotPassword:
+                ForgotPasswordView()
+                    .environmentObject(vm)
+                
+            case .createAccount:
+                CreateAccountView()
+                    .environmentObject(vm)
+            }
+        })
+        
         .alert(item: $vm.alertItem) { alert in
             MyAlertItem.present(alertItem: alert)
         }
         
     }
+    
+    
+    func onDismissOfActiveSheet() {
+        switch vm.activeSheet {
+        case .imagePicker(sourceType: _, picking: _):
+            profileVM.updateUsersProfilePicture(user: vm.user)
+            
+        default:
+            break
+            
+        }
+    }
+    
+    func onDismissOfActiveFullScreenCover() {
+        switch vm.activeFullScreen {
+        case .createArtist:
+            if vm.user.artist == nil {
+                profileVM.showArtistOwnerInfo = false
+            }
+            
+        case .uploadSong, .createAlbum, .forgotPassword, .createAccount, .none:
+            break
+        }
+    }
+    
 }
 
 

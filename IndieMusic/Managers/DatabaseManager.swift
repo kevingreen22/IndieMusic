@@ -357,6 +357,7 @@ final class DatabaseManger {
                     completion(false, error)
                 } else  {
                     print("Artist successfully deleted from Firebase DB.")
+                    completion(true, nil)
                 }
             }
     }

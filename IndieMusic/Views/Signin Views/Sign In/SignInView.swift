@@ -37,21 +37,21 @@ struct SignInView: View {
             
         } // End ZStack
         
-        .fullScreenCover(item: $signinVM.activeFullScreen, onDismiss: {
-             //dismiss sign in view if account was created
-            signinVM.activeFullScreen = nil
-        }, content: { item in
-            switch item {
-            case .forgotPassword:
-                ForgotPasswordView()
-                    .environmentObject(vm)
-            case .createAccount:
-                CreateAccountView()
-                    .environmentObject(vm)
-            default:
-                EmptyView()
-            }
-        })
+//        .fullScreenCover(item: $signinVM.activeFullScreen, onDismiss: {
+//             //dismiss sign in view if account was created
+//            signinVM.activeFullScreen = nil
+//        }, content: { item in
+//            switch item {
+//            case .forgotPassword:
+//                ForgotPasswordView()
+//                    .environmentObject(vm)
+//            case .createAccount:
+//                CreateAccountView()
+//                    .environmentObject(vm)
+//            default:
+//                EmptyView()
+//            }
+//        })
         
         .alert(item: $vm.alertItem, content: { alertItem in
             MyAlertItem.present(alertItem: alertItem)
@@ -105,9 +105,10 @@ extension SignInView {
             signinVM.isSigningIn.toggle()
             signinVM.signIn(completion: { success in
                 if success == true {
-                    vm.cacheUser(completion: { _ in })
-                    signinVM.isSigningIn.toggle()
-                    self.presentationMode.wrappedValue.dismiss()
+                    vm.cacheUser(completion: { success in
+                        signinVM.isSigningIn.toggle()
+                        self.presentationMode.wrappedValue.dismiss()
+                    })
                 } else {
                     signinVM.isSigningIn.toggle()
 //                            vm.alertItem = MyErrorContext.signInFailed

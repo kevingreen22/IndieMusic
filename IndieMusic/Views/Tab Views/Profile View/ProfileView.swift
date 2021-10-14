@@ -12,10 +12,9 @@ struct ProfileView: View {
     @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     
-    
     var body: some View {
         ZStack {
-            if vm.user != nil {
+            if AuthManager.shared.isSignedIn {
                 VStack(alignment: .leading, spacing: 0) {
                     ProfileViewHeader()
                         .environmentObject(vm)
@@ -23,39 +22,45 @@ struct ProfileView: View {
                     
                     ownerSongsList
                 }
+                
+                .onAppear {
+                    if AuthManager.shared.isSignedIn {
+                        // should see if profile picture is cached first
+                        profileVM.fetchUserProfilePicture(vm.user)
+                        if vm.user?.artist != nil {
+                            profileVM.showArtistOwnerInfo = true
+                        }
+                    }
+                }
+                
             } else {
                 showSignInViewButton
             }
             
             topNavButtons
-        }
-        
-        .onAppear {
-            profileVM.fetchUserProfilePicture(vm.user)
             
-            if vm.user?.artist != nil {
-                profileVM.showArtistOwnerInfo = true
+            if profileVM.showLoader {
+                LoaderView()
             }
         }
         
-        
-        .fullScreenCover(item: $vm.activeFullScreen, onDismiss: onDismissOfActiveFullScreenCover, content: { item in
-            switch item {
-            case .createArtist:
-                CreateArtistView()
-                    .environmentObject(vm)
-                
-            case .createAlbum:
-                CreateAlbumView()
-                    .environmentObject(vm)
-                
-            case .uploadSong:
-                UploadSongView()
-                    .environmentObject(vm)
-            case .forgotPassword, .createAccount:
-                EmptyView()
-            }
-        })
+//        .fullScreenCover(item: $vm.activeFullScreen, onDismiss: onDismissOfActiveFullScreenCover, content: { item in
+//            switch item {
+//            case .createArtist:
+//                CreateArtistView()
+//                    .environmentObject(vm)
+//                
+//            case .createAlbum:
+//                CreateAlbumView()
+//                    .environmentObject(vm)
+//                
+//            case .uploadSong:
+//                UploadSongView()
+//                    .environmentObject(vm)
+//            case .forgotPassword, .createAccount:
+//                EmptyView()
+//            }
+//        })
         
     } // End body
 }
@@ -107,10 +112,21 @@ extension ProfileView {
     
     var signOutButton: some View {
         Button(action: {
-            vm.alertItem = MyAlertItem(title: Text("Sign Out?"), message: Text("Are you sure you want to sign out?"), primaryButton: .cancel(), secondaryButton: .destructive(Text("Sign Out"), action: {
-                profileVM.signOut()
-                vm.showSigninView.toggle()
-            }))
+            vm.alertItem = MyAlertItem(
+                title: Text("Sign Out?"),
+                message: Text("Are you sure you want to sign out?"),
+                primaryButton: .cancel(),
+                secondaryButton: .destructive(Text("Sign Out"),
+                                              action: {
+                                                  withAnimation {
+                                                      profileVM.showLoader.toggle()
+                                                  }
+                                                  profileVM.signOut(viewModel: vm) { success in
+                                                      profileVM.showLoader.toggle()
+                                                      vm.selectedTab = 2
+                                                  }
+                                              })
+            )
         }, label: {
             Text("Sign Out")
                 .foregroundColor(.white)
@@ -132,17 +148,7 @@ extension ProfileView {
     }
     
     
-    func onDismissOfActiveFullScreenCover() {
-        switch vm.activeFullScreen {
-        case .createArtist:
-            if vm.user.artist == nil {
-                profileVM.showArtistOwnerInfo = false
-            }
-            
-        case .uploadSong, .createAlbum, .forgotPassword, .createAccount, .none:
-            break
-        }
-    }
+    
     
 }
 
@@ -154,100 +160,80 @@ fileprivate struct ProfileViewHeader: View {
     
     var body: some View {
         ZStack {
-            Rectangle()
-                .fill(Color.mainApp)
-                .edgesIgnoringSafeArea(.top)
-                .frame(height: 260)
+            if AuthManager.shared.isSignedIn {
+                Rectangle()
+                    .fill(Color.mainApp)
+                    .edgesIgnoringSafeArea(.top)
+                    .frame(height: 260)
                 
-            VStack {
-                Menu(content: {
-                    Button {
-                        vm.activeSheet = .imagePicker(sourceType: .photoLibrary, picking: .bioImage)
-                    } label: {
-                        Label("Images", systemImage: "photo")
-                    }
+                VStack {
+                    Menu(content: {
+                        Button {
+                            vm.activeSheet = .imagePicker(sourceType: .photoLibrary, picking: .bioImage)
+                        } label: {
+                            Label("Images", systemImage: "photo")
+                        }
+                        
+                        Button {
+                            vm.activeSheet = .imagePicker(sourceType: .camera, picking: .bioImage)
+                        } label: {
+                            Label("Camera", systemImage: "camera.fill")
+                        }
+                        
+                        Button {
+                            vm.activeSheet = .documentPicker(picking: .bioImage)
+                        } label: {
+                            Label("Browse", systemImage: "folder.fill")
+                        }
+                    }, label: {
+                        Image(uiImage: profileVM.selectedImage ?? UIImage(systemName: "person.circle.fill")!)
+                            .resizable()
+                            .frame(width: 100, height: 100)
+                            .clipShape(Circle())
+                    })
                     
-                    Button {
-                        vm.activeSheet = .imagePicker(sourceType: .camera, picking: .bioImage)
-                    } label: {
-                        Label("Camera", systemImage: "camera.fill")
-                    }
-                    
-                    Button {
-                        vm.activeSheet = .documentPicker(picking: .bioImage)
-                    } label: {
-                        Label("Browse", systemImage: "folder.fill")
-                    }
-                }, label: {
-                    Image(uiImage: profileVM.selectedImage ?? UIImage(systemName: "person.circle.fill")!)
-                        .resizable()
-                        .frame(width: 100, height: 100)
-                        .clipShape(Circle())
-                })
-                
-                Text(vm.user.name)
-                    .foregroundColor(.white)
-                    .font(.title)
-            }
-            
-            VStack {
-                Spacer()
-                HStack {
-                    UseAsArtistProfileButton()
-                        .environmentObject(vm)
-                        .environmentObject(profileVM)
-                    
-                    Spacer()
+                    Text(vm.user.name)
+                        .foregroundColor(.white)
+                        .font(.title)
                 }
-            }.padding([.leading, .bottom])
-            
-            if vm.user.artist != nil {
+                
                 VStack {
                     Spacer()
                     HStack {
+                        UseAsArtistProfileButton()
+                            .environmentObject(vm)
+                            .environmentObject(profileVM)
+                        
                         Spacer()
-                        ExpandableButtonPanel(primaryItem: ExpandableButtonItem(label: nil, imageName: "plus", action: nil), secondaryItems: [
-                            ExpandableButtonItem(label: nil, imageName: "rectangle.stack.fill.badge.plus", action: {
-                                // show create album view
-                                vm.activeFullScreen = .createAlbum
-                                withAnimation {
-                                    isExpanded.toggle()
-                                }
-                            }),
-                            ExpandableButtonItem(label: nil, imageName: "music.note", action: {
-                                // show upload song view
-                                vm.activeFullScreen = .uploadSong
-                                withAnimation {
-                                    isExpanded.toggle()
-                                }
-                            })
-                        ], size: 50, color: .appSecondary, isExpanded: $isExpanded)
                     }
-                }.padding([.trailing, .bottom])
+                }.padding([.leading, .bottom])
+                
+                if vm.user.artist != nil {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            ExpandableButtonPanel(primaryItem: ExpandableButtonItem(label: nil, imageName: "plus", action: nil), secondaryItems: [
+                                ExpandableButtonItem(label: nil, imageName: "rectangle.stack.fill.badge.plus", action: {
+                                    // show create album view
+                                    vm.activeFullScreen = .createAlbum
+                                    withAnimation {
+                                        isExpanded.toggle()
+                                    }
+                                }),
+                                ExpandableButtonItem(label: nil, imageName: "music.note", action: {
+                                    // show upload song view
+                                    vm.activeFullScreen = .uploadSong
+                                    withAnimation {
+                                        isExpanded.toggle()
+                                    }
+                                })
+                            ], size: 50, color: .appSecondary, isExpanded: $isExpanded)
+                        }
+                    }.padding([.trailing, .bottom])
+                }
             }
         }.frame(height: 260)
-        
-//        .sheet(item: $profileVM.activeSheet, onDismiss: { profileVM.updateUsersProfilePicture(user: vm.user) }) { item in
-//            switch item {
-//            case .imagePicker(let sourceType, let picking):
-//                switch picking {
-//                case .bioImage:
-//                    ImagePicker(selectedImage: $profileVM.selectedImage, finishedSelecting: .constant(nil), sourceType: sourceType)
-//                case .albumImage, .mp3:
-//                    EmptyView()
-//                }
-//                
-//            case .documentPicker(let picking):
-//                switch picking {
-//                case .bioImage, .albumImage:
-//                    DocumentPicker(filePath: $profileVM.url, file: .constant(nil), contentTypes: [.image])
-//                case .mp3:
-//                    EmptyView()
-//                }
-//            case .signIn, .paywall:
-//                EmptyView()
-//            }
-//        }
         
     }
 }
@@ -314,6 +300,7 @@ struct ProfileView_Previews: PreviewProvider {
         
         return ProfileView()
             .environmentObject(vm)
+            .environmentObject(ProfileViewModel())
     }
 }
 
