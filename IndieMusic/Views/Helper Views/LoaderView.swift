@@ -13,22 +13,27 @@ struct LoaderView: View {
             .scaleEffect(2)
             .background(
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.white)
+                    .realBlur(style: .light)
+                    .cornerRadius(10)
                     .frame(width: 100, height: 100)
-                    .opacity(0.7)
-                    
+                    .shadow(radius: 8)
             )
     }
-    
 }
+
+
 
 struct LoaderView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            Color.blue
-            VStack {
-                LoaderView()
-            }
+            Color.green.ignoresSafeArea()
+            ScrollView {
+                Text("Scroll down").font(.largeTitle).bold()
+                Text("to see").font(.largeTitle).bold()
+                Text("the effect").font(.largeTitle).bold()
+                Text("in action.").font(.largeTitle).bold()
+            }.offset(y: 160)
+            LoaderView()
         }
     }
 }

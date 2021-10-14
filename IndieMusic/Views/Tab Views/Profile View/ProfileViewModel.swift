@@ -15,7 +15,7 @@ class ProfileViewModel: ObservableObject {
     @Published var alertItem: MyAlertItem?
     @Published var showArtistOwnerInfo: Bool = false
     @Published var showSettings = false
-    @Published var showLoader = false
+    @Published var showLoader = true
     @Published var selectedImage: UIImage? = nil
     @Published var url: URL? = nil {
         didSet {
