@@ -66,10 +66,17 @@ class MainViewModel: ObservableObject {
             completion(false)
             return
         }
-        DatabaseManger.shared.fetchUser(email: email) { user in
-            guard let user = user else { return }
-            self.user = user
-            completion(true)
+        DispatchQueue.global().async {
+            DatabaseManger.shared.fetchUser(email: email) { user in
+                guard let user = user else { return }
+                self.user = user
+                StorageManager.shared.downloadProfilePictureFor(user: user) { uiimage in
+                    guard let image = uiimage else { return }
+                    guard let data = image.jpegData(compressionQuality: 1) else { return}
+                    user.profilePictureData = data
+                }
+                completion(true)
+            }
         }
     }
     

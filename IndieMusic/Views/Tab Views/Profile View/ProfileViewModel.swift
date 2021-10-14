@@ -26,6 +26,16 @@ class ProfileViewModel: ObservableObject {
         }
     }
     
+    func prepare(_ user: User) {
+        if AuthManager.shared.isSignedIn {
+            fetchUserProfilePicture(user)
+            
+            if user.artist != nil {
+                showArtistOwnerInfo = true
+            }
+        }
+    }
+    
     
     // Updates user profile picture in Firebase storage, then updates the User in Firebase DB.
     func updateUsersProfilePicture(user: User) {
@@ -36,8 +46,9 @@ class ProfileViewModel: ObservableObject {
         // save image to storage
         StorageManager.shared.uploadUserProfilePicture(user: user, image: image) { success in
             if success {
-                
                 // update user in DB
+                guard let data = image.jpegData(compressionQuality: 1) else { return }
+                user.profilePictureData = data
                 DatabaseManger.shared.update(user: user) { success, error in
                     
                 }
@@ -47,10 +58,15 @@ class ProfileViewModel: ObservableObject {
     
     
     func fetchUserProfilePicture(_ user: User) {
-        StorageManager.shared.downloadProfilePictureFor(user: user) { uiimage in
-            guard let uiimage = uiimage else { return }
-            DispatchQueue.main.async {
-                self.selectedImage = uiimage
+        if let data = user.profilePictureData {
+            guard let uiimage = UIImage(data: data) else { return }
+            selectedImage = uiimage
+        } else {
+            StorageManager.shared.downloadProfilePictureFor(user: user) { uiimage in
+                guard let uiimage = uiimage else { return }
+                DispatchQueue.main.async {
+                    self.selectedImage = uiimage
+                }
             }
         }
     }
@@ -64,6 +80,8 @@ class ProfileViewModel: ObservableObject {
         }
         return _image
     }
+    
+    
     
     
     func removeUsersOwnerPrivilage(viewModel: MainViewModel, completion:  ((Bool) -> Void)?) {
@@ -122,7 +140,6 @@ class ProfileViewModel: ObservableObject {
             }
         }
     }
-    
     
     fileprivate func updateUserOwnerPrivilage(viewModel: MainViewModel) {
         let group = DispatchGroup()

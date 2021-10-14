@@ -350,8 +350,8 @@
             filePath = "IndieMusic/Views/Tab Views/Profile View/ProfileViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
             landmarkName = "updateUsersProfilePicture(user:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -433,22 +433,6 @@
             startingLineNumber = "67"
             endingLineNumber = "67"
             landmarkName = "mainImage"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "7A06485C-EA33-4CBA-9894-33907D35FA59"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "IndieMusic/Views/Tab Views/Profile View/ProfileView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "28"
-            endingLineNumber = "28"
-            landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>

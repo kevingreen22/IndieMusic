@@ -23,15 +23,7 @@ struct ProfileView: View {
                     ownerSongsList
                 }
                 
-                .onAppear {
-                    if AuthManager.shared.isSignedIn {
-                        // should see if profile picture is cached first
-                        profileVM.fetchUserProfilePicture(vm.user)
-                        if vm.user?.artist != nil {
-                            profileVM.showArtistOwnerInfo = true
-                        }
-                    }
-                }
+                .onAppear { profileVM.prepare(vm.user) }
                 
             } else {
                 showSignInViewButton
@@ -39,30 +31,10 @@ struct ProfileView: View {
             
             topNavButtons
             
-            if profileVM.showLoader {
-                LoaderView()
-            }
+            if profileVM.showLoader { LoaderView() }
         }
         
-//        .fullScreenCover(item: $vm.activeFullScreen, onDismiss: onDismissOfActiveFullScreenCover, content: { item in
-//            switch item {
-//            case .createArtist:
-//                CreateArtistView()
-//                    .environmentObject(vm)
-//                
-//            case .createAlbum:
-//                CreateAlbumView()
-//                    .environmentObject(vm)
-//                
-//            case .uploadSong:
-//                UploadSongView()
-//                    .environmentObject(vm)
-//            case .forgotPassword, .createAccount:
-//                EmptyView()
-//            }
-//        })
-        
-    } // End body
+    }
 }
 
 
@@ -279,14 +251,17 @@ fileprivate struct UseAsArtistProfileButton: View {
                     primaryButton: .cancel(Text("Cancel"), action: {
                         profileVM.showArtistOwnerInfo = true
                     }),
-                    secondaryButton: .destructive(Text("Confirm"), action: {
-                        profileVM.showLoader.toggle()
-                        profileVM.removeUsersOwnerPrivilage(viewModel: vm, completion: { success in
-                            if success {
-                                
-                            }
-                        })
-                    })
+                    secondaryButton: .destructive(
+                        Text("Confirm"),
+                        action: {
+                            profileVM.showLoader.toggle()
+                            profileVM.removeUsersOwnerPrivilage(viewModel: vm, completion: { success in
+                                if success {
+                                    profileVM.showLoader.toggle()
+                                }
+                            })
+                        }
+                    )
                 )
             }
         })
@@ -308,10 +283,5 @@ struct ProfileView_Previews: PreviewProvider {
             .environmentObject(ProfileViewModel())
     }
 }
-
-
-
-
-
 
 
