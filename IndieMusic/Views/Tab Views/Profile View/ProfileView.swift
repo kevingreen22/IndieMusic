@@ -280,7 +280,12 @@ fileprivate struct UseAsArtistProfileButton: View {
                         profileVM.showArtistOwnerInfo = true
                     }),
                     secondaryButton: .destructive(Text("Confirm"), action: {
-                        profileVM.removeUsersOwnerPrivilage(viewModel: vm)
+                        profileVM.showLoader.toggle()
+                        profileVM.removeUsersOwnerPrivilage(viewModel: vm, completion: { success in
+                            if success {
+                                
+                            }
+                        })
                     })
                 )
             }

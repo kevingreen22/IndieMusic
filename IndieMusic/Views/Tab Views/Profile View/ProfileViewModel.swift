@@ -66,9 +66,11 @@ class ProfileViewModel: ObservableObject {
     }
     
     
-    func removeUsersOwnerPrivilage(viewModel: MainViewModel) {
+    func removeUsersOwnerPrivilage(viewModel: MainViewModel, completion:  ((Bool) -> Void)?) {
         print("Attempting to removing User Artist owner privilage...")
+        let totalRetrysAllowed = 2
         var errors: [Error]? = nil
+        var retry = 0
         let group = DispatchGroup()
         
         group.enter()
@@ -110,17 +112,26 @@ class ProfileViewModel: ObservableObject {
         case .success:
             viewModel.user.artist = nil
             print("Artist deleted from User Model")
+            updateUserOwnerPrivilage(viewModel: viewModel)
         case .timedOut:
             // try again
             print("dispatch group timed out. trying again.")
-            removeUsersOwnerPrivilage(viewModel: viewModel)
+            retry += 1
+            if retry <= totalRetrysAllowed {
+                removeUsersOwnerPrivilage(viewModel: viewModel, completion: nil)
+            }
         }
+    }
+    
+    
+    fileprivate func updateUserOwnerPrivilage(viewModel: MainViewModel) {
+        let group = DispatchGroup()
         
         group.enter()
         // save user to Firebase DB
         DatabaseManger.shared.update(user: viewModel.user) { _, error in
             if let error = error {
-                errors?.append(error)
+//                errors?.append(error)
             }
             print("User updated in DB")
             group.wait()
@@ -142,11 +153,21 @@ class ProfileViewModel: ObservableObject {
         case .timedOut:
             // try again
             print("dispatch group timed out.")
-            alertItem = MyErrorContext.myAlertWith(title: "Process timed out", message: nil, action: { self.removeUsersOwnerPrivilage(viewModel: viewModel) }
+            alertItem = MyErrorContext.myAlertWith(
+                title: "Process timed out",
+                message: "Try again?",
+                action: {
+                    self.removeUsersOwnerPrivilage(viewModel: viewModel, completion: { success in
+                        self.showLoader.toggle()
+                    })
+                }
             )
         }
-
     }
+    
+    
+    
+    
     
     
     func signOut(viewModel: MainViewModel, completion: @escaping (Bool) -> Void) {
