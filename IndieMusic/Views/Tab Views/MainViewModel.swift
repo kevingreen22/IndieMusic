@@ -15,7 +15,7 @@ class MainViewModel: ObservableObject {
         static let songCellImageSize: CGFloat = 30
     }
     
-    @Published var user: User!
+    @Published var user: User = User()
     @Published var showSplash = true
     @Published var initProgress: CGFloat = 0.0
     @Published var initProgressText = "fetching..."

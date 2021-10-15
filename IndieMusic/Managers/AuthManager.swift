@@ -18,7 +18,7 @@ final class AuthManager {
     
     /// Returns whether or not a user is signed in.
     public var isSignedIn: Bool {
-        print("Is signed in: \(auth.currentUser != nil) ")
+//        print("Is signed in: \(auth.currentUser != nil) ")
         return auth.currentUser != nil
     }
     

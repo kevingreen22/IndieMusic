@@ -59,7 +59,7 @@ struct MainTabView: View {
             .transition(.move(edge: .bottom))
             .onChange(of: vm.selectedTab) { newValue in
                 if newValue == 2 && AuthManager.shared.isSignedIn == false {
-                    vm.user = nil
+                    vm.user = User()
                 }
             }
             
@@ -119,7 +119,7 @@ struct MainTabView: View {
             case .documentPicker(let picking):
                 switch picking {
                 case .bioImage, .albumImage:
-                    DocumentPicker(filePath: $profileVM.url, file: .constant(nil), contentTypes: [.image])
+                    DocumentPicker(filePath: $profileVM.userProfileImageURL, file: .constant(nil), contentTypes: [.image])
                 case .mp3:
                     EmptyView()
                 }

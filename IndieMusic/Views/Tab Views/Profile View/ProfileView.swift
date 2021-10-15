@@ -9,6 +9,7 @@ import SwiftUI
 import UIKit
 
 struct ProfileView: View {
+    @State private var editMode = EditMode.inactive
     @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     
@@ -25,9 +26,7 @@ struct ProfileView: View {
                 
                 .onAppear { profileVM.prepare(vm.user) }
                 
-            } else {
-                showSignInViewButton
-            }
+            } else { showSignInViewButton }
             
             topNavButtons
             
@@ -35,28 +34,62 @@ struct ProfileView: View {
         }
         
     }
+    
+    fileprivate func onDelete(offsets: IndexSet) {
+        guard let index = offsets.first else { return }
+        let song = vm.user.songListData[index]
+        StorageManager.shared.delete(song: song) { error in
+            if error == nil {
+                vm.user.songListData.remove(at: index)
+                vm.user.delete(song: song)
+                DatabaseManger.shared.update(user: vm.user) { success, error in
+                    
+                }
+            }
+        }
+    }
+    
 }
 
 
 extension ProfileView {
-    
+   
     var ownerSongsList: some View {
-        List {
-            ForEach(vm.user.ownerSongs, id: \.self) { song in
-                HStack {
-                    Image(uiImage: profileVM.getAlbumArtworkFor(song: song))
-                        .resizable()
-                        .frame(width: 40, height: 40, alignment: .leading)
-                        .padding(.trailing)
-                    VStack(alignment: .leading) {
-                        Text(song.title)
-                            .font(.title3)
-                        Text(song.albumTitle)
-                            .foregroundColor(.appSecondary)
+        VStack {
+            HStack {
+                Image(uiImage: profileVM.artistBioImage ?? UIImage(systemName: "music.mic")!)
+                    .resizable()
+                    .frame(width: 50, height: 50)
+                    .clipShape(Circle())
+                    .padding(.leading)
+                Text(vm.user.artist?.name ?? "")
+                    .font(.title)
+                    .fontWeight(.semibold)
+                Spacer()
+                EditButton().padding(.trailing)
+            }.padding(4)
+            
+            List {
+                ForEach(vm.user.ownerSongs, id: \.self) { song in
+                    HStack {
+                        Image(uiImage: profileVM.getAlbumArtworkFor(song: song))
+                            .resizable()
+                            .frame(width: 40, height: 40, alignment: .leading)
+                            .padding(.trailing)
+                        VStack(alignment: .leading) {
+                            Text(song.title)
+                                .font(.title3)
+                            Text(song.albumTitle)
+                                .foregroundColor(.appSecondary)
+                        }
                     }
                 }
-            }
+                .onDelete(perform: onDelete)
+                
+            }.padding(0)
         }
+        .environment(\.editMode, $editMode)
+        
     }
     
     // Add this at the end of ZStack.
@@ -88,16 +121,18 @@ extension ProfileView {
                 title: Text("Sign Out?"),
                 message: Text("Are you sure you want to sign out?"),
                 primaryButton: .cancel(),
-                secondaryButton: .destructive(Text("Sign Out"),
-                                              action: {
-                                                  withAnimation {
-                                                      profileVM.showLoader.toggle()
-                                                  }
-                                                  profileVM.signOut(viewModel: vm) { success in
-                                                      profileVM.showLoader.toggle()
-                                                      vm.selectedTab = 2
-                                                  }
-                                              })
+                secondaryButton: .destructive(
+                    Text("Sign Out"),
+                    action: {
+                        withAnimation {
+                            profileVM.showLoader.toggle()
+                        }
+                        profileVM.signOut(viewModel: vm) { success in
+                            profileVM.showLoader.toggle()
+                            vm.selectedTab = 2
+                        }
+                    }
+                )
             )
         }, label: {
             Text("Sign Out")
@@ -118,10 +153,6 @@ extension ProfileView {
         }
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
-    
-    
-    
-    
 }
 
 fileprivate struct ProfileViewHeader: View {
@@ -132,78 +163,76 @@ fileprivate struct ProfileViewHeader: View {
     
     var body: some View {
         ZStack {
-            if AuthManager.shared.isSignedIn {
-                Rectangle()
-                    .fill(Color.mainApp)
-                    .edgesIgnoringSafeArea(.top)
-                    .frame(height: 260)
-                
-                VStack {
-                    Menu(content: {
-                        Button {
-                            vm.activeSheet = .imagePicker(sourceType: .photoLibrary, picking: .bioImage)
-                        } label: {
-                            Label("Images", systemImage: "photo")
-                        }
-                        
-                        Button {
-                            vm.activeSheet = .imagePicker(sourceType: .camera, picking: .bioImage)
-                        } label: {
-                            Label("Camera", systemImage: "camera.fill")
-                        }
-                        
-                        Button {
-                            vm.activeSheet = .documentPicker(picking: .bioImage)
-                        } label: {
-                            Label("Browse", systemImage: "folder.fill")
-                        }
-                    }, label: {
-                        Image(uiImage: profileVM.selectedImage ?? UIImage(systemName: "person.circle.fill")!)
-                            .resizable()
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
-                    })
+            Rectangle()
+                .fill(Color.mainApp)
+                .edgesIgnoringSafeArea(.top)
+                .frame(height: 260)
+            
+            VStack {
+                Menu(content: {
+                    Button {
+                        vm.activeSheet = .imagePicker(sourceType: .photoLibrary, picking: .bioImage)
+                    } label: {
+                        Label("Images", systemImage: "photo")
+                    }
                     
-                    Text(vm.user.name)
-                        .foregroundColor(.white)
-                        .font(.title)
-                }
+                    Button {
+                        vm.activeSheet = .imagePicker(sourceType: .camera, picking: .bioImage)
+                    } label: {
+                        Label("Camera", systemImage: "camera.fill")
+                    }
+                    
+                    Button {
+                        vm.activeSheet = .documentPicker(picking: .bioImage)
+                    } label: {
+                        Label("Browse", systemImage: "folder.fill")
+                    }
+                }, label: {
+                    Image(uiImage: profileVM.selectedImage ?? UIImage(systemName: "person.circle.fill")!)
+                        .resizable()
+                        .frame(width: 100, height: 100)
+                        .clipShape(Circle())
+                })
                 
+                Text(vm.user.name)
+                    .foregroundColor(.white)
+                    .font(.title)
+            }
+            
+            VStack {
+                Spacer()
+                HStack {
+                    UseAsArtistProfileButton()
+                        .environmentObject(vm)
+                        .environmentObject(profileVM)
+                    
+                    Spacer()
+                }
+            }.padding([.leading, .bottom])
+            
+            if vm.user.artist != nil {
                 VStack {
                     Spacer()
                     HStack {
-                        UseAsArtistProfileButton()
-                            .environmentObject(vm)
-                            .environmentObject(profileVM)
-                        
                         Spacer()
+                        ExpandableButtonPanel(primaryItem: ExpandableButtonItem(label: nil, imageName: "plus", action: nil), secondaryItems: [
+                            ExpandableButtonItem(label: nil, imageName: "rectangle.stack.fill.badge.plus", action: {
+                                // show create album view
+                                vm.activeFullScreen = .createAlbum
+                                withAnimation {
+                                    isExpanded.toggle()
+                                }
+                            }),
+                            ExpandableButtonItem(label: nil, imageName: "music.note", action: {
+                                // show upload song view
+                                vm.activeFullScreen = .uploadSong
+                                withAnimation {
+                                    isExpanded.toggle()
+                                }
+                            })
+                        ], size: 50, color: .appSecondary, isExpanded: $isExpanded)
                     }
-                }.padding([.leading, .bottom])
-                
-                if vm.user.artist != nil {
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            ExpandableButtonPanel(primaryItem: ExpandableButtonItem(label: nil, imageName: "plus", action: nil), secondaryItems: [
-                                ExpandableButtonItem(label: nil, imageName: "rectangle.stack.fill.badge.plus", action: {
-                                    // show create album view
-                                    vm.activeFullScreen = .createAlbum
-                                    withAnimation {
-                                        isExpanded.toggle()
-                                    }
-                                }),
-                                ExpandableButtonItem(label: nil, imageName: "music.note", action: {
-                                    // show upload song view
-                                    vm.activeFullScreen = .uploadSong
-                                    withAnimation {
-                                        isExpanded.toggle()
-                                    }
-                                })
-                            ], size: 50, color: .appSecondary, isExpanded: $isExpanded)
-                        }
-                    }.padding([.trailing, .bottom])
-                }
+                }.padding([.trailing, .bottom])
             }
         }.frame(height: 260)
         
@@ -274,13 +303,14 @@ fileprivate struct UseAsArtistProfileButton: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static let vm = MainViewModel()
+    static let pvm = ProfileViewModel()
     
     static var previews: some View {
         vm.user = MockData.user
         
         return ProfileView()
             .environmentObject(vm)
-            .environmentObject(ProfileViewModel())
+            .environmentObject(pvm)
     }
 }
 

@@ -37,6 +37,19 @@ class User: Codable {
         self.artist = artist
     }
     
+    init() {
+        self.name = ""
+        self.email = ""
+        self.profilePictureURL = nil
+        self.profilePictureData = nil
+        self.songListData = []
+        self.favoriteArtists = nil
+        self.favoriteAlbums = nil
+        self.favoriteSongs = nil
+        self.recentlyAdded = nil
+        self.artist = nil
+    }
+    
     
     var ownerAlbums: [Album] {
         guard let _artist = artist else { return [] }
@@ -56,5 +69,14 @@ class User: Codable {
     func addSongToUserSongList(song: Song) {
         songListData.append(song)
     }
+    
+    func delete(song: Song) {
+        guard let album = ownerAlbums.first(where: { album in
+            album.id.uuidString == song.albumID
+        }) else { return }
+        
+        album.songs.removeAll(where: { $0 == song })
+    }
+    
 }
 

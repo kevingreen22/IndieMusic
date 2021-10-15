@@ -132,7 +132,7 @@ final class DatabaseManger {
     }
     
     
-    public func checkForExistingArtist(name: String, completion: @escaping (Bool, MyError?) -> Void) {
+    public func checkForExistingArtist(name: String, completion: @escaping (Bool, Error?) -> Void) {
         database
             .collection(ContainerNames.artists)
             .whereField("name", isEqualTo: name)

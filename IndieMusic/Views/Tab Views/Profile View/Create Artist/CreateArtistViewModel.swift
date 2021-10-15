@@ -39,7 +39,7 @@ class CreateArtistViewModel: ObservableObject {
             
         print("Checking for duplicate artist...")
         DatabaseManger.shared.checkForExistingArtist(name: artistName) { notExists, error in
-            guard notExists, error != nil else {
+            guard notExists, error == nil else {
                 print("Artist already exists.")
                 DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
                     viewModel.alertItem = MyErrorContext.getErrorWith(error: error!)

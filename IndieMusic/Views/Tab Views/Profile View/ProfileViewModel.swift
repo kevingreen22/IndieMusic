@@ -15,11 +15,12 @@ class ProfileViewModel: ObservableObject {
     @Published var alertItem: MyAlertItem?
     @Published var showArtistOwnerInfo: Bool = false
     @Published var showSettings = false
-    @Published var showLoader = true
+    @Published var showLoader = false
     @Published var selectedImage: UIImage? = nil
-    @Published var url: URL? = nil {
+    @Published var artistBioImage: UIImage? = nil
+    @Published var userProfileImageURL: URL? = nil {
         didSet {
-            if let imageURL = url {
+            if let imageURL = userProfileImageURL {
                 guard let image = UIImage(contentsOfFile: imageURL.path) else { return }
                 selectedImage = image
             }
@@ -30,8 +31,9 @@ class ProfileViewModel: ObservableObject {
         if AuthManager.shared.isSignedIn {
             fetchUserProfilePicture(user)
             
-            if user.artist != nil {
+            if let artist = user.artist {
                 showArtistOwnerInfo = true
+                fetchArtistBioPicture(artist)
             }
         }
     }
@@ -62,10 +64,10 @@ class ProfileViewModel: ObservableObject {
             guard let uiimage = UIImage(data: data) else { return }
             selectedImage = uiimage
         } else {
-            StorageManager.shared.downloadProfilePictureFor(user: user) { uiimage in
+            StorageManager.shared.downloadProfilePictureFor(user: user) { [weak self] uiimage in
                 guard let uiimage = uiimage else { return }
                 DispatchQueue.main.async {
-                    self.selectedImage = uiimage
+                    self?.selectedImage = uiimage
                 }
             }
         }
@@ -79,6 +81,16 @@ class ProfileViewModel: ObservableObject {
             _image = image
         }
         return _image
+    }
+    
+    
+    func fetchArtistBioPicture(_ artist: Artist) {
+        StorageManager.shared.downloadArtistBioImage(artist: artist) { [weak self] uiimage in
+            guard let image = uiimage else { return }
+            DispatchQueue.main.async {
+                self?.artistBioImage = image
+            }
+        }
     }
     
     
@@ -174,8 +186,10 @@ class ProfileViewModel: ObservableObject {
                 title: "Process timed out",
                 message: "Try again?",
                 action: {
-                    self.removeUsersOwnerPrivilage(viewModel: viewModel, completion: { success in
-                        self.showLoader.toggle()
+                    self.removeUsersOwnerPrivilage(viewModel: viewModel, completion: { [weak self] success in
+                        DispatchQueue.main.async {
+                            self?.showLoader.toggle()
+                        }
                     })
                 }
             )
