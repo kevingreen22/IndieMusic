@@ -64,6 +64,7 @@ struct CurrentlyPlayingMinimizedView: View {
             .offset(y: -9)
             
         }
+        .background(RealBlurView())
         .frame(height: MainViewModel.Constants.currentlyPlayingMinimizedViewHeight)
         .background(Color.tabBarBackground.opacity(0.7))
         .clipShape(Capsule())
@@ -91,10 +92,8 @@ struct CurrentlyPlayingMinimizedView: View {
 
 struct CurrentlyPlayingView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            CurrentlyPlayingMinimizedView()
-                .environmentObject(CurrentlyPlayingViewModel())
-        }
+        CurrentlyPlayingMinimizedView()
+            .environmentObject(CurrentlyPlayingViewModel())
     }
 }
 
