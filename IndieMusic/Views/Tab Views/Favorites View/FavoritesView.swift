@@ -16,7 +16,7 @@ struct FavoritesView: View {
     ]
     
     var body: some View {
-        if vm.user != nil {
+        if AuthManager.shared.isSignedIn {
             List {
                 NavigationLink(destination: ArtistsView(artists: vm.user.favoriteArtists ?? [])
                                 .environmentObject(vm),

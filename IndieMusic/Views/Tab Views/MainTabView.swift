@@ -119,7 +119,7 @@ struct MainTabView: View {
             case .documentPicker(let picking):
                 switch picking {
                 case .bioImage, .albumImage:
-                    DocumentPicker(filePath: $profileVM.userProfileImageURL, file: .constant(nil), contentTypes: [.image])
+                    DocumentPicker(filePath: $profileVM.userProfileImageURL, fileData: .constant(nil), contentTypes: [.image])
                 case .mp3:
                     EmptyView()
                 }

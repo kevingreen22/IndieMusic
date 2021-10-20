@@ -22,12 +22,12 @@ struct ExploreView: View {
     @EnvironmentObject var vm: MainViewModel
     @StateObject var exploreVM = ExploreViewModel()
     
-    let colums = [GridItem(.flexible(minimum: ExploreViewModel.gridCellSize))]
-    let rows = [GridItem(.flexible(minimum: ExploreViewModel.gridCellSize))]
+    let colums = [GridItem(.fixed(ExploreViewModel.gridCellSize))]
+    let rows = [GridItem(.fixed(ExploreViewModel.gridCellSize))]
     
     
     var body: some View {
-        ScrollView {
+        ScrollView(.vertical, showsIndicators: false) {
             VStack {
                 if #available(iOS 15, *) {
                     Text(vm.searchText)
@@ -36,16 +36,15 @@ struct ExploreView: View {
                     SearchBar(text: $exploreVM.searchText)
                 }
                 
-                Divider()
+//                Divider()
                 
                 // ARTISTS
-                GridWithTitleAndSeeAll(
-                    title: "Artists",
-                    destination:
-                        ArtistsView(artists: exploreVM.artists.sorted()).environmentObject(vm),
-                    grid:
-                        artistGridView()
-                )
+//                GridWithTitleAndSeeAll(
+//                    title: "Artists",
+//                    destination:
+//                        ArtistsView(artists: exploreVM.artists.sorted()).environmentObject(vm),
+//                    grid: artistGridView()
+//                )
                 
                 Divider()
                 
@@ -60,12 +59,13 @@ struct ExploreView: View {
                 Divider()
                 
                 //GENRES
+                
                 GridWithTitleAndSeeAll(
                     title: "Genres",
                     destination: AlbumsView(albums: exploreVM.albumsForGenre).environmentObject(vm),
                     grid: genreGridView()
-                ).onPreferenceChange(GenreOfAlbumsIndexPreferenceKey.self) { value in
-                    exploreVM.albumsForGenre = value
+                ).onPreferenceChange(GenreOfAlbumsIndexPreferenceKey.self) { albums in
+                    exploreVM.albumsForGenre = albums
                 }
                 
                 Divider()
@@ -95,7 +95,7 @@ extension ExploreView {
         VStack {
             HStack {
                 Text(title)
-                    .font(.headline)
+                    .font(.title)
                     .fontWeight(.bold)
                     .padding(.leading)
                 Spacer()
@@ -107,38 +107,54 @@ extension ExploreView {
                         .foregroundColor(.mainApp)
                         .padding(.trailing)
                 }
-            }
-            grid
+            }.padding(.bottom)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                grid.padding(.horizontal)
+            }.frame(maxHeight: 200)
         }
     }
     
     func artistGridView() -> some View {
-        LazyHGrid(rows: rows) {
+        let rows = [GridItem(.flexible()),
+                     GridItem(.flexible()),
+                     GridItem(.flexible())
+        ]
+
+        return LazyHGrid(rows: rows) {
             ForEach(exploreVM.artists.sorted(), id: \.self) { artist in
                 ArtistNavLinkCell(artist: artist)
+                    .frame(width: UIScreen.main.bounds.width * 0.85, height: 60)
                     .environmentObject(vm)
+                    .backgroundForGrids()
             }
         }
     }
     
     func albumsGridView() -> some View {
-        LazyHGrid(rows: rows) {
+        let rows = [GridItem(.flexible())]
+        
+        return LazyHGrid(rows: rows) {
             ForEach(exploreVM.albums.sorted(), id: \.self) { album in
                 AlbumNavLinkCellView(album: album)
+                    .frame(width: UIScreen.main.bounds.width / 2.3, height: UIScreen.main.bounds.width / 2.3)
                     .environmentObject(vm)
             }
-        }
+        }.padding(.horizontal)
     }
     
     func genreGridView() -> some View {
-        LazyHGrid(rows: rows) {
-            let genre = exploreVM.genreOfAlbums.map{$0.key}.sorted()
+        let rows = [GridItem(.flexible())]
+        
+        return LazyHGrid(rows: rows) {
+            let genre = exploreVM.genreOfAlbums.keys.sorted()//.map{ $0.key }.sorted()
             ForEach(genre.indices) { index in
                 ExploreCellView(image: nil, title: genre[index], altText: nil)
+                    .frame(width: UIScreen.main.bounds.width / 2.3, height: 90)
                     .environmentObject(vm)
-                    .preference(key: GenreOfAlbumsIndexPreferenceKey.self, value: exploreVM.genreOfAlbums.map{$0.value}[index])
+                    .preference(key: GenreOfAlbumsIndexPreferenceKey.self, value: exploreVM.genreOfAlbums.map{ $0.value }[index])
             }
-        }
+        }.padding(.horizontal)
     }
     
     func songListView() -> some View {
@@ -163,15 +179,33 @@ struct GenreOfAlbumsIndexPreferenceKey: PreferenceKey {
 }
 
 
-
+extension View {
+    
+    func backgroundForGrids() -> some View {
+        self.background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color.secondary)
+                .opacity(0.3)
+                .scaleEffect(1.1)
+                .shadow(radius: 8)
+            , alignment: .center)
+    }
+}
 
 
 
 
 struct ExploreView_Previews: PreviewProvider {
+    static var evm = ExploreViewModel()
+    
     static var previews: some View {
-        ExploreView()
+        evm.artists = MockData.Artists()
+        evm.albums = MockData.Albums()
+        evm.songs = MockData.Songs()
+        evm.genreOfAlbums = MockData.GenresOfAlbums()
+        
+        return ExploreView()
             .environmentObject(MainViewModel())
-            .environmentObject(ExploreViewModel())
+            .environmentObject(evm)
     }
 }

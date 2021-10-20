@@ -44,7 +44,7 @@ class MainViewModel: ObservableObject {
     
     func fetchAlbumArtworkFor(album: Album) -> UIImage {
         var artwork = UIImage.albumArtworkPlaceholder
-        StorageManager.shared.downloadAlbumArtworkFor(album: album){ image in
+        StorageManager.shared.downloadAlbumArtworkFor(album: album) { image in
             guard let image = image else { return }
             artwork = image
         }

@@ -33,8 +33,8 @@ struct ArtistNavLinkCell: View {
     @EnvironmentObject var vm: MainViewModel
     @State private var isFavorited: Bool = false
     let artist: Artist
-    let imageWidth: CGFloat = 30
-    let imageHeight: CGFloat = 30
+    let imageWidth: CGFloat = 50
+    let imageHeight: CGFloat = 50
     
     var body: some View {
         NavigationLink(
@@ -47,7 +47,7 @@ struct ArtistNavLinkCell: View {
                         .aspectRatio(contentMode: .fit)
                         .cornerRadius(3)
                         .clipShape(Circle())
-                    Text(artist.name)
+                    Text(artist.name).foregroundColor(.black).fontWeight(.semibold)
                     Spacer()
                     FarvoriteHeartView(typeOfFavorite: Artist.self, isFavorited: $isFavorited)
                 }.padding(.horizontal)
@@ -240,17 +240,26 @@ struct CellViews_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             FavoritesNavLinkCell(systemImageName: "photo", label: "Favorites Cell")
-
+            
+            Divider()
+            
             ArtistNavLinkCell(artist: MockData.Artists().first!)
-
+                .environmentObject(MainViewModel())
+            
+            Divider()
+            
             AlbumNavLinkCellView(album: MockData.Albums().first!)
                 .environmentObject(MainViewModel())
                 .frame(width: 200, height: 200, alignment: .center)
-
+            
+            Divider()
+            
             SongListCell(song: MockData.Songs().first!, selectedSongCell: .constant(MockData.Songs().first!))
                 .environmentObject(MainViewModel())
                 .environmentObject(CurrentlyPlayingViewModel())
-        
+            
+            Divider()
+            
             ExploreCellView(image: nil, title: "Metal", altText: nil)
             
         }

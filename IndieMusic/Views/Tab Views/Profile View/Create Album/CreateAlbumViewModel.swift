@@ -10,22 +10,19 @@ import SwiftUI
 class CreateAlbumViewModel: ObservableObject {
     @Environment(\.presentationMode) var presentationMode
     @Published var activeSheet: ActiveSheet?
-    @Published var albumName = ""
-    @Published var genre: String = "Unknown"
-    @Published var newGenreName = ""
     @Published var selectedImage: UIImage?
-    @Published var year: Int = Calendar.current.component(.year, from: Date())
-    @Published var pickImage: Bool? = false
-    @Published var url: URL? = nil {
+    @Published var artworkImageData: Data? = nil {
         didSet {
-            if let imageURL = url {
-                guard let image = UIImage(contentsOfFile: imageURL.path) else { return }
+            if let imageData = artworkImageData {
+                guard let image = UIImage(data: imageData) else { return }
                 selectedImage = image
             }
         }
     }
-    
-    private var artworkURL: URL? = nil
+    @Published var newGenreName = ""
+    @Published var albumName = ""
+    @Published var genre: String = "Unknown"
+    @Published var year: Int = Calendar.current.component(.year, from: Date())
     
     var currentYear: Int {
         let year = Calendar.current.component(.year, from: Date())
@@ -47,13 +44,12 @@ class CreateAlbumViewModel: ObservableObject {
         
         // create a new instance of Album
         print("Creating instance of new album...")
-        let album = Album(id: UUID(), title: albumName, artistName: artist.name, artistID: artist.id.uuidString, artworkURL: artworkURL, songs: [], year: String(year), genre: genre)
-        
-        // Set artwork URL
-        print("Creating album artwork URL...")
+        let id = UUID()
+        var artworkURL: URL? = nil
         if selectedImage != nil {
-            artworkURL = URL(string: "\(ContainerNames.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG)")
+            artworkURL = URL(string: "\(ContainerNames.artists)/\(artist.id.uuidString)/\(id)/\(SuffixNames.albumArtworkPNG)")
         }
+        let album = Album(id: id, title: albumName, artistName: artist.name, artistID: artist.id.uuidString, artworkURL: artworkURL, songs: [], year: String(year), genre: genre)
         
         // Append new album to user's artist
         print("Adding new album to User's artist...")
@@ -61,19 +57,19 @@ class CreateAlbumViewModel: ObservableObject {
         
         // Save user to Firestore DB
         print("Attempting to update User...")
-        DatabaseManger.shared.insert(user: viewModel.user) { success in
+        DatabaseManger.shared.insert(user: viewModel.user) { [weak self] success in
             if success {
                 print("User model updated.")
                 
                 // Upload album artwork to stroage.
                 print("Attempting to upload album artowork to Firebase storage...")
-                StorageManager.shared.uploadAlbumArtworkImage(album: album, image: self.selectedImage) { success in
+                StorageManager.shared.uploadAlbumArtworkImage(album: album, image: self?.selectedImage) { [weak self] success in
                     if success {
                         print("Album artwork uploaded.")
                         
                     } else {
                         print("Error uploading album artwork.")
-                        self.reverseCreateAlbumIfError(viewModel: viewModel)
+                        self?.reverseCreateAlbumIfError(viewModel: viewModel)
                         DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
                             viewModel.alertItem = MyErrorContext.generalErrorAlert
                         }
@@ -81,7 +77,7 @@ class CreateAlbumViewModel: ObservableObject {
                 }
             } else {
                 print("Error updating user model with new owner album.")
-                self.reverseCreateAlbumIfError(viewModel: viewModel)
+                self?.reverseCreateAlbumIfError(viewModel: viewModel)
                 DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
                     viewModel.alertItem = MyErrorContext.generalErrorAlert
                 }

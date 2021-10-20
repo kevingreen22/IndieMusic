@@ -12,7 +12,7 @@ import MobileCoreServices
 struct DocumentPicker: UIViewControllerRepresentable {
     @Environment(\.presentationMode) var presentationMode
     @Binding var filePath: URL?
-    @Binding var file: Data?
+    @Binding var fileData: Data?
     var contentTypes: [UTType] = [.audio, .mp3]
     
     func makeCoordinator() -> Coordinator {
@@ -49,8 +49,8 @@ struct DocumentPicker: UIViewControllerRepresentable {
             }
             
             do {
-                let document = try Data(contentsOf: url.absoluteURL)
-                parent.file = document
+                let data = try Data(contentsOf: url.absoluteURL)
+                parent.fileData = data
                 parent.filePath = url
             } catch {
                 print("Error selecting file: \(error.localizedDescription)")

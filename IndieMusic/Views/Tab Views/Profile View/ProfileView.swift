@@ -56,18 +56,20 @@ extension ProfileView {
    
     var ownerSongsList: some View {
         VStack {
-            HStack {
-                Image(uiImage: profileVM.artistBioImage ?? UIImage(systemName: "music.mic")!)
-                    .resizable()
-                    .frame(width: 50, height: 50)
-                    .clipShape(Circle())
-                    .padding(.leading)
-                Text(vm.user.artist?.name ?? "")
-                    .font(.title)
-                    .fontWeight(.semibold)
-                Spacer()
-                EditButton().padding(.trailing)
-            }.padding(4)
+            if vm.user.artist != nil {
+                HStack {
+                    Image(uiImage: profileVM.artistBioImage ?? UIImage(systemName: "music.mic")!)
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .clipShape(Circle())
+                        .padding(.leading)
+                    Text(vm.user.artist?.name ?? "")
+                        .font(.title)
+                        .fontWeight(.semibold)
+                    Spacer()
+                    EditButton().padding(.trailing)
+                }.padding(4)
+            }
             
             List {
                 ForEach(vm.user.ownerSongs, id: \.self) { song in

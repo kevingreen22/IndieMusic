@@ -28,10 +28,10 @@ class MockData {
     static let data: [Artist] = [
         Artist(name: "Brokeneck",
                genre: "Metal",
-               imageURL: nil,
+               imageURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/artist_photo.png"),
                albums: [
                 Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
-                      artworkURL: URL(string: "dillinger"),
+                      artworkURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/42007443-CA23-4E4E-9CC3-983E41F90A14/album_artwork.png"),
                       songs: [
                         Song(title: "Electric Sloth",
                              albumTitle: "Hellfest EP",
@@ -41,7 +41,7 @@ class MockData {
                              albumID: UUID().uuidString,
                              lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
                              url: URL(fileURLWithPath: "song/path/name.mp3")
-                        ),
+                            ),
                         
                         Song(title: "Crush, Kill, Destroy",
                              albumTitle: "Hellfest EP",
@@ -51,7 +51,7 @@ class MockData {
                              albumID: UUID().uuidString,
                              lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
                              url: URL(fileURLWithPath: "song/path/name.mp3")
-                        ),
+                            ),
                         
                         Song(title: "Penguins Are Awfly Cute",
                              albumTitle: "Hellfest EP",
@@ -61,48 +61,12 @@ class MockData {
                              albumID: UUID().uuidString,
                              lyrics: nil,
                              url: URL(fileURLWithPath: "song/path/name.mp3")
-                        ),
-                      ],
-                      year: "2009",
-                      genre: "Metal"),
-                
-                Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
-                      artworkURL: URL(string: "dillinger"),
-                      songs: [
-                        Song(title: "Electric Sloth",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                        ),
-                        
-                        Song(title: "Crush, Kill, Destroy",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                        ),
-                        
-                        Song(title: "Penguins Are Awfly Cute",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: nil,
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                        ),
+                            ),
                       ],
                       year: "2009",
                       genre: "Metal"),
                 Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
-                      artworkURL: URL(string: "dillinger"),
+                      artworkURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/42007443-CA23-4E4E-9CC3-983E41F90A14/album_artwork.png"),
                       songs: [
                         Song(title: "Electric Sloth",
                              albumTitle: "Hellfest EP",
@@ -112,7 +76,7 @@ class MockData {
                              albumID: UUID().uuidString,
                              lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
                              url: URL(fileURLWithPath: "song/path/name.mp3")
-                        ),
+                            ),
                         
                         Song(title: "Crush, Kill, Destroy",
                              albumTitle: "Hellfest EP",
@@ -122,7 +86,7 @@ class MockData {
                              albumID: UUID().uuidString,
                              lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
                              url: URL(fileURLWithPath: "song/path/name.mp3")
-                        ),
+                            ),
                         
                         Song(title: "Penguins Are Awfly Cute",
                              albumTitle: "Hellfest EP",
@@ -132,12 +96,12 @@ class MockData {
                              albumID: UUID().uuidString,
                              lyrics: nil,
                              url: URL(fileURLWithPath: "song/path/name.mp3")
-                        ),
+                            ),
                       ],
                       year: "2009",
                       genre: "Metal"),
                 Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
-                      artworkURL: URL(string: "dillinger"),
+                      artworkURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/42007443-CA23-4E4E-9CC3-983E41F90A14/album_artwork.png"),
                       songs: [
                         Song(title: "Electric Sloth",
                              albumTitle: "Hellfest EP",
@@ -147,7 +111,7 @@ class MockData {
                              albumID: UUID().uuidString,
                              lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
                              url: URL(fileURLWithPath: "song/path/name.mp3")
-                        ),
+                            ),
                         
                         Song(title: "Crush, Kill, Destroy",
                              albumTitle: "Hellfest EP",
@@ -157,7 +121,7 @@ class MockData {
                              albumID: UUID().uuidString,
                              lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
                              url: URL(fileURLWithPath: "song/path/name.mp3")
-                        ),
+                            ),
                         
                         Song(title: "Penguins Are Awfly Cute",
                              albumTitle: "Hellfest EP",
@@ -167,12 +131,47 @@ class MockData {
                              albumID: UUID().uuidString,
                              lyrics: nil,
                              url: URL(fileURLWithPath: "song/path/name.mp3")
-                        ),
+                            ),
+                      ],
+                      year: "2009",
+                      genre: "Metal"),
+                Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
+                      artworkURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/42007443-CA23-4E4E-9CC3-983E41F90A14/album_artwork.png"),
+                      songs: [
+                        Song(title: "Electric Sloth",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
+                             genre: "Metal",
+                             artistID: UUID().uuidString,
+                             albumID: UUID().uuidString,
+                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
+                             url: URL(fileURLWithPath: "song/path/name.mp3")
+                            ),
+                        
+                        Song(title: "Crush, Kill, Destroy",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
+                             genre: "Metal",
+                             artistID: UUID().uuidString,
+                             albumID: UUID().uuidString,
+                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
+                             url: URL(fileURLWithPath: "song/path/name.mp3")
+                            ),
+                        
+                        Song(title: "Penguins Are Awfly Cute",
+                             albumTitle: "Hellfest EP",
+                             artistName: "Brokeneck",
+                             genre: "Metal",
+                             artistID: UUID().uuidString,
+                             albumID: UUID().uuidString,
+                             lyrics: nil,
+                             url: URL(fileURLWithPath: "song/path/name.mp3")
+                            ),
                       ],
                       year: "2009",
                       genre: "Metal")
                ]
-        ),
+              ),
     ]
     
     static func Artists() -> [Artist] {
@@ -204,10 +203,31 @@ class MockData {
                 }
             }
         }
-
+        
         return songs
     }
     
+    static func GenresOfAlbums() -> [String : [Album]] {
+        var genreOfAlbums: [String : [Album]] = [:]
+        for artist in data {
+            for album in artist.albums {
+                genreOfAlbums[album.genre]!.append(album)
+            }
+        }
+        
+        return genreOfAlbums
+    }
+    
+    static func Genres() -> [String] {
+        var genres: [String] = []
+        for artist in data {
+            for album in artist.albums {
+                genres.append(album.genre)
+            }
+        }
+        
+        return genres
+    }
     
     
     // MARK: Explore mock data

@@ -20,7 +20,6 @@ struct CreateArtistView: View {
                         .font(.system(size: 24))
                         .multilineTextAlignment(.center)
                         .padding(.bottom)
-                        .offset(x: -20)
                     
                     Picker("Genre*", selection: $createArtistVM.genre) {
                         TextField("Add new genre", text: $createArtistVM.newGenreName,  onCommit: {
@@ -72,7 +71,7 @@ struct CreateArtistView: View {
                         }, label: {
                             Image(uiImage: createArtistVM.bioImage ?? UIImage(systemName: "person.circle")!)
                                 .resizable()
-                                .aspectRatio(contentMode: .fit)
+                                .aspectRatio(contentMode: .fill)
                                 .frame(height: 50)
                                 .clipShape(Circle())
                                 .transition(.opacity)
@@ -132,7 +131,7 @@ struct CreateArtistView: View {
                 ImagePicker(selectedImage: $createArtistVM.bioImage, finishedSelecting: .constant(nil), sourceType: sourceType)
                 
             case .documentPicker:
-                DocumentPicker(filePath: $createArtistVM.url, file: .constant(nil), contentTypes: [.image])
+                DocumentPicker(filePath: $createArtistVM.url, fileData: .constant(nil), contentTypes: [.image])
             case .signIn, .paywall:
                 EmptyView()
             }

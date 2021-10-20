@@ -108,10 +108,11 @@ struct CreateAlbumView: View {
         .sheet(item: $createAlbumVM.activeSheet) { item in
             switch item {
             case .imagePicker(let sourceType, _) :
-                ImagePicker(selectedImage: $createAlbumVM.selectedImage, finishedSelecting: $createAlbumVM.pickImage, sourceType: sourceType)
+                ImagePicker(selectedImage: $createAlbumVM.selectedImage, finishedSelecting: .constant(false), sourceType: sourceType)
                 
             case .documentPicker:
-                DocumentPicker(filePath: $createAlbumVM.url, file: .constant(nil), contentTypes: [.image])
+                DocumentPicker(filePath: .constant(nil), fileData: $createAlbumVM.artworkImageData, contentTypes: [.image])
+                
             case .signIn, .paywall:
                 EmptyView()
             }

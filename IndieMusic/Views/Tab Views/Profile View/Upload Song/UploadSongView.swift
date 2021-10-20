@@ -107,7 +107,7 @@ struct UploadSongView: View {
         }
         
         .sheet(isPresented: $uploadVM.showDocumentPicker) {
-            DocumentPicker(filePath: $uploadVM.localFilePath, file: $uploadVM.fileData, contentTypes: [.mp3, .audio])
+            DocumentPicker(filePath: $uploadVM.localFilePath, fileData: $uploadVM.fileData, contentTypes: [.mp3, .audio])
         }
         
     }
