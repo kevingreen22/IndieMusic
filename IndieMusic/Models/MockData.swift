@@ -175,12 +175,12 @@ class MockData {
     ]
     
     static func Artists() -> [Artist] {
-        var artistNames: [Artist] = []
+        var artists: [Artist] = []
         for artist in data {
-            artistNames.append(artist)
+            artists.append(artist)
         }
         
-        return artistNames
+        return artists
     }
     
     static func Albums() -> [Album] {
@@ -211,7 +211,8 @@ class MockData {
         var genreOfAlbums: [String : [Album]] = [:]
         for artist in data {
             for album in artist.albums {
-                genreOfAlbums[album.genre]!.append(album)
+                genreOfAlbums.updateValue(artist.albums, forKey: album.genre)
+//                genreOfAlbums[album.genre]?.append(album)
             }
         }
         

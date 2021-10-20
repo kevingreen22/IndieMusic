@@ -24,7 +24,7 @@ struct FavoritesNavLinkCell: View {
                 .cornerRadius(3)
                 .foregroundColor(.mainApp)
             Text(label)
-        }.padding(.horizontal)
+        }
     }
 }
 
@@ -50,7 +50,7 @@ struct ArtistNavLinkCell: View {
                     Text(artist.name).foregroundColor(.black).fontWeight(.semibold)
                     Spacer()
                     FarvoriteHeartView(typeOfFavorite: Artist.self, isFavorited: $isFavorited)
-                }.padding(.horizontal)
+                }
             }
         )
     }
@@ -115,7 +115,7 @@ struct SongListCell: View {
                         ZStack {
                             if song == selectedSongCell {
                                 Color.black.opacity(0.7)
-                                SwimplyPlayIndicator(state: $cpVM.playState, color: .white, style: .legacy)
+                                SwimplyPlayIndicator(state: $cpVM.playState, color: .mainApp, style: .legacy)
                                     .frame(width: constants.playIndicatorSize, height: constants.playIndicatorSize, alignment: .leading)
                             }
                         }
@@ -138,7 +138,6 @@ struct SongListCell: View {
         
     }
 }
-
 fileprivate struct CellTapped: Gesture {
     @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
@@ -156,6 +155,82 @@ fileprivate struct CellTapped: Gesture {
             }
     }
 }
+
+
+struct ExploreCellView: View {
+    
+    enum ExploreCellLayoutType {
+        case square, list
+    }
+    
+    let imageName: String?
+    let title: String
+    let altText: String?
+    let layoutType: ExploreCellLayoutType
+    
+    private let imagePlaceholder: UIImage = UIImage.genreImagePlaceholder
+    
+    init( imageName: String?, title: String, altText: String?, layoutType: ExploreCellLayoutType = .square) {
+        self.imageName = imageName
+        self.title = title
+        self.altText = altText
+        self.layoutType = layoutType
+    }
+
+    var body: some View {
+        switch layoutType {
+        case .square:
+            VStack(spacing: 8) {
+                if imageName != nil {
+                 Image(imageName!)
+                        .resizable()
+                        .scaledToFit()
+                }
+
+                Text(title)
+                    .foregroundColor(.black)
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .truncationMode(.tail)
+                
+                if altText != nil {
+                    Text(altText!)
+                        .foregroundColor(.gray)
+                        .font(.caption2)
+                        .fontWeight(.semibold)
+                        .truncationMode(.tail)
+                }
+            }
+        case .list:
+            HStack {
+                if imageName != nil {
+                 Image(imageName!)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                }
+                    
+                VStack {
+                    Text(title)
+                        .foregroundColor(Color.mainApp)
+                        .font((altText != nil) ? .title3 : .title)
+                        .fontWeight(.semibold)
+                        .truncationMode(.tail)
+                    
+                    if altText != nil {
+                        Text(altText!)
+                            .foregroundColor(.gray)
+                            .font(.caption2)
+                            .fontWeight(.semibold)
+                            .truncationMode(.tail)
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 
 
 
@@ -192,76 +267,43 @@ struct FarvoriteHeartView: View {
 
 
 
-struct ExploreCellView: View {
-    let image: Image?
-    let title: String
-    let altText: String?
-    
-    private let imagePlaceholder: UIImage = UIImage.genreImagePlaceholder
-    
-    init( image: Image?, title: String, altText: String?) {
-        self.image = image
-        self.title = title
-        self.altText = altText
-    }
-
-    
-    var body: some View {
-        VStack(spacing: 8) {
-            (image != nil ?
-             image!.resizable()  :
-                (Image(uiImage:  UIImage(named: title.lowercased()) ?? imagePlaceholder))
-                .resizable())
-                .scaledToFit()
-
-            Text(title)
-                .foregroundColor(.black)
-                .font(.title3)
-                .fontWeight(.semibold)
-                .truncationMode(.tail)
-            
-            if altText != nil {
-                Text(altText!)
-                    .foregroundColor(.gray)
-                    .font(.caption2)
-                    .fontWeight(.semibold)
-                    .truncationMode(.tail)
-            }
-        }
-    }
-}
-
-
-
-
 struct CellViews_Previews: PreviewProvider {
     static let rows = [GridItem(.flexible(minimum: 150))]
     
     static var previews: some View {
-        VStack {
+        Group {
             FavoritesNavLinkCell(systemImageName: "photo", label: "Favorites Cell")
+                .previewLayout(.sizeThatFits)
             
-            Divider()
             
             ArtistNavLinkCell(artist: MockData.Artists().first!)
                 .environmentObject(MainViewModel())
+                .previewLayout(.sizeThatFits)
             
-            Divider()
             
             AlbumNavLinkCellView(album: MockData.Albums().first!)
                 .environmentObject(MainViewModel())
                 .frame(width: 200, height: 200, alignment: .center)
+                .previewLayout(.sizeThatFits)
             
-            Divider()
             
             SongListCell(song: MockData.Songs().first!, selectedSongCell: .constant(MockData.Songs().first!))
                 .environmentObject(MainViewModel())
                 .environmentObject(CurrentlyPlayingViewModel())
+                .previewLayout(.sizeThatFits)
             
-            Divider()
             
-            ExploreCellView(image: nil, title: "Metal", altText: nil)
+            ExploreCellView(imageName: "metal", title: "Metal", altText: nil)
+                .previewLayout(.sizeThatFits)
             
+            ExploreCellView(imageName: "metal", title: "Metal", altText: nil, layoutType: .list)
+                .previewLayout(.sizeThatFits)
+            
+            
+            FarvoriteHeartView(typeOfFavorite: nil, isFavorited: .constant(true))
+                .previewLayout(.sizeThatFits)
         }
     }
 }
+
+
