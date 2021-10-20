@@ -14,7 +14,6 @@ import RQPermissions
 struct IndieMusicApp: App {
     
     init() {
-        self.firstAppLaunch = isFirstAppRun()
         setupFirebase()
     }
     
@@ -25,7 +24,6 @@ struct IndieMusicApp: App {
     
     @State private var retrycount = 0
     private let retryCacheAmount = 2
-    private var firstAppLaunch = true
     
     var body: some Scene {
         WindowGroup {
@@ -107,7 +105,7 @@ private extension IndieMusicApp {
         }
 
         group.enter()
-        if AuthManager.shared.isSignedIn && firstAppLaunch == false {
+        if AuthManager.shared.isSignedIn && !isFirstAppRun {
             vm.cacheUser { success in
                 if success {
                     print("User cached.")

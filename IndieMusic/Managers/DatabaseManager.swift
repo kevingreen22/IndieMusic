@@ -30,7 +30,7 @@ final class DatabaseManger {
             try database
                 .collection(ContainerNames.users)
                 .document(documentID)
-                .setData(from: user) { [weak self] error in
+                .setData(from: user) { error in
                     completion(error == nil)
                 }
         } catch let error {
@@ -47,7 +47,7 @@ final class DatabaseManger {
             try database
                 .collection(ContainerNames.users)
                 .document(documentID)
-                .setData(from: user) { [weak self] error in
+                .setData(from: user) { error in
                     if let error = error {
                         print("Error updating User in Firestore DB: \(error)")
                         completion(false, error)
@@ -68,7 +68,7 @@ final class DatabaseManger {
         database
             .collection(ContainerNames.users)
             .document(documentID)
-            .getDocument { [weak self] snapshot, error in
+            .getDocument { snapshot, error in
                 guard error == nil else {
                     return
                 }
@@ -101,7 +101,7 @@ final class DatabaseManger {
         database
             .collection(ContainerNames.users)
             .document(documentID)
-            .delete() { [weak self] error in
+            .delete() { error in
                 if let error = error {
                     print("Error removing document: \(error)")
                 } else {
@@ -123,7 +123,7 @@ final class DatabaseManger {
             try database
                 .collection(ContainerNames.artists)
                 .document(artist.id.uuidString)
-                .setData(from: artist, merge: false) { [weak self] error in
+                .setData(from: artist, merge: false) { error in
                     completion(error == nil)
                 }
         } catch let error {
@@ -155,7 +155,7 @@ final class DatabaseManger {
 //            .document(artist.id)
 //            .updateData([
 //                "albums" : FieldValue.arrayUnion([album])
-//            ]) { [weak self] error in
+//            ]) { error in
 //                guard error != nil else {
 //                    completion(nil)
 //                    return
@@ -175,7 +175,7 @@ final class DatabaseManger {
 //                    "albums" : [
 //                        "songs" : FieldValue.arrayUnion([song])
 //                    ]
-//                ]) { [weak self] error in
+//                ]) { error in
 //                    guard error != nil else {
 //                        completion(nil)
 //                        return
@@ -199,7 +199,7 @@ final class DatabaseManger {
         var _artists: [Artist] = []
         database
             .collection(ContainerNames.artists)
-            .getDocuments { [weak self] snapshot, error in
+            .getDocuments { snapshot, error in
 //                guard let documents = snapshot?.documents.compactMap({ $0.data() }), error == nil else { return }
 //                let artists: [Artist] = documents.compactMap({
 //                    let name = $0["name"] as! String
@@ -241,7 +241,7 @@ final class DatabaseManger {
         database
             .collection(ContainerNames.artists)
             .document(id)
-            .getDocument { [weak self] snapshot, error in
+            .getDocument { snapshot, error in
                 guard error == nil else { return }
                 let result = Result {
                     try snapshot?.data(as: Artist.self)
@@ -378,7 +378,7 @@ final class DatabaseManger {
         database
             .collection(ContainerNames.users)
             .document("genres")
-            .updateData(["genre" : genre], completion: { [weak self] error in
+            .updateData(["genre" : genre], completion: { error in
                 guard error == nil else  {
                     print("Error updating genres: \(error.debugDescription)")
                     completion(true)
@@ -394,7 +394,7 @@ final class DatabaseManger {
         database
             .collection(ContainerNames.genres)
             .document("genres")
-            .getDocument { [weak self] snapshot, error in
+            .getDocument { snapshot, error in
                 guard error == nil else { return }
                 guard let genres: [String] = snapshot?.get("genre") as? [String] else {
                     print("Fetching genres failied")

@@ -23,7 +23,9 @@ class ExploreViewModel: ObservableObject {
     
     @Published var songs: [Song] = []
     
-    
+    init() {
+        fetchExplores()
+    }
     
     
     func fetchExplores() {
@@ -34,28 +36,33 @@ class ExploreViewModel: ObservableObject {
     }
     
     fileprivate func fetchAllArtists() {
-        DatabaseManger.shared.fetchAllArtists { artists in
-            self.artists.append(contentsOf: artists.prefix(10))
+        DatabaseManger.shared.fetchAllArtists { [weak self] artists in
+            self?.artists.append(contentsOf: artists)
         }
+        
     }
     
     fileprivate func fetchAllGenres() {
-        DatabaseManger.shared.fetchAllAlbums { albums in
+        DatabaseManger.shared.fetchAllAlbums { [weak self] albums in
             for album in albums {
-                self.genreOfAlbums[album.genre]?.append(album)
+                self?.genreOfAlbums[album.genre]?.append(album)
             }
         }
     }
     
     fileprivate func fetchAllAlbums() {
-        DatabaseManger.shared.fetchAllAlbums { albums in
-            self.albums.append(contentsOf: albums.prefix(10))
+        DatabaseManger.shared.fetchAllAlbums { [weak self] albums in
+            for album in albums {
+                if !album.songs.isEmpty {
+                    self?.albums.append(album)
+                }
+            }
         }
     }
     
     fileprivate func fetchAllSongs() {
-        DatabaseManger.shared.fetchAllSongs { songs in
-            self.songs.append(contentsOf: songs)
+        DatabaseManger.shared.fetchAllSongs { [weak self] songs in
+            self?.songs.append(contentsOf: songs)
         }
     }
         

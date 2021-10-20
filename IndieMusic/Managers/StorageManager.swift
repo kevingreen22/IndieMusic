@@ -134,7 +134,8 @@ final class StorageManager {
     
     public func downloadAlbumArtworkFor(albumID: String, artistID: String, completion: @escaping (UIImage?) -> Void) {
         let path = "\(ContainerNames.artists)/\(artistID)/\(albumID)/\(SuffixNames.albumArtworkPNG)"
-        self.container
+        
+        container
             .reference(withPath: path)
             .downloadURL { url, _ in
                 guard let url = url else { return }
@@ -150,7 +151,8 @@ final class StorageManager {
     
     public func downloadAlbumArtworkFor(album: Album, completion: @escaping (UIImage?) -> Void) {
         guard let path = album.artworkURL?.absoluteString else { return }
-        self.container
+        
+        container
             .reference(withPath: path)
             .downloadURL { url, _ in
                 guard let url = url else { return }
@@ -168,6 +170,7 @@ final class StorageManager {
     
     public func deleteAlbumArtwork(_ album: Album, completion: @escaping (Error?) -> Void) {
         let path = "\(ContainerNames.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG)"
+        
         container
             .reference(withPath: path)
             .delete { error in
@@ -239,7 +242,8 @@ final class StorageManager {
     public func downloadArtistBioImage(artist: Artist, completion: @escaping (UIImage?) -> Void) {
 //        let path = "\(ContainerNames.artists)/\(artist.id.uuidString)/\(SuffixNames.bioPicture)"
         guard let path = artist.imageURL?.absoluteString else { return }
-        self.container
+        
+        container
             .reference(withPath: path)
             .downloadURL { url, _ in
                 guard let url = url else { return }
@@ -273,7 +277,8 @@ final class StorageManager {
     
     // Universal download image
     public func downloadImageWith(path: String, completion: @escaping (UIImage?, URLResponse?, Error?) -> Void) {
-        self.container
+        
+        container
             .reference(withPath: path)
             .downloadURL { url, error in
                 guard let url = url, error != nil else {

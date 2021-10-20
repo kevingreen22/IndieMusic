@@ -10,12 +10,12 @@ import SwiftUI
 
 extension App {
     
-    func isFirstAppRun() -> Bool {
-        if UserDefaults.standard.bool(forKey: "first_app_run") {
+    var isFirstAppRun: Bool {
+        if !UserDefaults.standard.bool(forKey: "first_app_run") {
             UserDefaults.standard.set(true, forKey: "first_app_run")
-            return false
-        } else {
             return true
+        } else {
+            return false
         }
     }
 }

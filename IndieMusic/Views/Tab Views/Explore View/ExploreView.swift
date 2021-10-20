@@ -39,12 +39,12 @@ struct ExploreView: View {
 //                Divider()
                 
                 // ARTISTS
-//                GridWithTitleAndSeeAll(
-//                    title: "Artists",
-//                    destination:
-//                        ArtistsView(artists: exploreVM.artists.sorted()).environmentObject(vm),
-//                    grid: artistGridView()
-//                )
+                GridWithTitleAndSeeAll(
+                    title: "Artists",
+                    destination:
+                        ArtistsView(artists: exploreVM.artists.sorted()).environmentObject(vm),
+                    grid: artistGridView()
+                )
                 
                 Divider()
                 
@@ -79,11 +79,6 @@ struct ExploreView: View {
                 )
             }
         }
-        
-        .onAppear {
-            exploreVM.fetchExplores()
-        }
-        
     }
 }
 
@@ -135,7 +130,7 @@ extension ExploreView {
         let rows = [GridItem(.flexible())]
         
         return LazyHGrid(rows: rows) {
-            ForEach(exploreVM.albums.sorted(), id: \.self) { album in
+            ForEach(exploreVM.albums.prefix(10).sorted(), id: \.self) { album in
                 AlbumNavLinkCellView(album: album)
                     .frame(width: UIScreen.main.bounds.width / 2.3, height: UIScreen.main.bounds.width / 2.3)
                     .environmentObject(vm)
@@ -147,7 +142,7 @@ extension ExploreView {
         let rows = [GridItem(.flexible())]
         
         return LazyHGrid(rows: rows) {
-            let genre = exploreVM.genreOfAlbums.keys.sorted()//.map{ $0.key }.sorted()
+            let genre: [String] = Array(exploreVM.genreOfAlbums.keys)
             ForEach(genre.indices) { index in
                 ExploreCellView(image: nil, title: genre[index], altText: nil)
                     .frame(width: UIScreen.main.bounds.width / 2.3, height: 90)
@@ -159,7 +154,7 @@ extension ExploreView {
     
     func songListView() -> some View {
         List {
-            ForEach(exploreVM.songs.sorted(), id: \.self) { song in
+            ForEach(exploreVM.songs, id: \.self) { song in
                 SongListCell(song: song, selectedSongCell: .constant(nil))
             }
         }.listStyle(DefaultListStyle())
