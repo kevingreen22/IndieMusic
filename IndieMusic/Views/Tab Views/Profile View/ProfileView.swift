@@ -12,11 +12,12 @@ struct ProfileView: View {
     @State private var editMode = EditMode.inactive
     @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
-    let user: User
+    let user: User?
+    
     
     var body: some View {
         ZStack {
-            if AuthManager.shared.isSignedIn {
+            if let user = vm.user, AuthManager.shared.isSignedIn {
                 VStack(alignment: .leading, spacing: 0) {
                     ProfileViewHeader(user: user)
                         .environmentObject(vm)
@@ -37,7 +38,7 @@ struct ProfileView: View {
     }
     
     fileprivate func onDelete(offsets: IndexSet) {
-        guard let index = offsets.first else { return }
+        guard let index = offsets.first, let user = vm.user else { return }
         let song = user.songListData[index]
         StorageManager.shared.delete(song: song) { error in
             if error == nil {
@@ -57,14 +58,14 @@ extension ProfileView {
    
     var ownerSongsList: some View {
         VStack {
-            if user.artist != nil {
+            if let user = user, let artist = user.artist {
                 HStack {
                     Image(uiImage: profileVM.artistBioImage ?? UIImage(systemName: "music.mic")!)
                         .resizable()
                         .frame(width: 50, height: 50)
                         .clipShape(Circle())
                         .padding(.leading)
-                    Text(user.artist!.name)
+                    Text(artist.name)
                         .font(.title)
                         .fontWeight(.semibold)
                     Spacer()
@@ -73,7 +74,7 @@ extension ProfileView {
             }
             
             List {
-                ForEach(user.ownerSongs, id: \.self) { song in
+                ForEach(user?.ownerSongs ?? [], id: \.self) { song in
                     HStack {
                         Image(uiImage: profileVM.getAlbumArtworkFor(song: song))
                             .resizable()

@@ -45,18 +45,14 @@ struct MainTabView: View {
                     Label(TabTitle.explore.rawValue, systemImage: TabImage.explore.rawValue)
                 }.tag(2)
                 
-                if let user = vm.user {
-                    ProfileView(user: user)
-                        .environmentObject(vm)
-                        .environmentObject(cpVM)
-                        .environmentObject(profileVM)
-                        .environment(\.defaultMinListRowHeight, 60)
-                        .tabItem {
-                            Label(TabTitle.profile.rawValue, systemImage: TabImage.profile.rawValue)
-                        }.tag(3)
-                } else {
-                    SignInView()
-                }
+                ProfileView(user: vm.user)
+                    .environmentObject(vm)
+                    .environmentObject(cpVM)
+                    .environmentObject(profileVM)
+                    .environment(\.defaultMinListRowHeight, 60)
+                    .tabItem {
+                        Label(TabTitle.profile.rawValue, systemImage: TabImage.profile.rawValue)
+                    }.tag(3)
                 
             } // End TabView
             .accentColor(.primary)
