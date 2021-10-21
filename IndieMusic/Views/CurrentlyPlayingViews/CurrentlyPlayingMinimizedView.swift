@@ -50,7 +50,8 @@ struct CurrentlyPlayingMinimizedView: View {
                 Spacer()
                 
                 Button(action: {
-                    cpVM.playNextSong(songList: vm.user.songListData)
+                    guard let user = vm.user else { return }
+                    cpVM.playNextSong(songList: user.songListData)
                 }, label: {
                     Image(systemName: "forward.fill")
                         .foregroundColor(.black)
@@ -100,7 +101,6 @@ struct CurrentlyPlayingView_Previews: PreviewProvider {
                 .environmentObject(dev.currentlyPlaingVM)
                 .preferredColorScheme(.dark)
         }
-        
     }
 }
 

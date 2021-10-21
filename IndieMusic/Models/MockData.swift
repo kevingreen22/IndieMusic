@@ -16,217 +16,107 @@ extension PreviewProvider {
 
 
 class DeveloperPreview {
-    static let instance = DeveloperPreview(
-        user: User(
+    static let instance = DeveloperPreview()
+    
+    private init() {
+        var artist: Artist {
+            let artistID: UUID = UUID(uuidString: "brokeneck")!
+            let albumIDs = ["album1", "album2", "album3"]
+            
+            let mockSong1 = Song(
+            title: "Electric Sloth",
+            albumTitle: "Hellfest EP",
+            artistName: "Brokeneck",
+            genre: "Metal",
+            artistID: artistID.uuidString,
+            albumID: albumIDs[0],
+            lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
+            url: URL(fileURLWithPath: "artists/brokeneck/hellfest_ep/electric_sloth.mp3")
+        )
+            
+            let mockSong2 = Song(
+            title: "Crush, Kill, Destroy",
+            albumTitle: "Hellfest EP",
+            artistName: "Brokeneck",
+            genre: "Metal",
+            artistID: artistID.uuidString,
+            albumID: albumIDs[1],
+            lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
+            url: URL(fileURLWithPath: "artists/brokeneck/hellFest_ep/crush,_kill,destroy.mp3")
+        )
+            
+            let mockSong3 = Song(
+            title: "Penguins Are Awfly Cute",
+            albumTitle: "Hellfest EP",
+            artistName: "Brokeneck",
+            genre: "Metal",
+            artistID: artistID.uuidString,
+            albumID: albumIDs[2],
+            lyrics: nil,
+            url: URL(fileURLWithPath: "artists/brokeneck/hellFest_ep/penguins_are_awfly_cute.mp3")
+        )
+            
+            let mockAlbum = Album(
+                title: "Hellfest EP",
+                artistName: "Brokeneck",
+                artistID: artistID.uuidString,
+                artworkURL: URL(string: "artists/brokeneck/hellfest_ep/album_artwork.png"),
+                songs: [mockSong1, mockSong2, mockSong3],
+                year: "2009",
+                genre: "Metal")
+            
+            let artist = Artist(
+                id: artistID,
+                name: "Brokeneck",
+                genre: "Metal",
+                imageURL: URL(string: "artists/brokeneck/artist_photo.png"),
+                albums: [mockAlbum, mockAlbum, mockAlbum]
+            )
+            
+            return artist
+        }
+        self.artists = [artist]
+        
+        self.user = User(
             name: "Kevin",
             email: "Bbongrip@gmail.com",
             profilePictureURL: nil,
             profilePictureData: nil,
             songListData: [],
-            favoriteArtists: [],
-            favoriteAlbums: [],
-            favoriteSongs: [],
-            recentlyAdded: nil,
-            artist: nil)
-    )
-    
-    let user: User
-    var exploreData: [ExploreCellModel] = []
-    var mockAlbums: [String] = []
-                                           
-    private init(user: User) {
-        user.favoriteArtists = [data.first!]
-        user.favoriteAlbums = [data.first!.albums.first!]
-        user.favoriteSongs = [data.first!.albums.first!.songs.first!]
-        user.artist = data.first!
-        self.user = user
-        
-        self.exploreData = [
-            ExploreCellModel(imageName: "metal", image: nil, genre: "Metal", albums: albums, artists: artists),
-            ExploreCellModel(imageName: "r&b", image: nil, genre: "R&B", albums: albums, artists: artists),
-            ExploreCellModel(imageName: "hip_hop", image: nil, genre: "Hip Hop", albums: albums, artists: artists),
-            ExploreCellModel(imageName: "rap", image: nil, genre: "Rap", albums: albums, artists: artists),
-            ExploreCellModel(imageName: "blues", image: nil, genre: "Blues", albums: albums, artists: artists)
-        ]
-        
-        self.mockAlbums = ["Album 1", "Album 2", "Album 3", "Album 4"]
-        
+            favoriteArtists: [artists.first!],
+            favoriteAlbums: [artists.first!.albums.first!],
+            favoriteSongs: [artists.first!.albums.first!.songs.first!],
+            recentlyAdded: [],
+            artist: artists.first!
+        )
         
         self.mainVM.user = self.user
+        
+        self.exploreVM.albums = albums
+        self.exploreVM.artists = artists
+        self.exploreVM.songs = songs
+        self.exploreVM.genreOfAlbums = genresOfAlbums
+        
+        self.currentlyPlaingVM.album = albums.first!
+        self.currentlyPlaingVM.song = albums.first!.songs.first!
+        
     }
     
     
     
+    let user: User
+    let artists: [Artist]
+    
     let mainVM = MainViewModel()
+    let profileVM = ProfileViewModel()
     let exploreVM = ExploreViewModel()
     let currentlyPlaingVM = CurrentlyPlayingViewModel()
     let signinVM = SigninViewModel()
-    
-    
-    
-    
-    
-    let data: [Artist] = [
-        Artist(name: "Brokeneck",
-               genre: "Metal",
-               imageURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/artist_photo.png"),
-               albums: [
-                Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
-                      artworkURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/42007443-CA23-4E4E-9CC3-983E41F90A14/album_artwork.png"),
-                      songs: [
-                        Song(title: "Electric Sloth",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                            ),
-                        
-                        Song(title: "Crush, Kill, Destroy",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                            ),
-                        
-                        Song(title: "Penguins Are Awfly Cute",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: nil,
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                            ),
-                      ],
-                      year: "2009",
-                      genre: "Metal"),
-                Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
-                      artworkURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/42007443-CA23-4E4E-9CC3-983E41F90A14/album_artwork.png"),
-                      songs: [
-                        Song(title: "Electric Sloth",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                            ),
-                        
-                        Song(title: "Crush, Kill, Destroy",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                            ),
-                        
-                        Song(title: "Penguins Are Awfly Cute",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: nil,
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                            ),
-                      ],
-                      year: "2009",
-                      genre: "Metal"),
-                Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
-                      artworkURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/42007443-CA23-4E4E-9CC3-983E41F90A14/album_artwork.png"),
-                      songs: [
-                        Song(title: "Electric Sloth",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                            ),
-                        
-                        Song(title: "Crush, Kill, Destroy",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                            ),
-                        
-                        Song(title: "Penguins Are Awfly Cute",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: nil,
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                            ),
-                      ],
-                      year: "2009",
-                      genre: "Metal"),
-                Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
-                      artworkURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/42007443-CA23-4E4E-9CC3-983E41F90A14/album_artwork.png"),
-                      songs: [
-                        Song(title: "Electric Sloth",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                            ),
-                        
-                        Song(title: "Crush, Kill, Destroy",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                            ),
-                        
-                        Song(title: "Penguins Are Awfly Cute",
-                             albumTitle: "Hellfest EP",
-                             artistName: "Brokeneck",
-                             genre: "Metal",
-                             artistID: UUID().uuidString,
-                             albumID: UUID().uuidString,
-                             lyrics: nil,
-                             url: URL(fileURLWithPath: "song/path/name.mp3")
-                            ),
-                      ],
-                      year: "2009",
-                      genre: "Metal")
-               ]
-              ),
-    ]
-    
-    var artists: [Artist] {
-        var artists: [Artist] = []
-        for artist in data {
-            artists.append(artist)
-        }
         
-        return artists
-    }
     
     var albums: [Album] {
         var albumNames: [Album] = []
-        for artist in data {
+        for artist in artists {
             for album in artist.albums {
                 albumNames.append(album)
             }
@@ -237,7 +127,7 @@ class DeveloperPreview {
     
     var songs: [Song] {
         var songs: [Song] = []
-        for artist in data {
+        for artist in artists {
             for album in artist.albums {
                 for song in album.songs {
                     songs.append(song)
@@ -250,7 +140,7 @@ class DeveloperPreview {
     
     var genresOfAlbums: [String : [Album]] {
         var genreOfAlbums: [String : [Album]] = [:]
-        for artist in data {
+        for artist in artists {
             for album in artist.albums {
                 genreOfAlbums.updateValue(artist.albums, forKey: album.genre)
 //                genreOfAlbums[album.genre]?.append(album)
@@ -260,257 +150,7 @@ class DeveloperPreview {
         return genreOfAlbums
     }
     
-    var genres: [String] {
-        var genres: [String] = []
-        for artist in data {
-            for album in artist.albums {
-                genres.append(album.genre)
-            }
-        }
-        
-        return genres
-    }
+    
+    
     
 }
-
-
-
-
-// MARK: MOCKDATA
-//class MockData {
-//    
-//    // MARK: User mock data
-//    static let user = User(name: "Kevin",
-//                           email: "Bbongrip@gmail.com",
-//                           profilePictureURL: nil,
-//                           profilePictureData: nil,
-//                           songListData: [],
-//                           favoriteArtists: [data.first!],
-//                           favoriteAlbums: [data.first!.albums.first!],
-//                           favoriteSongs: [data.first!.albums.first!.songs.first!],
-//                           recentlyAdded: nil,
-//                           artist: data.first!
-//    )
-//    
-//    
-//    // MARK: Artist mock data
-//    static let data: [Artist] = [
-//        Artist(name: "Brokeneck",
-//               genre: "Metal",
-//               imageURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/artist_photo.png"),
-//               albums: [
-//                Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
-//                      artworkURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/42007443-CA23-4E4E-9CC3-983E41F90A14/album_artwork.png"),
-//                      songs: [
-//                        Song(title: "Electric Sloth",
-//                             albumTitle: "Hellfest EP",
-//                             artistName: "Brokeneck",
-//                             genre: "Metal",
-//                             artistID: UUID().uuidString,
-//                             albumID: UUID().uuidString,
-//                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-//                             url: URL(fileURLWithPath: "song/path/name.mp3")
-//                            ),
-//                        
-//                        Song(title: "Crush, Kill, Destroy",
-//                             albumTitle: "Hellfest EP",
-//                             artistName: "Brokeneck",
-//                             genre: "Metal",
-//                             artistID: UUID().uuidString,
-//                             albumID: UUID().uuidString,
-//                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-//                             url: URL(fileURLWithPath: "song/path/name.mp3")
-//                            ),
-//                        
-//                        Song(title: "Penguins Are Awfly Cute",
-//                             albumTitle: "Hellfest EP",
-//                             artistName: "Brokeneck",
-//                             genre: "Metal",
-//                             artistID: UUID().uuidString,
-//                             albumID: UUID().uuidString,
-//                             lyrics: nil,
-//                             url: URL(fileURLWithPath: "song/path/name.mp3")
-//                            ),
-//                      ],
-//                      year: "2009",
-//                      genre: "Metal"),
-//                Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
-//                      artworkURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/42007443-CA23-4E4E-9CC3-983E41F90A14/album_artwork.png"),
-//                      songs: [
-//                        Song(title: "Electric Sloth",
-//                             albumTitle: "Hellfest EP",
-//                             artistName: "Brokeneck",
-//                             genre: "Metal",
-//                             artistID: UUID().uuidString,
-//                             albumID: UUID().uuidString,
-//                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-//                             url: URL(fileURLWithPath: "song/path/name.mp3")
-//                            ),
-//                        
-//                        Song(title: "Crush, Kill, Destroy",
-//                             albumTitle: "Hellfest EP",
-//                             artistName: "Brokeneck",
-//                             genre: "Metal",
-//                             artistID: UUID().uuidString,
-//                             albumID: UUID().uuidString,
-//                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-//                             url: URL(fileURLWithPath: "song/path/name.mp3")
-//                            ),
-//                        
-//                        Song(title: "Penguins Are Awfly Cute",
-//                             albumTitle: "Hellfest EP",
-//                             artistName: "Brokeneck",
-//                             genre: "Metal",
-//                             artistID: UUID().uuidString,
-//                             albumID: UUID().uuidString,
-//                             lyrics: nil,
-//                             url: URL(fileURLWithPath: "song/path/name.mp3")
-//                            ),
-//                      ],
-//                      year: "2009",
-//                      genre: "Metal"),
-//                Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
-//                      artworkURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/42007443-CA23-4E4E-9CC3-983E41F90A14/album_artwork.png"),
-//                      songs: [
-//                        Song(title: "Electric Sloth",
-//                             albumTitle: "Hellfest EP",
-//                             artistName: "Brokeneck",
-//                             genre: "Metal",
-//                             artistID: UUID().uuidString,
-//                             albumID: UUID().uuidString,
-//                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-//                             url: URL(fileURLWithPath: "song/path/name.mp3")
-//                            ),
-//                        
-//                        Song(title: "Crush, Kill, Destroy",
-//                             albumTitle: "Hellfest EP",
-//                             artistName: "Brokeneck",
-//                             genre: "Metal",
-//                             artistID: UUID().uuidString,
-//                             albumID: UUID().uuidString,
-//                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-//                             url: URL(fileURLWithPath: "song/path/name.mp3")
-//                            ),
-//                        
-//                        Song(title: "Penguins Are Awfly Cute",
-//                             albumTitle: "Hellfest EP",
-//                             artistName: "Brokeneck",
-//                             genre: "Metal",
-//                             artistID: UUID().uuidString,
-//                             albumID: UUID().uuidString,
-//                             lyrics: nil,
-//                             url: URL(fileURLWithPath: "song/path/name.mp3")
-//                            ),
-//                      ],
-//                      year: "2009",
-//                      genre: "Metal"),
-//                Album(title: "Hellfest EP", artistName: "Brokeneck", artistID: UUID().uuidString,
-//                      artworkURL: URL(string: "artists/35C17CAF-9B6C-4CBC-AA66-C19F2442612E/42007443-CA23-4E4E-9CC3-983E41F90A14/album_artwork.png"),
-//                      songs: [
-//                        Song(title: "Electric Sloth",
-//                             albumTitle: "Hellfest EP",
-//                             artistName: "Brokeneck",
-//                             genre: "Metal",
-//                             artistID: UUID().uuidString,
-//                             albumID: UUID().uuidString,
-//                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-//                             url: URL(fileURLWithPath: "song/path/name.mp3")
-//                            ),
-//                        
-//                        Song(title: "Crush, Kill, Destroy",
-//                             albumTitle: "Hellfest EP",
-//                             artistName: "Brokeneck",
-//                             genre: "Metal",
-//                             artistID: UUID().uuidString,
-//                             albumID: UUID().uuidString,
-//                             lyrics: "jahsdh falkia \nlsijfa sdihf\n aslkdh alsdh falshd f;lasj f;aliewhj\nasidcha'osicnma\n.wkenc :SOIHje\nf:as ;diafh awsoiafha sidhaf ;owiehjf\n ao aois doiah sohf asohf;alweiUS:LW  OIje \n:OSIHJw e;aliawh\n a;oij :Oijaw;oIW\n E:O ASOIEHJF ;woe\n WEOIJ",
-//                             url: URL(fileURLWithPath: "song/path/name.mp3")
-//                            ),
-//                        
-//                        Song(title: "Penguins Are Awfly Cute",
-//                             albumTitle: "Hellfest EP",
-//                             artistName: "Brokeneck",
-//                             genre: "Metal",
-//                             artistID: UUID().uuidString,
-//                             albumID: UUID().uuidString,
-//                             lyrics: nil,
-//                             url: URL(fileURLWithPath: "song/path/name.mp3")
-//                            ),
-//                      ],
-//                      year: "2009",
-//                      genre: "Metal")
-//               ]
-//              ),
-//    ]
-//    
-//    static func Artists() -> [Artist] {
-//        var artists: [Artist] = []
-//        for artist in data {
-//            artists.append(artist)
-//        }
-//        
-//        return artists
-//    }
-//    
-//    static func Albums() -> [Album] {
-//        var albumNames: [Album] = []
-//        for artist in data {
-//            for album in artist.albums {
-//                albumNames.append(album)
-//            }
-//        }
-//        
-//        return albumNames
-//    }
-//    
-//    static func Songs() -> [Song] {
-//        var songs: [Song] = []
-//        for artist in data {
-//            for album in artist.albums {
-//                for song in album.songs {
-//                    songs.append(song)
-//                }
-//            }
-//        }
-//        
-//        return songs
-//    }
-//    
-//    static func GenresOfAlbums() -> [String : [Album]] {
-//        var genreOfAlbums: [String : [Album]] = [:]
-//        for artist in data {
-//            for album in artist.albums {
-//                genreOfAlbums.updateValue(artist.albums, forKey: album.genre)
-////                genreOfAlbums[album.genre]?.append(album)
-//            }
-//        }
-//        
-//        return genreOfAlbums
-//    }
-//    
-//    static func Genres() -> [String] {
-//        var genres: [String] = []
-//        for artist in data {
-//            for album in artist.albums {
-//                genres.append(album.genre)
-//            }
-//        }
-//        
-//        return genres
-//    }
-//    
-//    
-//    // MARK: Explore mock data
-//    static let exploreData: [ExploreCellModel] = [
-//        ExploreCellModel(imageName: "metal", image: nil, genre: "Metal", albums: Albums(), artists: Artists()),
-//        ExploreCellModel(imageName: "r&b", image: nil, genre: "R&B", albums: Albums(), artists: Artists()),
-//        ExploreCellModel(imageName: "hip_hop", image: nil, genre: "Hip Hop", albums: Albums(), artists: Artists()),
-//        ExploreCellModel(imageName: "rap", image: nil, genre: "Rap", albums: Albums(), artists: Artists()),
-//        ExploreCellModel(imageName: "blues", image: nil, genre: "Blues", albums: Albums(), artists: Artists())
-//    ]
-//    
-//    
-//    
-//    static let mockAlbums = ["Album 1", "Album 2", "Album 3", "Album 4"]
-//    
-//}

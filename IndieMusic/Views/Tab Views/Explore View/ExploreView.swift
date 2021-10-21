@@ -38,52 +38,30 @@ struct ExploreView: View {
                 
                 
                 // ARTISTS
-//                GridWithTitleAndSeeAll(
-//                    title: "Artists",
-//                    destination:
-//                        ArtistsView(artists: exploreVM.artists.sorted()).environmentObject(vm),
-//                    grid: artistGridView
-//                )
-                artistGridView
+//                if !exploreVM.artists.isEmpty {
+                    artistGridView
+//                }
                 
-                Divider()
+//                Divider()
                 
                 //ALBUMS
-//                GridWithTitleAndSeeAll(
-//                    title: "Albums",
-//                    destination:
-//                        AlbumsView(albums: exploreVM.albums.sorted()).environmentObject(vm),
-//                    grid: albumsGridView
-//                )
-                albumsGridView
+//                if !exploreVM.albums.isEmpty {
+                    albumsGridView
+//                }
                 
-                
-                Divider()
+//                Divider()
                 
                 //GENRES
-//                GridWithTitleAndSeeAll(
-//                    title: "Genres",
-//                    destination: AlbumsView(albums: exploreVM.albumsForGenre).environmentObject(vm),
-//                    grid: genreGridView
-//                ).onPreferenceChange(GenreOfAlbumsIndexPreferenceKey.self) { albums in
-//                    exploreVM.albumsForGenre = albums
+//                if !exploreVM.genreOfAlbums.isEmpty {
+                    genreGridView
 //                }
-                genreGridView
                 
-                
-                
-                
-                Divider()
+//                Divider()
                 
                 // SONGS
-//                GridWithTitleAndSeeAll(
-//                    title: "Songs",
-//                    destination: EmptyView(),
-//                    isActive: false,
-//                    grid: songListView
-//                )
-                songListView
-                
+//                if !exploreVM.songs.isEmpty {
+                    songListView
+//                }
                 
             }
         }
@@ -94,53 +72,8 @@ struct ExploreView: View {
 
 extension ExploreView {
     
-//    func GridWithTitleAndSeeAll<Dest: View, Grid: View>(title: String, destination: Dest, isActive: Bool = true, grid: Grid) -> some View {
-//        VStack {
-//            HStack {
-//                Text(title)
-//                    .font(.title)
-//                    .fontWeight(.bold)
-//                    .padding(.leading)
-//                Spacer()
-//
-//                NavigationLink(isActive: .constant(isActive)) {
-//                    destination
-//                } label: {
-//                    Text("See All")
-//                        .foregroundColor(.mainApp)
-//                        .padding(.trailing)
-//                }
-//            }.padding(.bottom)
-//
-//            ScrollView(.horizontal, showsIndicators: false) {
-//                grid.padding(.horizontal)
-//            }.frame(maxHeight: 200)
-//        }
-//    }
-    
-//    func headerWithSeeAllButton(title: String) -> some View {
-//        HStack {
-//            Text(title)
-//                .font(.title)
-//                .fontWeight(.bold)
-//                .padding(.leading)
-//            Spacer()
-//            NavigationLink {
-//                AlbumsView(albums: exploreVM.albums.sorted()).environmentObject(vm)
-//            } label: {
-//                Text("See All")
-//                    .foregroundColor(.mainApp)
-//                    .padding(.trailing)
-//            }
-//        }.padding(.bottom)
-//    }
-    
     var artistGridView: some View {
-        let rows = [GridItem(.flexible()),
-                     GridItem(.flexible()),
-                     GridItem(.flexible())
-        ]
-        return VStack {
+        VStack(spacing: 0) {
             HStack {
                 Text("Artists")
                     .font(.title)
@@ -151,29 +84,28 @@ extension ExploreView {
                     ArtistsView(artists: exploreVM.artists.sorted()).environmentObject(vm)
                 } label: {
                     Text("See All")
-                        .foregroundColor(.primary)
+                        .foregroundColor(Color.theme.primary)
                         .padding(.trailing)
                 }
-            }.padding(.bottom)
+            }
             
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHGrid(rows: rows) {
+                LazyHGrid(rows: [GridItem(.flexible()),
+                                 GridItem(.flexible()),
+                                 GridItem(.flexible())
+                    ]) {
                     ForEach(exploreVM.artists.sorted(), id: \.self) { artist in
                         ArtistNavLinkCell(artist: artist)
                             .frame(width: UIScreen.main.bounds.width * 0.85, height: 50)
                             .environmentObject(vm)
                     }
-                }//.padding(.horizontal)
+                }
             }
-            .frame(maxHeight: 200)
-            .padding(.horizontal)
         }
     }
     
     var albumsGridView: some View {
-        let rows = [GridItem(.flexible())]
-        
-        return VStack {
+        VStack(spacing: 0) {
             HStack {
                 Text("Albums")
                     .font(.title)
@@ -184,28 +116,25 @@ extension ExploreView {
                     AlbumsView(albums: exploreVM.albums.sorted()).environmentObject(vm)
                 } label: {
                     Text("See All")
-                        .foregroundColor(.primary)
+                        .foregroundColor(Color.theme.primary)
                         .padding(.trailing)
                 }
             }.padding(.bottom)
             
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHGrid(rows: rows) {
+                LazyHGrid(rows: [GridItem(.flexible())]) {
                     ForEach(exploreVM.albums.prefix(10).sorted(), id: \.self) { album in
                         AlbumNavLinkCellView(album: album)
                             .frame(width: UIScreen.main.bounds.width / 2.3, height: UIScreen.main.bounds.width / 2.3)
                             .environmentObject(vm)
                     }
-                }//.padding(.horizontal)
+                }
             }
-            .frame(maxHeight: 200)
-            .padding(.horizontal)
         }
     }
     
     var genreGridView: some View {
-        let rows = [GridItem(.flexible())]
-        return VStack {
+        VStack(spacing: 0) {
             HStack {
                 Text("Genres")
                     .font(.title)
@@ -216,23 +145,21 @@ extension ExploreView {
                     GenresListView(genres: exploreVM.genreOfAlbums)
                 } label: {
                     Text("See All")
-                        .foregroundColor(.primary)
+                        .foregroundColor(Color.theme.primary)
                         .padding(.trailing)
                 }
-            }.padding(.bottom)
+            }
             
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHGrid(rows: rows) {
+                LazyHGrid(rows: [GridItem(.flexible())]) {
                     ForEach(Array(zip(exploreVM.genreOfAlbums.keys, Array(exploreVM.genreOfAlbums.values))), id: \.0) { genre, albums in
                         ExploreCellView(imageName: nil, title: genre, altText: nil)
                             .frame(width: UIScreen.main.bounds.width / 2.3, height: 90)
                             .environmentObject(vm)
                             .preference(key: GenreOfAlbumsIndexPreferenceKey.self, value: albums)
                     }
-                }//.padding(.horizontal)
+                }
             }
-            .frame(maxHeight: 200)
-            .padding(.horizontal)
         }
          
     }
@@ -249,10 +176,10 @@ extension ExploreView {
                     SongsListView(songs: exploreVM.songs, album: nil).environmentObject(vm)
                 } label: {
                     Text("See All")
-                        .foregroundColor(.primary)
+                        .foregroundColor(Color.theme.primary)
                         .padding(.trailing)
                 }
-            }.padding(.bottom)
+            }
             
             List {
                 ForEach(exploreVM.songs, id: \.self) { song in
@@ -281,8 +208,15 @@ struct GenreOfAlbumsIndexPreferenceKey: PreferenceKey {
 
 struct ExploreView_Previews: PreviewProvider {
     static var previews: some View {
-        ExploreView()
-            .environmentObject(dev.mainVM)
-            .environmentObject(dev.exploreVM)
+        Group {
+            ExploreView()
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.exploreVM)
+            
+            ExploreView()
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.exploreVM)
+                .preferredColorScheme(.dark)
+        }
     }
 }

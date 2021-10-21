@@ -27,7 +27,11 @@ struct GenresListView: View {
 
 struct GenresListView_Previews: PreviewProvider {
     static var previews: some View {
-        //  ["Metal" : [], "Rock" : [], "R&B" : [], "Rap" : [] ]
-        GenresListView(genres: dev.genresOfAlbums)
+        Group {
+            GenresListView(genres: dev.genresOfAlbums)
+            
+            GenresListView(genres: dev.genresOfAlbums)
+                .preferredColorScheme(.dark)
+        }
     }
 }

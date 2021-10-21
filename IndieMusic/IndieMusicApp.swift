@@ -20,7 +20,6 @@ struct IndieMusicApp: App {
     @Environment(\.scenePhase) var scenePhase
     @StateObject var  vm: MainViewModel = MainViewModel()
     @StateObject var cpVM: CurrentlyPlayingViewModel = CurrentlyPlayingViewModel()
-    @StateObject var profileVM: ProfileViewModel = ProfileViewModel()
     
     @State private var retrycount = 0
     private let retryCacheAmount = 2
@@ -30,7 +29,6 @@ struct IndieMusicApp: App {
             MainTabView()
                 .environmentObject(vm)
                 .environmentObject(cpVM)
-                .environmentObject(profileVM)
                 .onAppear {
                     requestPermissionsIfNeeded()
                     cacheDataFromFirebase()

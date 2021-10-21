@@ -18,13 +18,13 @@ class User: Codable {
     var profilePictureURL: URL?
     var profilePictureData: Data?
     var songListData: [Song]
-    var favoriteArtists: [Artist]?
-    var favoriteAlbums: [Album]?
-    var favoriteSongs: [Song]?
-    var recentlyAdded: [Album]?
+    var favoriteArtists: [Artist]
+    var favoriteAlbums: [Album]
+    var favoriteSongs: [Song]
+    var recentlyAdded: [Album]
     var artist: Artist?
     
-    init(name: String, email: String, profilePictureURL: URL?, profilePictureData: Data?, songListData: [Song], favoriteArtists: [Artist]?, favoriteAlbums: [Album]?, favoriteSongs: [Song]?, recentlyAdded: [Album]?, artist: Artist?) {
+    init(name: String, email: String, profilePictureURL: URL?, profilePictureData: Data?, songListData: [Song], favoriteArtists: [Artist], favoriteAlbums: [Album], favoriteSongs: [Song], recentlyAdded: [Album], artist: Artist?) {
         self.name = name
         self.email = email
         self.profilePictureURL = profilePictureURL
@@ -37,18 +37,18 @@ class User: Codable {
         self.artist = artist
     }
     
-    init() {
-        self.name = ""
-        self.email = ""
-        self.profilePictureURL = nil
-        self.profilePictureData = nil
-        self.songListData = []
-        self.favoriteArtists = nil
-        self.favoriteAlbums = nil
-        self.favoriteSongs = nil
-        self.recentlyAdded = nil
-        self.artist = nil
-    }
+//    init() {
+//        self.name = ""
+//        self.email = ""
+//        self.profilePictureURL = nil
+//        self.profilePictureData = nil
+//        self.songListData = []
+//        self.favoriteArtists = []
+//        self.favoriteAlbums = []
+//        self.favoriteSongs = []
+//        self.recentlyAdded = []
+//        self.artist = nil
+//    }
     
     
     var ownerAlbums: [Album] {

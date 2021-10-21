@@ -159,7 +159,6 @@ struct SignInView_Previews: PreviewProvider {
             SignInView()
                 .environmentObject(dev.mainVM)
                 .environmentObject(dev.signinVM)
-                .preferredColorScheme(.light)
             
             SignInView()
                 .environmentObject(dev.mainVM)

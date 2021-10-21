@@ -29,6 +29,7 @@ class CreateArtistViewModel: ObservableObject {
     func createArtist(viewModel: MainViewModel) {
         // Validate info
         print("Validating info to create artist...")
+        guard viewModel.user != nil else { return }
         guard artistName != "" else {
             print("Validation failed.")
             DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
@@ -60,15 +61,15 @@ class CreateArtistViewModel: ObservableObject {
         ownerArtist.albums.append(defaultAlbum)
         
         
-        viewModel.user.artist = ownerArtist
+        viewModel.user!.artist = ownerArtist
         
         print("Attempting to update User into Firebase DB...")
-        DatabaseManger.shared.insert(user: viewModel.user) { success in
+        DatabaseManger.shared.insert(user: viewModel.user!) { success in
             if success {
                 print("User model updated in Firebase DB.")
                 
                 print("Attempting to insert new artist into Firebase DB...")
-                DatabaseManger.shared.insert(artist: viewModel.user.artist!) { success in
+                DatabaseManger.shared.insert(artist: viewModel.user!.artist!) { success, error in
                     guard success else { return }
                     
                     guard self.bioImage != nil else { return }

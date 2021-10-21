@@ -33,7 +33,13 @@ struct ArtistsView: View {
 
 struct ArtistView_Previews: PreviewProvider {
     static var previews: some View {
-        ArtistsView(artists: dev.artists)
-            .environmentObject(dev.mainVM)
+        Group {
+            ArtistsView(artists: dev.artists)
+                .environmentObject(dev.mainVM)
+            
+            ArtistsView(artists: dev.artists)
+                .environmentObject(dev.mainVM)
+                .preferredColorScheme(.dark)
+        }
     }
 }

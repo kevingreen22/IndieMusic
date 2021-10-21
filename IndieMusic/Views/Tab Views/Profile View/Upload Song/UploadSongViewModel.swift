@@ -26,12 +26,13 @@ class UploadSongViewModel: ObservableObject {
     
     func uploadSong(viewModel: MainViewModel) {
         // Validate info
+        guard let user = viewModel.user else { return }
         withAnimation {
             viewModel.showNotification.toggle()
             viewModel.notificationText = "Verifying..."
         }
         print("Verifying song info...")
-        guard viewModel.user.artist != nil,
+        guard user.artist != nil,
               !songTitle.isEmpty else {
                   print("Required Song info not complete.")
                   withAnimation { viewModel.showNotification.toggle() }
@@ -56,7 +57,7 @@ class UploadSongViewModel: ObservableObject {
         // Create new instance of Song object
         print("Creating new instance of song...")
         viewModel.notificationText = "Creating..."
-        let song = Song(title: songTitle, albumTitle: album.title, artistName: viewModel.user.artist!.name, genre: songGenre, artistID: viewModel.user.artist!.id.uuidString, albumID: album.id.uuidString, lyrics: lyrics, url: songURL)
+        let song = Song(title: songTitle, albumTitle: album.title, artistName: user.artist!.name, genre: songGenre, artistID: user.artist!.id.uuidString, albumID: album.id.uuidString, lyrics: lyrics, url: songURL)
         
         
         // Upload song to storage
@@ -74,7 +75,7 @@ class UploadSongViewModel: ObservableObject {
                 // Add the song to the albums array of songs
                 print("Adding new song to user albums...")
                 viewModel.notificationText = "Adding to album..."
-                guard let album = viewModel.user.artist!.albums.first(where: { $0.id.uuidString == song.albumID }) else {
+                guard let album = user.artist!.albums.first(where: { $0.id.uuidString == song.albumID }) else {
                     print("Error getting album for song.")
                     self.reverseUploadSongIfError(viewModel: viewModel)
                     withAnimation { viewModel.showNotification.toggle() }
@@ -114,10 +115,11 @@ class UploadSongViewModel: ObservableObject {
     
     // Update Artist in Firestore DB
     fileprivate func updateArtist(viewModel: MainViewModel, song: Song, album: Album, image: UIImage?) {
+        guard let user = viewModel.user, let artist = user.artist else { return }
         print("Attempting to update artist in DB...")
         viewModel.notificationText = "Updating artist..."
-        DatabaseManger.shared.insert(artist: viewModel.user.artist!) { success in
-            if success {
+        DatabaseManger.shared.insert(artist: artist) { success, error in
+            if success && error == nil {
                 print("Artist object updated in DB.")
                 self.uploadAlbumArtwork(image: image, album: album, viewModel: viewModel)
             } else {
@@ -134,8 +136,8 @@ class UploadSongViewModel: ObservableObject {
     
     // Upload album artwork to storage
     fileprivate func uploadAlbumArtwork(image: UIImage?, album: Album, viewModel: MainViewModel) {
-        guard image != nil else {
-            self.updateUser(user: viewModel.user, viewModel: viewModel)
+        guard let user = viewModel.user, image != nil else {
+            self.updateUser(user: viewModel.user!, viewModel: viewModel)
             return
         }
         
@@ -144,7 +146,7 @@ class UploadSongViewModel: ObservableObject {
         StorageManager.shared.uploadAlbumArtworkImage(album: album, image: image) { success in
             if success {
                 print("Album artwork uploaded successfully.")
-                self.updateUser(user: viewModel.user, viewModel: viewModel)
+                self.updateUser(user: user, viewModel: viewModel)
             } else {
                 print("Error uploading album artwork.")
                 self.reverseUploadSongIfError(viewModel: viewModel)

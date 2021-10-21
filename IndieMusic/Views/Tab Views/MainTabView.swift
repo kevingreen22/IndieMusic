@@ -12,7 +12,8 @@ struct MainTabView: View {
     @Environment(\.defaultMinListRowHeight) var listRowHeight
     @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
-    @EnvironmentObject var profileVM: ProfileViewModel
+    @StateObject var profileVM: ProfileViewModel = ProfileViewModel()
+
     
     init() {
         UITabBar.appearance().backgroundColor = UIColor(Color.theme.tabBarBackground)
@@ -44,22 +45,25 @@ struct MainTabView: View {
                     Label(TabTitle.explore.rawValue, systemImage: TabImage.explore.rawValue)
                 }.tag(2)
                 
-                
-                ProfileView()
-                    .environmentObject(vm)
-                    .environmentObject(cpVM)
-                    .environmentObject(profileVM)
-                    .environment(\.defaultMinListRowHeight, 60)
-                    .tabItem {
-                        Label(TabTitle.profile.rawValue, systemImage: TabImage.profile.rawValue)
-                    }.tag(3)
+                if let user = vm.user {
+                    ProfileView(user: user)
+                        .environmentObject(vm)
+                        .environmentObject(cpVM)
+                        .environmentObject(profileVM)
+                        .environment(\.defaultMinListRowHeight, 60)
+                        .tabItem {
+                            Label(TabTitle.profile.rawValue, systemImage: TabImage.profile.rawValue)
+                        }.tag(3)
+                } else {
+                    SignInView()
+                }
                 
             } // End TabView
             .accentColor(.primary)
             .transition(.move(edge: .bottom))
             .onChange(of: vm.selectedTab) { newValue in
                 if newValue == 2 && AuthManager.shared.isSignedIn == false {
-                    vm.user = User()
+                    vm.user = nil
                 }
             }
             
@@ -162,7 +166,8 @@ struct MainTabView: View {
     func onDismissOfActiveSheet() {
         switch vm.activeSheet {
         case .imagePicker(sourceType: _, picking: _):
-            profileVM.updateUsersProfilePicture(user: vm.user)
+            guard let user = vm.user else { return }
+            profileVM.updateUsersProfilePicture(user: user)
             
         default:
             break
@@ -173,9 +178,8 @@ struct MainTabView: View {
     func onDismissOfActiveFullScreenCover() {
         switch vm.activeFullScreen {
         case .createArtist:
-            if vm.user.artist == nil {
-                profileVM.showArtistOwnerInfo = false
-            }
+            guard let user = vm.user, user.artist == nil else { return }
+            profileVM.showArtistOwnerInfo = false
             
         case .uploadSong, .createAlbum, .forgotPassword, .createAccount, .none:
             break

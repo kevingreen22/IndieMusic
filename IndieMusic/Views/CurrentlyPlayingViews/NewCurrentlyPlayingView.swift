@@ -90,7 +90,8 @@ struct NewCurrentlyPlayingView: View {
                             Spacer()
                             
                             Button(action: {
-                                cpVM.playNextSong(songList: vm.user.songListData)
+                                guard let user = vm.user else { return }
+                                cpVM.playNextSong(songList: user.songListData)
                             }, label: {
                                 Image(systemName: "forward.fill")
                                     .foregroundColor(.black)
@@ -149,7 +150,8 @@ extension NewCurrentlyPlayingView {
     private var playControlButtons: some View {
         HStack {
             Button(action: {
-                cpVM.playPreviousSong(songList: vm.user.songListData)
+                guard let user = vm.user else { return }
+                cpVM.playPreviousSong(songList: user.songListData)
             }, label: {
                 Image(systemName: "backward.fill")
                     .scaleEffect(2.3)
@@ -172,7 +174,8 @@ extension NewCurrentlyPlayingView {
             Spacer()
             
             Button(action: {
-                cpVM.playNextSong(songList: vm.user.songListData)
+                guard let user = vm.user else { return }
+                cpVM.playNextSong(songList: user.songListData)
             }, label: {
                 Image(systemName: "forward.fill")
                     .scaleEffect(2.3)
@@ -362,6 +365,16 @@ extension NewCurrentlyPlayingView {
 
 struct NewCurrentlyPlayingView_Previews: PreviewProvider {
     static var previews: some View {
-        NewCurrentlyPlayingView()
+        Group {
+            NewCurrentlyPlayingView()
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.currentlyPlaingVM)
+            
+            NewCurrentlyPlayingView()
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.currentlyPlaingVM)
+                .preferredColorScheme(.dark)
+        }
+        
     }
 }

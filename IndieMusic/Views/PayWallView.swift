@@ -26,8 +26,6 @@ struct PayWallView: View {
                             .foregroundColor(.white)
                     )
                 
-                
-                
                 Text("Purchace Premium\nAd Free listening all day everyday.")
                     .font(.title2)
                     .fontWeight(.bold)
@@ -36,7 +34,6 @@ struct PayWallView: View {
                 Text("$4.99 Monthly")
                     .font(.title3)
                     .multilineTextAlignment(.center)
-                
                 
                 Spacer()
                 
@@ -107,18 +104,8 @@ struct PayWallView: View {
             
             .navigationTitle("Indie Music Premium")
         }
-        
-        .alert(item: $vm.alertItem, content: { alertItem in
-            MyAlertItem.present(alertItem: alertItem)
-        }) // End alert
     }
 }
-
-
-
-
-
-
 
 
 
@@ -130,7 +117,6 @@ struct PayWallView_Previews: PreviewProvider {
         Group {
             PayWallView()
                 .environmentObject(dev.mainVM)
-                .preferredColorScheme(.light)
             
             PayWallView()
                 .environmentObject(dev.mainVM)

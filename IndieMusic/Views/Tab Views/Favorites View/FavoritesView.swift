@@ -18,7 +18,7 @@ struct FavoritesView: View {
     var body: some View {
         if AuthManager.shared.isSignedIn {
             List {
-                NavigationLink(destination: ArtistsView(artists: vm.user.favoriteArtists ?? [])
+                NavigationLink(destination: ArtistsView(artists: vm.user?.favoriteArtists ?? [])
                                 .environmentObject(vm),
                                label: {
                     FavoritesNavLinkCell(systemImageName: "music.mic", label: "Artists")
@@ -26,14 +26,14 @@ struct FavoritesView: View {
                 }
                 ).listRowBackground(Color.clear)
                 
-                NavigationLink(destination: AlbumsView(albums: vm.user.favoriteAlbums ?? []),
+                NavigationLink(destination: AlbumsView(albums: vm.user?.favoriteAlbums ?? []),
                                label: {
                     FavoritesNavLinkCell(systemImageName: "music.note.list", label: "Albums")
                         .environmentObject(vm)
                 }
                 ).listRowBackground(Color.clear)
                 
-                NavigationLink(destination: SongsListView(songs: vm.user.favoriteSongs ?? [], album: nil),
+                NavigationLink(destination: SongsListView(songs: vm.user?.favoriteSongs ?? [], album: nil),
                                label: {
                     FavoritesNavLinkCell(systemImageName: "music.note", label: "Songs")
                         .environmentObject(vm)
@@ -48,7 +48,7 @@ struct FavoritesView: View {
                     .listRowBackground(LinearGradient(gradient: Gradient(colors: [Color.white, Color.gray]), startPoint: .top, endPoint: .bottom).opacity(0.5))
                 
                 LazyVGrid(columns: columns) {
-                    ForEach(vm.user.recentlyAdded ?? [], id: \.self) { recent in
+                    ForEach(vm.user?.recentlyAdded ?? [], id: \.self) { recent in
                         ZStack {
                             NavigationLink(
                                 destination: Text("Destination"),
@@ -86,7 +86,13 @@ struct FavoritesView: View {
 
 struct FavoritesView_Previews: PreviewProvider {
     static var previews: some View {
-        FavoritesView()
-            .environmentObject(dev.mainVM)
+        Group {
+            FavoritesView()
+                .environmentObject(dev.mainVM)
+            
+            FavoritesView()
+                .environmentObject(dev.mainVM)
+                .preferredColorScheme(.dark)
+        }
     }
 }

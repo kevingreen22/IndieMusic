@@ -50,7 +50,7 @@ struct UploadSongView: View {
                     }
                     
                     Picker("Album*", selection: $uploadVM.album) {
-                        ForEach(vm.user.ownerAlbums, id: \.self) { album in
+                        ForEach(vm.user!.ownerAlbums, id: \.self) { album in
                             HStack {
                                 Text(album.title)
                             }

@@ -33,7 +33,7 @@ class CreateAlbumViewModel: ObservableObject {
     func createAlbum(viewModel: MainViewModel) {
         // validate
         print("Validating album info...")
-        guard let artist = viewModel.user.artist,
+        guard let user = viewModel.user, let artist = user.artist,
               albumName != "" else {
                   print("Validation failied.")
                   DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
@@ -57,7 +57,7 @@ class CreateAlbumViewModel: ObservableObject {
         
         // Save user to Firestore DB
         print("Attempting to update User...")
-        DatabaseManger.shared.insert(user: viewModel.user) { [weak self] success in
+        DatabaseManger.shared.insert(user: user) { [weak self] success in
             if success {
                 print("User model updated.")
                 

@@ -40,7 +40,13 @@ struct AlbumsView: View {
 
 struct AlbumsView_Previews: PreviewProvider {
     static var previews: some View {
-        AlbumsView(albums: dev.albums)
-            .environmentObject(dev.mainVM)
+        Group {
+            AlbumsView(albums: dev.albums)
+                .environmentObject(dev.mainVM)
+            
+            AlbumsView(albums: dev.albums)
+                .environmentObject(dev.mainVM)
+                .preferredColorScheme(.dark)
+        }
     }
 }

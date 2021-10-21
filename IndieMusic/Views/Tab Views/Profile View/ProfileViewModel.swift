@@ -97,7 +97,7 @@ class ProfileViewModel: ObservableObject {
     
     
     func removeUsersOwnerPrivilage(viewModel: MainViewModel, completion:  ((Bool) -> Void)?) {
-        print("Attempting to removing User Artist owner privilage...")
+        print("Attempting to remove User Artist owner privilage...")
         let totalRetrysAllowed = 2
         var errors: [Error]? = nil
         var retry = 0
@@ -105,7 +105,7 @@ class ProfileViewModel: ObservableObject {
         
         group.enter()
         // remove uploaded MP3's from Firebase Storage
-        for album in viewModel.user.artist!.albums {
+        for album in viewModel.user!.artist!.albums {
             for song in album.songs {
                 StorageManager.shared.delete(song: song) { error in
                     if let error = error {
@@ -129,7 +129,7 @@ class ProfileViewModel: ObservableObject {
         
         group.enter()
         // remove artist from Firebase DB
-        DatabaseManger.shared.delete(artist: viewModel.user.artist!) { _, error in
+        DatabaseManger.shared.delete(artist: viewModel.user!.artist!) { _, error in
             if let error = error {
                 errors?.append(error)
             }
@@ -140,7 +140,7 @@ class ProfileViewModel: ObservableObject {
         let result1 = group.wait(timeout: .now() + 30)
         switch result1 {
         case .success:
-            viewModel.user.artist = nil
+            viewModel.user!.artist = nil
             print("Artist deleted from User Model")
             updateUserOwnerPrivilage(viewModel: viewModel)
         case .timedOut:
@@ -158,7 +158,7 @@ class ProfileViewModel: ObservableObject {
         
         group.enter()
         // save user to Firebase DB
-        DatabaseManger.shared.update(user: viewModel.user) { _, error in
+        DatabaseManger.shared.update(user: viewModel.user!) { _, error in
             if let error = error {
 //                errors?.append(error)
             }

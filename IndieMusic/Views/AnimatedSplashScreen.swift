@@ -12,12 +12,12 @@ struct AnimatedSplashScreen: View {
     
     var body: some View {
         ZStack {
-            Color.primary
+            Color.theme.primary.ignoresSafeArea()
             
             VStack {
                 Spacer()
                 
-                Text("Hello, World!")
+                Text("Indie Music")
                     .foregroundColor(.white)
                     .fontWeight(.semibold)
                     .scaleEffect(3)
@@ -41,7 +41,6 @@ struct AnimatedSplashScreen_Preview: PreviewProvider {
     static var previews: some View {
         Group {
             AnimatedSplashScreen()
-                .preferredColorScheme(.light)
 
             AnimatedSplashScreen()
                 .preferredColorScheme(.dark)

@@ -164,9 +164,7 @@ final class StorageManager {
                 task.resume()
             }
     }
-    
-    
-    
+        
     
     public func deleteAlbumArtwork(_ album: Album, completion: @escaping (Error?) -> Void) {
         let path = "\(ContainerNames.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG)"

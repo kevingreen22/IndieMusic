@@ -12,19 +12,20 @@ struct ProfileView: View {
     @State private var editMode = EditMode.inactive
     @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
+    let user: User
     
     var body: some View {
         ZStack {
             if AuthManager.shared.isSignedIn {
                 VStack(alignment: .leading, spacing: 0) {
-                    ProfileViewHeader()
+                    ProfileViewHeader(user: user)
                         .environmentObject(vm)
                         .environmentObject(profileVM)
                     
                     ownerSongsList
                 }
                 
-                .onAppear { profileVM.prepare(vm.user) }
+                .onAppear { profileVM.prepare(user) }
                 
             } else { showSignInViewButton }
             
@@ -37,12 +38,12 @@ struct ProfileView: View {
     
     fileprivate func onDelete(offsets: IndexSet) {
         guard let index = offsets.first else { return }
-        let song = vm.user.songListData[index]
+        let song = user.songListData[index]
         StorageManager.shared.delete(song: song) { error in
             if error == nil {
-                vm.user.songListData.remove(at: index)
-                vm.user.delete(song: song)
-                DatabaseManger.shared.update(user: vm.user) { success, error in
+                user.songListData.remove(at: index)
+                user.delete(song: song)
+                DatabaseManger.shared.update(user: user) { success, error in
                     
                 }
             }
@@ -56,14 +57,14 @@ extension ProfileView {
    
     var ownerSongsList: some View {
         VStack {
-            if vm.user.artist != nil {
+            if user.artist != nil {
                 HStack {
                     Image(uiImage: profileVM.artistBioImage ?? UIImage(systemName: "music.mic")!)
                         .resizable()
                         .frame(width: 50, height: 50)
                         .clipShape(Circle())
                         .padding(.leading)
-                    Text(vm.user.artist?.name ?? "")
+                    Text(user.artist!.name)
                         .font(.title)
                         .fontWeight(.semibold)
                     Spacer()
@@ -72,7 +73,7 @@ extension ProfileView {
             }
             
             List {
-                ForEach(vm.user.ownerSongs, id: \.self) { song in
+                ForEach(user.ownerSongs, id: \.self) { song in
                     HStack {
                         Image(uiImage: profileVM.getAlbumArtworkFor(song: song))
                             .resizable()
@@ -91,7 +92,6 @@ extension ProfileView {
             }.padding(0)
         }
         .environment(\.editMode, $editMode)
-        
     }
     
     // Add this at the end of ZStack.
@@ -162,6 +162,8 @@ fileprivate struct ProfileViewHeader: View {
     @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @State private var isExpanded = false
+    let user: User
+    
     
     var body: some View {
         ZStack {
@@ -196,7 +198,7 @@ fileprivate struct ProfileViewHeader: View {
                         .clipShape(Circle())
                 })
                 
-                Text(vm.user.name)
+                Text(user.name)
                     .foregroundColor(.white)
                     .font(.title)
             }
@@ -204,7 +206,7 @@ fileprivate struct ProfileViewHeader: View {
             VStack {
                 Spacer()
                 HStack {
-                    UseAsArtistProfileButton()
+                    UseAsArtistProfileButton(user: user)
                         .environmentObject(vm)
                         .environmentObject(profileVM)
                     
@@ -212,7 +214,7 @@ fileprivate struct ProfileViewHeader: View {
                 }
             }.padding([.leading, .bottom])
             
-            if vm.user.artist != nil {
+            if user.artist != nil {
                 VStack {
                     Spacer()
                     HStack {
@@ -245,9 +247,11 @@ fileprivate struct UseAsArtistProfileButton: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
+    let user: User
     private let shadowColor = Color.black.opacity(0.4)
     private let shadowPosition: (x: CGFloat, y: CGFloat) = (x: 2, y: 2)
     private let shadowRadius: CGFloat = 3
+    
     
     var body: some View {
         Button(action: {
@@ -271,10 +275,10 @@ fileprivate struct UseAsArtistProfileButton: View {
         
         
         .onChange(of: profileVM.showArtistOwnerInfo, perform: { changed in
-            if changed && vm.user.artist == nil {
+            if changed && user.artist == nil {
                 vm.activeFullScreen = .createArtist
             } else
-            if !changed && vm.user.artist != nil {
+            if !changed && user.artist != nil {
                 /* Alert user if they turn off "Artist Profile" that all of their albums/songs including thier artist will be deleted from the service, and they'll have to re-upload everything if they want to turn it back on. i.e. no one will be able to listen to it anymore */
                 vm.alertItem = MyAlertItem(
                     title: Text("Are you sure?"),
@@ -304,15 +308,17 @@ fileprivate struct UseAsArtistProfileButton: View {
 
 
 struct ProfileView_Previews: PreviewProvider {
-    static let vm = MainViewModel()
-    static let pvm = ProfileViewModel()
-    
     static var previews: some View {
-        vm.user = dev.user
-        
-        return ProfileView()
-            .environmentObject(vm)
-            .environmentObject(pvm)
+        Group {
+            ProfileView(user: dev.user)
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.profileVM)
+            
+            ProfileView(user: dev.user)
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.profileVM)
+                .preferredColorScheme(.dark)
+        }
     }
 }
 

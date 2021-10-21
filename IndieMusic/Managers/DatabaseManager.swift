@@ -9,6 +9,21 @@ import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
+struct ContainerNames {
+    static var artists = "artists"
+    static var users = "users"
+    static var genres = "genres"
+    static var profilePictures = "profile_pictures"
+}
+
+struct SuffixNames {
+    static var mp3 = ".mp3"
+    static var photoPNG = "photo.png"
+    static var albumArtworkPNG = "album_artwork.png"
+    static var bioPicture = "bio_picture.png"
+}
+
+
 final class DatabaseManger {
     
     static let shared = DatabaseManger()
@@ -118,16 +133,17 @@ final class DatabaseManger {
     // MARK: Insert music to database
     
     /// Adds an artist to the Firestore database. Either overwriting the current artist with a new instance, or creating a new one.
-    public func insert(artist: Artist, completion: @escaping (Bool) -> Void) {
+    public func insert(artist: Artist, completion: @escaping (Bool, Error?) -> Void) {
         do {
             try database
                 .collection(ContainerNames.artists)
                 .document(artist.id.uuidString)
                 .setData(from: artist, merge: false) { error in
-                    completion(error == nil)
+                    completion(true, error)
                 }
         } catch let error {
             print("Error writing \"artist\" to Firestore: \(error.localizedDescription)")
+            completion(false, error)
         }
     }
     
@@ -376,8 +392,8 @@ final class DatabaseManger {
     
     public func addNewGenre(_ genre: String, completion: @escaping (Bool) -> Void) {
         database
-            .collection(ContainerNames.users)
-            .document("genres")
+            .collection(ContainerNames.genres)
+            .document(ContainerNames.genres)
             .updateData(["genre" : genre], completion: { error in
                 guard error == nil else  {
                     print("Error updating genres: \(error.debugDescription)")
@@ -393,7 +409,7 @@ final class DatabaseManger {
     public func fetchGenres(completion: @escaping ([String]?, Error?) -> Void) {
         database
             .collection(ContainerNames.genres)
-            .document("genres")
+            .document(ContainerNames.genres)
             .getDocument { snapshot, error in
                 guard error == nil else { return }
                 guard let genres: [String] = snapshot?.get("genre") as? [String] else {

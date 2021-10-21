@@ -15,7 +15,7 @@ class MainViewModel: ObservableObject {
         static let songCellImageSize: CGFloat = 30
     }
     
-    @Published var user: User = User()
+    @Published var user: User? = nil
     @Published var showSplash = true
     @Published var initProgress: CGFloat = 0.0
     @Published var initProgressText = "fetching..."
@@ -31,6 +31,9 @@ class MainViewModel: ObservableObject {
     @Published var notificationText = "Uploading..."
 
     
+    var isUserNil: Bool {
+        return user == nil
+    }
     
     
     func fetchBioImageFor(artist: Artist) -> UIImage {

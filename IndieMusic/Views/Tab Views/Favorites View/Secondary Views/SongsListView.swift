@@ -67,6 +67,16 @@ struct SongsListView_Previews: PreviewProvider {
             SongsListView(songs: nil, album: dev.albums.first!)
                 .environmentObject(dev.mainVM)
                 .environmentObject(dev.currentlyPlaingVM)
+            
+            SongsListView(songs: dev.songs, album: nil)
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.currentlyPlaingVM)
+                .preferredColorScheme(.dark)
+            
+            SongsListView(songs: nil, album: dev.albums.first!)
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.currentlyPlaingVM)
+                .preferredColorScheme(.dark)
         }
     }
 }
