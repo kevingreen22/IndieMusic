@@ -40,7 +40,7 @@ struct AlbumsView: View {
 
 struct AlbumsView_Previews: PreviewProvider {
     static var previews: some View {
-        AlbumsView(albums: MockData.Albums())
-            .environmentObject(MainViewModel())
+        AlbumsView(albums: dev.albums)
+            .environmentObject(dev.mainVM)
     }
 }

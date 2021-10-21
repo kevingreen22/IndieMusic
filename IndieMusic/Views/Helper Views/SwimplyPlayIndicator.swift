@@ -126,3 +126,5 @@ private struct LineView: Shape {
         return Path(roundedRect: lineRect, cornerRadius: cornerRadius)
     }
 }
+
+

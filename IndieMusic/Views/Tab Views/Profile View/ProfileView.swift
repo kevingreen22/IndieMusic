@@ -82,7 +82,7 @@ extension ProfileView {
                             Text(song.title)
                                 .font(.title3)
                             Text(song.albumTitle)
-                                .foregroundColor(.appSecondary)
+                                .foregroundColor(Color.theme.secondary)
                         }
                     }
                 }
@@ -151,7 +151,7 @@ extension ProfileView {
                 .font(.title)
                 .foregroundColor(.white)
                 .frame(width: 300, height: 55)
-                .background(Color.mainApp)
+                .background(Color.primary)
         }
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
@@ -166,7 +166,7 @@ fileprivate struct ProfileViewHeader: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .fill(Color.mainApp)
+                .fill(Color.primary)
                 .edgesIgnoringSafeArea(.top)
                 .frame(height: 260)
             
@@ -232,7 +232,7 @@ fileprivate struct ProfileViewHeader: View {
                                     isExpanded.toggle()
                                 }
                             })
-                        ], size: 50, color: .appSecondary, isExpanded: $isExpanded)
+                        ], size: 50, color: .theme.secondary, isExpanded: $isExpanded)
                     }
                 }.padding([.trailing, .bottom])
             }
@@ -260,7 +260,7 @@ fileprivate struct UseAsArtistProfileButton: View {
                 .rotationEffect(.degrees(profileVM.showArtistOwnerInfo ? 0 : 360))
         })
             .frame(width: 50, height: 50)
-            .background(Color.appSecondary)
+            .background(Color.theme.secondary)
             .cornerRadius(50 / 2)
             .shadow(
                 color: shadowColor,
@@ -308,7 +308,7 @@ struct ProfileView_Previews: PreviewProvider {
     static let pvm = ProfileViewModel()
     
     static var previews: some View {
-        vm.user = MockData.user
+        vm.user = dev.user
         
         return ProfileView()
             .environmentObject(vm)

@@ -341,8 +341,15 @@ fileprivate struct AlbumArtwork: View {
 
 struct CurrentlyPlayingFullScreenView_Previews: PreviewProvider {
     static var previews: some View {
-        CurrentlyPlayingFullScreen()
-            .environmentObject(MainViewModel())
-            .environmentObject(CurrentlyPlayingViewModel())
+        Group {
+            CurrentlyPlayingFullScreen()
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.currentlyPlaingVM)
+            
+            CurrentlyPlayingFullScreen()
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.currentlyPlaingVM)
+                .preferredColorScheme(.dark)
+        }
     }
 }

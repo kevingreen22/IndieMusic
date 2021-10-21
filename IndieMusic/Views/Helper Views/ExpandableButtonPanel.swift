@@ -91,10 +91,49 @@ struct ExpandableButtonPanel: View {
 
 struct ExpandableButtonPanel_Previews: PreviewProvider {
     static var previews: some View {
-        ExpandableButtonPanel(primaryItem: ExpandableButtonItem(label: nil, imageName: "plus", action: nil),
-                              secondaryItems: [
-                                ExpandableButtonItem(label: nil, imageName: "music.note", action: { print("Upload Song pressed") }),
-                                ExpandableButtonItem(label: nil, imageName: "rectangle.stack.fill.badge.plus", action: { print("Add album pressed") })
-                              ], size: 50, color: .green, isExpanded: .constant(false))
+        Group {
+            ExpandableButtonPanel(
+                primaryItem: ExpandableButtonItem(
+                    label: nil,
+                    imageName: "plus",
+                    action: nil),
+                secondaryItems: [
+                    ExpandableButtonItem(
+                        label: nil,
+                        imageName: "music.note",
+                        action: { print("Upload Song pressed") }),
+                    ExpandableButtonItem(
+                        label: nil,
+                        imageName: "rectangle.stack.fill.badge.plus",
+                        action: { print("Add album pressed") })
+                ],
+                size: 50,
+                color: .green,
+                isExpanded: .constant(false)
+            )
+                .previewLayout(.sizeThatFits)
+            
+            ExpandableButtonPanel(
+                primaryItem: ExpandableButtonItem(
+                    label: nil,
+                    imageName: "plus",
+                    action: nil),
+                secondaryItems: [
+                    ExpandableButtonItem(
+                        label: nil,
+                        imageName: "music.note",
+                        action: { print("Upload Song pressed") }),
+                    ExpandableButtonItem(
+                        label: nil,
+                        imageName: "rectangle.stack.fill.badge.plus",
+                        action: { print("Add album pressed") })
+                ],
+                size: 50,
+                color: .green,
+                isExpanded: .constant(false)
+            )
+                .preferredColorScheme(.dark)
+                .previewLayout(.sizeThatFits)
+        }
     }
 }

@@ -55,7 +55,7 @@ struct ForgotPasswordView: View {
                         .font(.title)
                         .foregroundColor(.white)
                         .frame(width: 300, height: 55)
-                        .background(Color.mainApp)
+                        .background(Color.primary)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding(.top)
@@ -69,7 +69,14 @@ struct ForgotPasswordView: View {
 
 struct ForgotPasswordView_Previews: PreviewProvider {
     static var previews: some View {
-        ForgotPasswordView()
-            .environmentObject(MainViewModel())
+        Group {
+            ForgotPasswordView()
+                .environmentObject(dev.mainVM)
+            
+            ForgotPasswordView()
+                .environmentObject(dev.mainVM)
+                .preferredColorScheme(.dark)
+            
+        }
     }
 }

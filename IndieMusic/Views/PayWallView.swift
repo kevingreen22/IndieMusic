@@ -127,7 +127,14 @@ struct PayWallView: View {
 
 struct PayWallView_Previews: PreviewProvider {
     static var previews: some View {
-        PayWallView()
-            .environmentObject(MainViewModel())
+        Group {
+            PayWallView()
+                .environmentObject(dev.mainVM)
+                .preferredColorScheme(.light)
+            
+            PayWallView()
+                .environmentObject(dev.mainVM)
+                .preferredColorScheme(.dark)
+        }
     }
 }

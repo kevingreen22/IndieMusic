@@ -87,30 +87,6 @@ fileprivate struct ProgressGlimmer: View {
 
 
 
-
-struct ProgressBarView_Previews: PreviewProvider {
-    static var previews: some View {
-        ZStack {
-            Color.blue.ignoresSafeArea()
-            VStack {
-                NonObstructiveNotificationView {
-                    ProgressBarView(progress: .constant(50), color: Color.mainApp)
-                }
-                
-                Spacer()
-            }
-        }
-    }
-}
-
-
-
-
-
-
-
-
-
 struct NonObstructiveNotificationView<Content: View>: View {
     let content: Content
     let width: CGFloat = 280
@@ -135,3 +111,32 @@ struct NonObstructiveNotificationView<Content: View>: View {
 
 
 
+
+struct ProgressBarView_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            ZStack {
+                Color.blue.ignoresSafeArea()
+                VStack {
+                    NonObstructiveNotificationView {
+                        ProgressBarView(progress: .constant(50), color: Color.primary)
+                    }
+                    
+                    Spacer()
+                }
+            }
+            
+            ZStack {
+                Color.blue.ignoresSafeArea()
+                VStack {
+                    NonObstructiveNotificationView {
+                        ProgressBarView(progress: .constant(50), color: Color.primary)
+                    }
+                    
+                    Spacer()
+                }
+            }
+            .preferredColorScheme(.dark)
+        }
+    }
+}

@@ -12,7 +12,7 @@ struct AnimatedSplashScreen: View {
     
     var body: some View {
         ZStack {
-            Color.mainApp
+            Color.primary
             
             VStack {
                 Spacer()
@@ -39,6 +39,12 @@ struct AnimatedSplashScreen: View {
 
 struct AnimatedSplashScreen_Preview: PreviewProvider {
     static var previews: some View {
-        AnimatedSplashScreen()
+        Group {
+            AnimatedSplashScreen()
+                .preferredColorScheme(.light)
+
+            AnimatedSplashScreen()
+                .preferredColorScheme(.dark)
+        }
     }
 }

@@ -151,7 +151,7 @@ extension ExploreView {
                     ArtistsView(artists: exploreVM.artists.sorted()).environmentObject(vm)
                 } label: {
                     Text("See All")
-                        .foregroundColor(.mainApp)
+                        .foregroundColor(.primary)
                         .padding(.trailing)
                 }
             }.padding(.bottom)
@@ -184,7 +184,7 @@ extension ExploreView {
                     AlbumsView(albums: exploreVM.albums.sorted()).environmentObject(vm)
                 } label: {
                     Text("See All")
-                        .foregroundColor(.mainApp)
+                        .foregroundColor(.primary)
                         .padding(.trailing)
                 }
             }.padding(.bottom)
@@ -216,7 +216,7 @@ extension ExploreView {
                     GenresListView(genres: exploreVM.genreOfAlbums)
                 } label: {
                     Text("See All")
-                        .foregroundColor(.mainApp)
+                        .foregroundColor(.primary)
                         .padding(.trailing)
                 }
             }.padding(.bottom)
@@ -249,7 +249,7 @@ extension ExploreView {
                     SongsListView(songs: exploreVM.songs, album: nil).environmentObject(vm)
                 } label: {
                     Text("See All")
-                        .foregroundColor(.mainApp)
+                        .foregroundColor(.primary)
                         .padding(.trailing)
                 }
             }.padding(.bottom)
@@ -280,16 +280,9 @@ struct GenreOfAlbumsIndexPreferenceKey: PreferenceKey {
 
 
 struct ExploreView_Previews: PreviewProvider {
-    static var evm = ExploreViewModel()
-    
     static var previews: some View {
-        evm.artists = MockData.data
-        evm.albums = MockData.Albums()
-        evm.songs = MockData.Songs()
-        evm.genreOfAlbums = MockData.GenresOfAlbums()
-        
-        return ExploreView()
-            .environmentObject(MainViewModel())
-            .environmentObject(evm)
+        ExploreView()
+            .environmentObject(dev.mainVM)
+            .environmentObject(dev.exploreVM)
     }
 }

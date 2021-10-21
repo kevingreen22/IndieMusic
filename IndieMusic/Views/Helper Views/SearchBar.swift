@@ -61,3 +61,17 @@ struct SearchBar: View {
         }
     }
 }
+
+
+struct SearchBar_Preview: PreviewProvider {
+    static var previews: some View {
+        Group {
+            SearchBar(text: .constant("Search"))
+                .previewLayout(.sizeThatFits)
+            
+            SearchBar(text: .constant("Search"))
+                .previewLayout(.sizeThatFits)
+                .preferredColorScheme(.dark)
+        }
+    }
+}

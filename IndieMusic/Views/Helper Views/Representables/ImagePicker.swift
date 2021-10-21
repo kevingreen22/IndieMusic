@@ -57,30 +57,3 @@ struct ImagePicker: UIViewControllerRepresentable {
     
 }
 
-
-//struct PickImageFromMenu<Model: ObservableObject>: View {
-//    let picking: PickingType
-//    let model: Model
-//    
-//    var body: some View {
-//        VStack {
-//            Button {
-//                model.activeSheet = .imagePicker(sourceType: .photoLibrary, picking: picking)
-//            } label: {
-//                Label("Images", systemImage: "photo")
-//            }
-//            
-//            Button {
-//                model.activeSheet = .imagePicker(sourceType: .camera, picking: picking)
-//            } label: {
-//                Label("Camera", systemImage: "camera.fill")
-//            }
-//            
-//            Button {
-//                model.activeSheet = .documentPicker(picking: picking)
-//            } label: {
-//                Label("Choose File", systemImage: "folder.fill")
-//            }
-//        }
-//    }
-//}

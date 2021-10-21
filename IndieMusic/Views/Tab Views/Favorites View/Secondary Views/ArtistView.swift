@@ -33,7 +33,7 @@ struct ArtistsView: View {
 
 struct ArtistView_Previews: PreviewProvider {
     static var previews: some View {
-        ArtistsView(artists: MockData.Artists())
-            .environmentObject(MainViewModel())
+        ArtistsView(artists: dev.artists)
+            .environmentObject(dev.mainVM)
     }
 }

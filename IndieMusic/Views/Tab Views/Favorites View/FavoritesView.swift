@@ -69,7 +69,7 @@ struct FavoritesView: View {
                     .font(.title)
                     .foregroundColor(.white)
                     .frame(width: 300, height: 55)
-                    .background(Color.mainApp)
+                    .background(Color.primary)
             }
             .clipShape(RoundedRectangle(cornerRadius: 10))
         }
@@ -87,6 +87,6 @@ struct FavoritesView: View {
 struct FavoritesView_Previews: PreviewProvider {
     static var previews: some View {
         FavoritesView()
-            .environmentObject(MainViewModel())
+            .environmentObject(dev.mainVM)
     }
 }

@@ -66,7 +66,7 @@ extension SignInView {
     var mainImage: some View {
         Image(systemName: "play.rectangle")
             .font(.system(size: 200))
-            .foregroundColor(.mainApp)
+            .foregroundColor(.primary)
             .shadow(radius: 5)
     }
     
@@ -119,7 +119,7 @@ extension SignInView {
                 .font(.title)
                 .foregroundColor(.white)
                 .frame(width: 300, height: 55)
-                .background(Color.mainApp)
+                .background(Color.primary)
         }
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .buttonStyle(ActivityIndicatorButtonStyle(start: signinVM.isSigningIn))
@@ -157,12 +157,14 @@ struct SignInView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             SignInView()
-                .environmentObject(MainViewModel())
-                .environmentObject(SigninViewModel())
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.signinVM)
+                .preferredColorScheme(.light)
+            
             SignInView()
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.signinVM)
                 .preferredColorScheme(.dark)
-                .environmentObject(MainViewModel())
-                .environmentObject(SigninViewModel())
         }
     }
 }

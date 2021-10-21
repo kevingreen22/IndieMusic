@@ -113,7 +113,7 @@ struct CreateArtistView: View {
                                 .font(.system(size: 25))
                                 .frame(width: 300, height: 50)
                                 .foregroundColor(.white)
-                                .background(Color.mainApp)
+                                .background(Color.primary)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                         })
                             .padding()

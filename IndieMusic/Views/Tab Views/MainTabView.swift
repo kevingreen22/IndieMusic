@@ -15,7 +15,7 @@ struct MainTabView: View {
     @EnvironmentObject var profileVM: ProfileViewModel
     
     init() {
-        UITabBar.appearance().backgroundColor = UIColor(Color.tabBarBackground)
+        UITabBar.appearance().backgroundColor = UIColor(Color.theme.tabBarBackground)
     }
     
     var body: some View {
@@ -55,7 +55,7 @@ struct MainTabView: View {
                     }.tag(3)
                 
             } // End TabView
-            .accentColor(.mainApp)
+            .accentColor(.primary)
             .transition(.move(edge: .bottom))
             .onChange(of: vm.selectedTab) { newValue in
                 if newValue == 2 && AuthManager.shared.isSignedIn == false {
@@ -73,7 +73,7 @@ struct MainTabView: View {
                 NonObstructiveNotificationView {
                     VStack(spacing: 3) {
                         Text(vm.notificationText)
-                        ProgressBarView(progress: $vm.uploadProgress, color: .mainApp)
+                        ProgressBarView(progress: $vm.uploadProgress, color: .primary)
                     }
                 }
                 .ignoresSafeArea()
@@ -193,8 +193,13 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             MainTabView()
-                .environmentObject(MainViewModel())
-                .environmentObject(CurrentlyPlayingViewModel())
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.currentlyPlaingVM)
+            
+            MainTabView()
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.currentlyPlaingVM)
+                .preferredColorScheme(.dark)
         }
     }
 }

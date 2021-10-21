@@ -59,7 +59,7 @@ struct NewCurrentlyPlayingView: View {
                                 .fill(Color.black.opacity(0.08))
                                 .frame(height: 3)
                             Capsule()
-                                .fill(Color.mainApp)
+                                .fill(Color.primary)
                                 .frame(width: cpVM.currentPlayTrackWidth, height: 3)
                         }
                         Spacer()
@@ -105,7 +105,7 @@ struct NewCurrentlyPlayingView: View {
                         
                     }
                     .frame(height: MainViewModel.Constants.currentlyPlayingMinimizedViewHeight)
-                    .background(Color.tabBarBackground.opacity(0.7))
+                    .background(Color.theme.tabBarBackground.opacity(0.7))
                     .clipShape(Capsule())
                     .padding(.horizontal)
                     .onTapGesture {

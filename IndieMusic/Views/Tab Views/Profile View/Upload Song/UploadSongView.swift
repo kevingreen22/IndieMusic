@@ -30,7 +30,7 @@ struct UploadSongView: View {
                         })
                         .frame(width: 200, height: 50)
                         .foregroundColor(.white)
-                        .background(Color.mainApp)
+                        .background(Color.primary)
                         .cornerRadius(8)
                         Spacer()
                     }
@@ -97,7 +97,7 @@ struct UploadSongView: View {
                                 .font(.system(size: 25))
                                 .frame(width: 300, height: 50)
                                 .foregroundColor(.white)
-                                .background(Color.mainApp)
+                                .background(Color.primary)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                         })
                             .padding()

@@ -25,15 +25,29 @@ struct LoaderView: View {
 
 struct LoaderView_Previews: PreviewProvider {
     static var previews: some View {
-        ZStack {
-            Color.green.ignoresSafeArea()
-            ScrollView {
-                Text("Scroll down").font(.largeTitle).bold()
-                Text("to see").font(.largeTitle).bold()
-                Text("the effect").font(.largeTitle).bold()
-                Text("in action.").font(.largeTitle).bold()
-            }.offset(y: 160)
-            LoaderView()
+        Group {
+            ZStack {
+                Color.green.ignoresSafeArea()
+                ScrollView {
+                    Text("Scroll down").font(.largeTitle).bold()
+                    Text("to see").font(.largeTitle).bold()
+                    Text("the effect").font(.largeTitle).bold()
+                    Text("in action.").font(.largeTitle).bold()
+                }.offset(y: 160)
+                LoaderView()
+            }
+            
+            ZStack {
+                Color.green.ignoresSafeArea()
+                ScrollView {
+                    Text("Scroll down").font(.largeTitle).bold()
+                    Text("to see").font(.largeTitle).bold()
+                    Text("the effect").font(.largeTitle).bold()
+                    Text("in action.").font(.largeTitle).bold()
+                }.offset(y: 160)
+                LoaderView()
+            }
+            .preferredColorScheme(.dark)
         }
     }
 }

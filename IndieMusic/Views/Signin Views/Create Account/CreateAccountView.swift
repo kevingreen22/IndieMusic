@@ -76,7 +76,7 @@ struct CreateAccountView: View {
                                 .font(.title)
                                 .foregroundColor(.white)
                                 .frame(width: 300, height: 55)
-                                .background(Color.mainApp)
+                                .background(Color.primary)
                         }
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .buttonStyle(ActivityIndicatorButtonStyle(start: createAccountVM.isSigningIn))
@@ -119,10 +119,11 @@ struct CreateAccountView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             CreateAccountView()
-                .environmentObject(MainViewModel())
+                .environmentObject(dev.mainVM)
+            
             CreateAccountView()
+                .environmentObject(dev.mainVM)
                 .preferredColorScheme(.dark)
-                .environmentObject(MainViewModel())
         }
     }
 }

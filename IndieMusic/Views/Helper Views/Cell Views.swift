@@ -22,7 +22,7 @@ struct FavoritesNavLinkCell: View {
                 .frame(width: imageWidth, height: imageHeight)
                 .aspectRatio(contentMode: .fit)
                 .cornerRadius(3)
-                .foregroundColor(.mainApp)
+                .foregroundColor(.primary)
             Text(label)
         }
     }
@@ -115,7 +115,7 @@ struct SongListCell: View {
                         ZStack {
                             if song == selectedSongCell {
                                 Color.black.opacity(0.7)
-                                SwimplyPlayIndicator(state: $cpVM.playState, color: .mainApp, style: .legacy)
+                                SwimplyPlayIndicator(state: $cpVM.playState, color: .primary, style: .legacy)
                                     .frame(width: constants.playIndicatorSize, height: constants.playIndicatorSize, alignment: .leading)
                             }
                         }
@@ -212,7 +212,7 @@ struct ExploreCellView: View {
                     
                 VStack {
                     Text(title)
-                        .foregroundColor(Color.mainApp)
+                        .foregroundColor(Color.primary)
                         .font((altText != nil) ? .title3 : .title)
                         .fontWeight(.semibold)
                         .truncationMode(.tail)
@@ -275,33 +275,66 @@ struct CellViews_Previews: PreviewProvider {
             FavoritesNavLinkCell(systemImageName: "photo", label: "Favorites Cell")
                 .previewLayout(.sizeThatFits)
             
+            FavoritesNavLinkCell(systemImageName: "photo", label: "Favorites Cell")
+                .previewLayout(.sizeThatFits)
+                .preferredColorScheme(.dark)
             
-            ArtistNavLinkCell(artist: MockData.Artists().first!)
-                .environmentObject(MainViewModel())
+            
+            ArtistNavLinkCell(artist: dev.artists.first!)
+                .environmentObject(dev.mainVM)
                 .previewLayout(.sizeThatFits)
             
+            ArtistNavLinkCell(artist: dev.artists.first!)
+                .environmentObject(dev.mainVM)
+                .previewLayout(.sizeThatFits)
+                .preferredColorScheme(.dark)
             
-            AlbumNavLinkCellView(album: MockData.Albums().first!)
-                .environmentObject(MainViewModel())
+            
+            AlbumNavLinkCellView(album: dev.albums.first!)
+                .environmentObject(dev.mainVM)
                 .frame(width: 200, height: 200, alignment: .center)
                 .previewLayout(.sizeThatFits)
             
-            
-            SongListCell(song: MockData.Songs().first!, selectedSongCell: .constant(MockData.Songs().first!))
-                .environmentObject(MainViewModel())
-                .environmentObject(CurrentlyPlayingViewModel())
+            AlbumNavLinkCellView(album: dev.albums.first!)
+                .environmentObject(dev.mainVM)
+                .frame(width: 200, height: 200, alignment: .center)
                 .previewLayout(.sizeThatFits)
+                .preferredColorScheme(.dark)
+            
+            
+            SongListCell(song: dev.songs.first!, selectedSongCell: .constant(dev.songs.first!))
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.currentlyPlaingVM)
+                .previewLayout(.sizeThatFits)
+            
+            SongListCell(song: dev.songs.first!, selectedSongCell: .constant(dev.songs.first!))
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.currentlyPlaingVM)
+                .previewLayout(.sizeThatFits)
+                .preferredColorScheme(.dark)
             
             
             ExploreCellView(imageName: "metal", title: "Metal", altText: nil)
                 .previewLayout(.sizeThatFits)
             
+            ExploreCellView(imageName: "metal", title: "Metal", altText: nil)
+                .previewLayout(.sizeThatFits)
+                .preferredColorScheme(.dark)
+            
             ExploreCellView(imageName: "metal", title: "Metal", altText: nil, layoutType: .list)
                 .previewLayout(.sizeThatFits)
+            
+            ExploreCellView(imageName: "metal", title: "Metal", altText: nil, layoutType: .list)
+                .previewLayout(.sizeThatFits)
+                .preferredColorScheme(.dark)
             
             
             FarvoriteHeartView(typeOfFavorite: nil, isFavorited: .constant(true))
                 .previewLayout(.sizeThatFits)
+            
+            FarvoriteHeartView(typeOfFavorite: nil, isFavorited: .constant(true))
+                .previewLayout(.sizeThatFits)
+                .preferredColorScheme(.dark)
         }
     }
 }

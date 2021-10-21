@@ -20,7 +20,7 @@ struct CurrentlyPlayingMinimizedView: View {
                     .fill(Color.black.opacity(0.08))
                     .frame(height: 3)
                 Capsule()
-                    .fill(Color.mainApp)
+                    .fill(Color.primary)
                     .frame(width: cpVM.currentPlayTrackWidth, height: 3)
             }
             Spacer()
@@ -66,7 +66,7 @@ struct CurrentlyPlayingMinimizedView: View {
         }
         .background(RealBlurView())
         .frame(height: MainViewModel.Constants.currentlyPlayingMinimizedViewHeight)
-        .background(Color.tabBarBackground.opacity(0.7))
+        .background(Color.theme.tabBarBackground.opacity(0.7))
         .clipShape(Capsule())
         .padding(.horizontal)
         
@@ -92,8 +92,15 @@ struct CurrentlyPlayingMinimizedView: View {
 
 struct CurrentlyPlayingView_Previews: PreviewProvider {
     static var previews: some View {
-        CurrentlyPlayingMinimizedView()
-            .environmentObject(CurrentlyPlayingViewModel())
+        Group {
+            CurrentlyPlayingMinimizedView()
+                .environmentObject(dev.currentlyPlaingVM)
+            
+            CurrentlyPlayingMinimizedView()
+                .environmentObject(dev.currentlyPlaingVM)
+                .preferredColorScheme(.dark)
+        }
+        
     }
 }
 

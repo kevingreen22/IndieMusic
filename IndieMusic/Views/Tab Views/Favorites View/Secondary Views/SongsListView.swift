@@ -60,13 +60,13 @@ struct SongsListView: View {
 struct SongsListView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SongsListView(songs: MockData.Songs(), album: nil)
-                .environmentObject(MainViewModel())
-                .environmentObject(CurrentlyPlayingViewModel())
+            SongsListView(songs: dev.songs, album: nil)
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.currentlyPlaingVM)
             
-            SongsListView(songs: nil, album: MockData.Albums().first!)
-                .environmentObject(MainViewModel())
-                .environmentObject(CurrentlyPlayingViewModel())
+            SongsListView(songs: nil, album: dev.albums.first!)
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.currentlyPlaingVM)
         }
     }
 }

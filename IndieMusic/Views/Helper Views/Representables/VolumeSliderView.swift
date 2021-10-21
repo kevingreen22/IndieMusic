@@ -20,12 +20,3 @@ struct VolumeSliderView: UIViewRepresentable {
 }
 
 
-
-struct VolumeSliderView_Previews: PreviewProvider {
-    static var previews: some View {
-        ZStack {
-            Color.green
-            VolumeSliderView()
-        }
-    }
-}
