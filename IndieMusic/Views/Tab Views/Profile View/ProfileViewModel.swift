@@ -16,6 +16,7 @@ class ProfileViewModel: ObservableObject {
     @Published var showArtistOwnerInfo: Bool = false
     @Published var showSettings = false
     @Published var showLoader = false
+    @Published var isExpanded = false
     @Published var selectedImage: UIImage? = nil
     @Published var artistBioImage: UIImage? = nil
     @Published var userProfileImageURL: URL? = nil {

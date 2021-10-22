@@ -63,7 +63,7 @@ struct ExploreCellView: View {
                     
                 VStack {
                     Text(title)
-                        .foregroundColor(Color.primary)
+                        .foregroundColor(Color.theme.primary)
                         .font((altText != nil) ? .title3 : .title)
                         .fontWeight(.semibold)
                         .truncationMode(.tail)

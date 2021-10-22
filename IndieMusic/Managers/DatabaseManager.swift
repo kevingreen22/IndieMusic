@@ -93,7 +93,7 @@ final class DatabaseManger {
                 switch result {
                 case .success(let user):
                     if let user = user {
-                        // A `Artist` value was successfully initialized from the DocumentSnapshot.
+                        // A `User` value was successfully initialized from the DocumentSnapshot.
                         print("Fetching User successful.")
                         _user = user
                     } else {
@@ -102,7 +102,7 @@ final class DatabaseManger {
                     }
                 case .failure(let error):
                     // A `User` value could not be initialized from the DocumentSnapshot.
-                    print("Error decoding artist: \(error)")
+                    print("Error decoding user: \(error)")
                 }
                 
                 completion(_user)

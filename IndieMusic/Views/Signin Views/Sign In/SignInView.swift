@@ -66,7 +66,7 @@ extension SignInView {
     var mainImage: some View {
         Image(systemName: "play.rectangle")
             .font(.system(size: 200))
-            .foregroundColor(.primary)
+            .foregroundColor(Color.theme.primary)
             .shadow(radius: 5)
     }
     
@@ -111,7 +111,7 @@ extension SignInView {
                     })
                 } else {
                     signinVM.isSigningIn.toggle()
-//                            vm.alertItem = MyErrorContext.signInFailed
+//                    vm.alertItem = MyErrorContext.signInFailed
                 }
             })
         } label: {
@@ -119,7 +119,7 @@ extension SignInView {
                 .font(.title)
                 .foregroundColor(.white)
                 .frame(width: 300, height: 55)
-                .background(Color.primary)
+                .background(Color.theme.primary)
         }
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .buttonStyle(ActivityIndicatorButtonStyle(start: signinVM.isSigningIn))

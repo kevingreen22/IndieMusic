@@ -55,7 +55,7 @@ struct MainTabView: View {
                     }.tag(3)
                 
             } // End TabView
-            .accentColor(.primary)
+            .accentColor(Color.theme.primary)
             .transition(.move(edge: .bottom))
             .onChange(of: vm.selectedTab) { newValue in
                 if newValue == 2 && AuthManager.shared.isSignedIn == false {
@@ -73,7 +73,7 @@ struct MainTabView: View {
                 NonObstructiveNotificationView {
                     VStack(spacing: 3) {
                         Text(vm.notificationText)
-                        ProgressBarView(progress: $vm.uploadProgress, color: .primary)
+                        ProgressBarView(progress: $vm.uploadProgress, color: Color.theme.primary)
                     }
                 }
                 .ignoresSafeArea()

@@ -76,17 +76,7 @@ struct CreateArtistView: View {
                                 .clipShape(Circle())
                                 .transition(.opacity)
                         })
-                        //                            Image(uiImage: createArtistVM.bioImage ?? UIImage(systemName: "person.circle")!)
-                        //                                .resizable()
-                        //                                .aspectRatio(contentMode: .fit)
-                        //                                .frame(height: 50)
-                        //                                .clipShape(Circle())
-                        //                                .transition(.opacity)
-                        //                                .onTapGesture {
-                        //                                    createArtistVM.showImagePicker.toggle()
-                        //                                }
                     }
-                    
                 } // End Form
                 
                 .navigationBarTitle(Text("Create Artist"), displayMode: .inline)
@@ -113,7 +103,7 @@ struct CreateArtistView: View {
                                 .font(.system(size: 25))
                                 .frame(width: 300, height: 50)
                                 .foregroundColor(.white)
-                                .background(Color.primary)
+                                .background(Color.theme.primary)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                         })
                             .padding()
@@ -138,7 +128,6 @@ struct CreateArtistView: View {
         }
         
     }
-    
 }
 
 
@@ -146,8 +135,15 @@ struct CreateArtistView: View {
 
 struct CreatArtistAlbumSongView_Previews: PreviewProvider {
     static var previews: some View {
-        CreateArtistView()
-            .environmentObject(MainViewModel())
-            .environmentObject(ProfileViewModel())
+        Group {
+            CreateArtistView()
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.profileVM)
+            
+            CreateArtistView()
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.profileVM)
+                .preferredColorScheme(.dark)
+        }
     }
 }

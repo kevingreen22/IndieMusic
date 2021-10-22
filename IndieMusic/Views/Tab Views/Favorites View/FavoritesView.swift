@@ -69,7 +69,7 @@ struct FavoritesView: View {
                     .font(.title)
                     .foregroundColor(.white)
                     .frame(width: 300, height: 55)
-                    .background(Color.primary)
+                    .background(Color.theme.primary)
             }
             .clipShape(RoundedRectangle(cornerRadius: 10))
         }

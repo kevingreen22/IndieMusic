@@ -22,7 +22,7 @@ struct FavoritesNavLinkCell: View {
                 .frame(width: imageWidth, height: imageHeight)
                 .aspectRatio(contentMode: .fit)
                 .cornerRadius(3)
-                .foregroundColor(.primary)
+                .foregroundColor(Color.theme.primary)
             Text(label)
         }
     }

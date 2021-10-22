@@ -20,7 +20,7 @@ struct CurrentlyPlayingMinimizedView: View {
                     .fill(Color.black.opacity(0.08))
                     .frame(height: 3)
                 Capsule()
-                    .fill(Color.primary)
+                    .fill(Color.theme.primary)
                     .frame(width: cpVM.currentPlayTrackWidth, height: 3)
             }
             Spacer()

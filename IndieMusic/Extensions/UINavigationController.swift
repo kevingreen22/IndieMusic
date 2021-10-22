@@ -21,7 +21,7 @@ extension UINavigationController {
         navigationBar.scrollEdgeAppearance = appearance
         navigationBar.topItem?.backButtonDisplayMode = .minimal
         navigationBar.tintColor = .black
-        navigationBar.barTintColor = UIColor(Color.primary)
+        navigationBar.barTintColor = UIColor(Color.theme.primary)
         
         let tableView = UITableView.appearance()
         tableView.backgroundColor = .systemBackground

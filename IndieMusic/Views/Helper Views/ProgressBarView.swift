@@ -119,7 +119,7 @@ struct ProgressBarView_Previews: PreviewProvider {
                 Color.blue.ignoresSafeArea()
                 VStack {
                     NonObstructiveNotificationView {
-                        ProgressBarView(progress: .constant(50), color: Color.primary)
+                        ProgressBarView(progress: .constant(50), color: Color.theme.primary)
                     }
                     
                     Spacer()
@@ -130,7 +130,7 @@ struct ProgressBarView_Previews: PreviewProvider {
                 Color.blue.ignoresSafeArea()
                 VStack {
                     NonObstructiveNotificationView {
-                        ProgressBarView(progress: .constant(50), color: Color.primary)
+                        ProgressBarView(progress: .constant(50), color: Color.theme.primary)
                     }
                     
                     Spacer()

@@ -27,7 +27,7 @@ struct SongListCell: View {
                         ZStack {
                             if song == selectedSongCell {
                                 Color.black.opacity(0.7)
-                                SwimplyPlayIndicator(state: $cpVM.playState, color: .primary, style: .legacy)
+                                SwimplyPlayIndicator(state: $cpVM.playState, color: Color.theme.primary, style: .legacy)
                                     .frame(width: constants.playIndicatorSize, height: constants.playIndicatorSize, alignment: .leading)
                             }
                         }
