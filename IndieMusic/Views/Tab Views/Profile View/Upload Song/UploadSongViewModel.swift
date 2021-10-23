@@ -45,7 +45,7 @@ class UploadSongViewModel: ObservableObject {
         // Generate URL for song path in Firebase Storage container
         print("Generating URL For song path in Firebase...")
         withAnimation { viewModel.notificationText = "GeneratingURL..." }
-        guard let songURL = URL(string: "\(ContainerNames.artists)/\(album.id)/\(songTitle)\(SuffixNames.mp3)") else {
+        guard let songURL = URL(string: "\(FirebaseCollection.artists)/\(album.id)/\(songTitle)\(SuffixNames.mp3)") else {
             print("Problem creating song url path/id's")
             withAnimation { viewModel.showNotification.toggle() }
             DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {

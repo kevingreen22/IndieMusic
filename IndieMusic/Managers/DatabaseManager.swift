@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-struct ContainerNames {
+struct FirebaseCollection {
     static var artists = "artists"
     static var users = "users"
     static var genres = "genres"
@@ -43,7 +43,7 @@ final class DatabaseManger {
         let documentID = user.email.underscoredDotAt()
         do {
             try database
-                .collection(ContainerNames.users)
+                .collection(FirebaseCollection.users)
                 .document(documentID)
                 .setData(from: user) { error in
                     completion(error == nil)
@@ -60,7 +60,7 @@ final class DatabaseManger {
 
         do {
             try database
-                .collection(ContainerNames.users)
+                .collection(FirebaseCollection.users)
                 .document(documentID)
                 .setData(from: user) { error in
                     if let error = error {
@@ -77,11 +77,12 @@ final class DatabaseManger {
     }
 
     
+    /// Fetches a User by their email from the database.
     public func fetchUser(email: String, completion: @escaping (User?) -> Void) {
         let documentID = email.underscoredDotAt()
         var _user: User?
         database
-            .collection(ContainerNames.users)
+            .collection(FirebaseCollection.users)
             .document(documentID)
             .getDocument { snapshot, error in
                 guard error == nil else {
@@ -110,11 +111,11 @@ final class DatabaseManger {
     }
     
     
-    /// Removes a user from the database.
+    /// Removes/deletes a user from the database.
     public func delete(user: User, completion: @escaping (Bool) -> Void) {
         let documentID = user.email.underscoredDotAt()
         database
-            .collection(ContainerNames.users)
+            .collection(FirebaseCollection.users)
             .document(documentID)
             .delete() { error in
                 if let error = error {
@@ -130,13 +131,13 @@ final class DatabaseManger {
     
     
     
-    // MARK: Insert music to database
+    // MARK: Insert music to database methods.
     
     /// Adds an artist to the Firestore database. Either overwriting the current artist with a new instance, or creating a new one.
     public func insert(artist: Artist, completion: @escaping (Bool, Error?) -> Void) {
         do {
             try database
-                .collection(ContainerNames.artists)
+                .collection(FirebaseCollection.artists)
                 .document(artist.id.uuidString)
                 .setData(from: artist, merge: false) { error in
                     completion(true, error)
@@ -147,10 +148,10 @@ final class DatabaseManger {
         }
     }
     
-    
+    /// Checks the Firestore database if an Artist already exists with the given name.
     public func checkForExistingArtist(name: String, completion: @escaping (Bool, Error?) -> Void) {
         database
-            .collection(ContainerNames.artists)
+            .collection(FirebaseCollection.artists)
             .whereField("name", isEqualTo: name)
             .getDocuments { snapshot, error in
                 guard error == nil else {
@@ -164,57 +165,17 @@ final class DatabaseManger {
     }
     
     
-    /// Adds album(s) to the artist within the Firestore database.
-//    public func insert(album: Album, for artist: Artist, completion: @escaping (Error?) -> Void) {
-//        database
-//            .collection(ContainerNames.artists)
-//            .document(artist.id)
-//            .updateData([
-//                "albums" : FieldValue.arrayUnion([album])
-//            ]) { error in
-//                guard error != nil else {
-//                    completion(nil)
-//                    return
-//                }
-//                print("Error writing \"album\" to artist within Firestore: \(error!.localizedDescription))")
-//                completion(error)
-//            }
-//    }
-    
-    
-    /// Adds song(s) to an artist's album within the Firestore database.
-//    public func insert(song: Song, completion: @escaping (Error?) -> Void) {
-//            database
-//                .collection(ContainerNames.artists)
-//                .document(song.artistID)
-//                .updateData([
-//                    "albums" : [
-//                        "songs" : FieldValue.arrayUnion([song])
-//                    ]
-//                ]) { error in
-//                    guard error != nil else {
-//                        completion(nil)
-//                        return
-//                    }
-//                    print("Error writing \"song\" to Firestore: \(error!.localizedDescription))")
-//                    completion(error)
-//                }
-//    }
     
     
     
-    
-    
-    
-    
-    
-    // MARK: Get music from database
+    // MARK: Get music from database methods.
     
     /// Gets all artists.
     public func fetchAllArtists(completion: @escaping ([Artist]) -> Void) {
         var _artists: [Artist] = []
         database
-            .collection(ContainerNames.artists)
+            .collection(FirebaseCollection.artists)
+            .whereField("name", isNotEqualTo: "")
             .getDocuments { snapshot, error in
 //                guard let documents = snapshot?.documents.compactMap({ $0.data() }), error == nil else { return }
 //                let artists: [Artist] = documents.compactMap({
@@ -226,8 +187,8 @@ final class DatabaseManger {
 //                })
 //                print("retrieved artists: \(artists)")
                 
-                guard error == nil else { return }
-                for document in snapshot!.documents {
+                guard let documents = snapshot?.documents, error == nil else { return }
+                for document in documents {
                     let result = Result {
                         try document.data(as: Artist.self)
                     }
@@ -255,7 +216,7 @@ final class DatabaseManger {
     public func fetchArtist(with id: String, completion: @escaping (Artist?) -> Void) {
         var _artist: Artist?
         database
-            .collection(ContainerNames.artists)
+            .collection(FirebaseCollection.artists)
             .document(id)
             .getDocument { snapshot, error in
                 guard error == nil else { return }
@@ -281,12 +242,28 @@ final class DatabaseManger {
             }
     }
     
+    /// Deletes an Artist/Albums/Songs from the database.
+    public func delete(artist: Artist, completion: @escaping (Bool, Error?) -> Void) {
+        let documentID = artist.id.uuidString
+        database
+            .collection(FirebaseCollection.artists)
+            .document(documentID)
+            .delete { error in
+                if let error = error {
+                    print("Error deleting Artist from Firestore DB: \(error)")
+                    completion(false, error)
+                } else  {
+                    print("Artist successfully deleted from Firebase DB.")
+                    completion(true, nil)
+                }
+            }
+    }
+    
     
     
     /// Gets all albums
     public func fetchAllAlbums(completion: @escaping ([Album]) -> Void) {
         var _albums: [Album] = []
-        
         fetchAllArtists { artists in
             for artist in artists {
                 for album in artist.albums {
@@ -297,7 +274,7 @@ final class DatabaseManger {
         }
     }
     
-    /// Gets all albums, for an artist.
+    /// Gets all albums, for a specific artist.
     public func fetchAlbumsFor(artistID id: String, completion: @escaping ([Album]?) -> Void) {
         fetchArtist(with: id) { artist in
             guard let artist = artist else { completion(nil); return }
@@ -305,8 +282,8 @@ final class DatabaseManger {
         }
     }
     
-    /// Fetches one album that matches the given ID if it exists
-    public func fetchAlbumWith(id: String, artistID: String, completion: @escaping (Album?) -> Void) {
+    /// Fetches one album that matches the given ID, if it exists.
+    public func fetchAlbum(with id: String, artistID: String, completion: @escaping (Album?) -> Void) {
         fetchArtist(with: artistID) { artist in
             guard let artist = artist else { completion(nil); return }
             for album in artist.albums {
@@ -320,10 +297,10 @@ final class DatabaseManger {
     
     
     
+    
     /// Fetches all songs.
     public func fetchAllSongs(completion: @escaping ([Song]) -> Void) {
         var _songs: [Song] = []
-        
         fetchAllArtists { artists in
             for artist in artists {
                 for album in artist.albums {
@@ -336,15 +313,15 @@ final class DatabaseManger {
     
     /// Fetches all songs for an album.
     public func fetchSongsFor(albumID id: String, artistID: String, completion: @escaping ([Song]?) -> Void) {
-        fetchAlbumWith(id: id, artistID: artistID) { album in
+        fetchAlbum(with: id, artistID: artistID) { album in
             guard let album = album else { completion(nil); return }
             completion(album.songs)
         }
     }
     
-    /// Fetches one song that matches the given ID if it exists.
+    /// Fetches one song that matches the given ID, if it exists.
     public func fetchSong(with id: String, albumID: String, artistID: String, completion: @escaping (Song?) -> Void) {
-        fetchAlbumWith(id: albumID, artistID: artistID) { album in
+        fetchAlbum(with: albumID, artistID: artistID) { album in
             guard let album = album else { completion(nil); return }
             for song in album.songs {
                 if song.id.uuidString == id {
@@ -360,40 +337,15 @@ final class DatabaseManger {
     
     
     
-    // MARK: Delete music from database
-    public func delete(artist: Artist, completion: @escaping (Bool, Error?) -> Void) {
-        let documentID = artist.id.uuidString
-        
-        database
-            .collection(ContainerNames.artists)
-            .document(documentID)
-            .delete { error in
-                if let error = error {
-                    print("Error deleting Artist from Firestore DB: \(error)")
-                    completion(false, error)
-                } else  {
-                    print("Artist successfully deleted from Firebase DB.")
-                    completion(true, nil)
-                }
-            }
-    }
     
     
+    // MARK: Genre Methods.
     
-    
-    
-    
-    
-    
-    
-    
-    
-    // MARK: Add new genre to database
-    
+    /// Adds a new Genre to the database.
     public func addNewGenre(_ genre: String, completion: @escaping (Bool) -> Void) {
         database
-            .collection(ContainerNames.genres)
-            .document(ContainerNames.genres)
+            .collection(FirebaseCollection.genres)
+            .document(FirebaseCollection.genres)
             .updateData(["genre" : genre], completion: { error in
                 guard error == nil else  {
                     print("Error updating genres: \(error.debugDescription)")
@@ -405,11 +357,11 @@ final class DatabaseManger {
             })
     }
     
-    
+    /// Fetches all the Genres from the database.
     public func fetchGenres(completion: @escaping ([String]?, Error?) -> Void) {
         database
-            .collection(ContainerNames.genres)
-            .document(ContainerNames.genres)
+            .collection(FirebaseCollection.genres)
+            .document(FirebaseCollection.genres)
             .getDocument { snapshot, error in
                 guard error == nil else { return }
                 guard let genres: [String] = snapshot?.get("genre") as? [String] else {

@@ -43,7 +43,7 @@ class ProfileViewModel: ObservableObject {
     // Updates user profile picture in Firebase storage, then updates the User in Firebase DB.
     func updateUsersProfilePicture(user: User) {
         guard let image = selectedImage else { return }
-        let profilePictureURL = URL(string: "\(ContainerNames.profilePictures)/\(user.email.underscoredDotAt())/\(SuffixNames.photoPNG)")
+        let profilePictureURL = URL(string: "\(FirebaseCollection.profilePictures)/\(user.email.underscoredDotAt())/\(SuffixNames.photoPNG)")
         user.profilePictureURL = profilePictureURL
         
         // save image to storage

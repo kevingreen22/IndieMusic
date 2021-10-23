@@ -29,12 +29,12 @@ struct ExploreView: View {
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack {
-//                if #available(iOS 15, *) {
-//                    Text(vm.searchText)
-//                        .searchable(text: $exploreVM.searchText, prompt: "Search and explore!")
-//                } else {
+                if #available(iOS 15, *) {
+                    Text(vm.searchText)
+                        .searchable(text: $exploreVM.searchText, prompt: "Search and explore!")
+                } else {
                     SearchBar(text: $exploreVM.searchText)
-//                }
+                }
                 
                 
                 // ARTISTS

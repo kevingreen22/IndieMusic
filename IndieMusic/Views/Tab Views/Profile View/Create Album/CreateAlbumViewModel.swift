@@ -47,7 +47,7 @@ class CreateAlbumViewModel: ObservableObject {
         let id = UUID()
         var artworkURL: URL? = nil
         if selectedImage != nil {
-            artworkURL = URL(string: "\(ContainerNames.artists)/\(artist.id.uuidString)/\(id)/\(SuffixNames.albumArtworkPNG)")
+            artworkURL = URL(string: "\(FirebaseCollection.artists)/\(artist.id.uuidString)/\(id)/\(SuffixNames.albumArtworkPNG)")
         }
         let album = Album(id: id, title: albumName, artistName: artist.name, artistID: artist.id.uuidString, artworkURL: artworkURL, songs: [], year: String(year), genre: genre)
         

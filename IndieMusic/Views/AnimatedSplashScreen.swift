@@ -8,11 +8,10 @@
 import SwiftUI
 import FLAnimatedImage
 
-// Record player icon is from "https://www.flaticon.com/authors/surang"
+// gif source: https://sentimentsbysingh.com
 
 struct AnimatedSplashScreen: View {
     @EnvironmentObject var vm: MainViewModel
-    @State private var startAnimation = false
     
     var body: some View {
         ZStack {
@@ -22,11 +21,18 @@ struct AnimatedSplashScreen: View {
                 Spacer()
                 
                 GifView(fileName: "record_player")
+                    .frame(width: 260, height: 260)
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            vm.showSplash = false
+                        }
+                    }
                 
                 Spacer()
             }
             
         }
+        
     }
 }
 

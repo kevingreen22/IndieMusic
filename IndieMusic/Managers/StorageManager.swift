@@ -33,7 +33,7 @@ final class StorageManager {
         let metadata = StorageMetadata()
         metadata.contentType = "audio/mp3"
 
-        let ref = container.reference().child("\(ContainerNames.artists)/\(song.artistID)/\(song.albumID)/\(song.title)\(SuffixNames.mp3)")
+        let ref = container.reference().child("\(FirebaseCollection.artists)/\(song.artistID)/\(song.albumID)/\(song.title)\(SuffixNames.mp3)")
         
 //        let task = ref.putFile(from: localFilePath, metadata: metadata)
         let task = ref.putData(file, metadata: metadata)
@@ -97,7 +97,7 @@ final class StorageManager {
     
     
     public func delete(song: Song, completion: @escaping (Error?) -> Void) {
-        let path = "\(ContainerNames.artists)/\(song.artistID)/\(song.albumID)/\(song.id)\(SuffixNames.mp3)"
+        let path = "\(FirebaseCollection.artists)/\(song.artistID)/\(song.albumID)/\(song.id)\(SuffixNames.mp3)"
         container
             .reference(withPath: path)
             .delete { error in
@@ -133,7 +133,7 @@ final class StorageManager {
     
     
     public func downloadAlbumArtworkFor(albumID: String, artistID: String, completion: @escaping (UIImage?) -> Void) {
-        let path = "\(ContainerNames.artists)/\(artistID)/\(albumID)/\(SuffixNames.albumArtworkPNG)"
+        let path = "\(FirebaseCollection.artists)/\(artistID)/\(albumID)/\(SuffixNames.albumArtworkPNG)"
         
         container
             .reference(withPath: path)
@@ -167,7 +167,7 @@ final class StorageManager {
         
     
     public func deleteAlbumArtwork(_ album: Album, completion: @escaping (Error?) -> Void) {
-        let path = "\(ContainerNames.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG)"
+        let path = "\(FirebaseCollection.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG)"
         
         container
             .reference(withPath: path)

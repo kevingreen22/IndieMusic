@@ -52,7 +52,7 @@ class CreateArtistViewModel: ObservableObject {
         let ownerArtist = Artist(id: UUID(), name: artistName, genre: genre, imageURL: nil, albums: [])
         
         if bioImage != nil {
-            let imageURL = URL(string: "\(ContainerNames.artists)/\(ownerArtist.id.uuidString)/\(SuffixNames.bioPicture)")
+            let imageURL = URL(string: "\(FirebaseCollection.artists)/\(ownerArtist.id.uuidString)/\(SuffixNames.bioPicture)")
             ownerArtist.imageURL = imageURL
         }
         

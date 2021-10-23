@@ -146,7 +146,7 @@ class CurrentlyPlayingViewModel: ObservableObject {
     
     /// Prepares song info for playing song.
     fileprivate func prepareInfoForSong() {
-        DatabaseManger.shared.fetchAlbumWith(id: self.song.albumID, artistID: self.song.artistID) { album in
+        DatabaseManger.shared.fetchAlbum(with: self.song.albumID, artistID: self.song.artistID) { album in
             guard let album = album else { return }
             self.album = album
             
