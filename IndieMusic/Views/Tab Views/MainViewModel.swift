@@ -31,11 +31,6 @@ class MainViewModel: ObservableObject {
     @Published var notificationText = "Uploading..."
 
     
-    var isUserNil: Bool {
-        return user == nil
-    }
-    
-    
     func fetchBioImageFor(artist: Artist) -> UIImage {
         var bioImage = UIImage.bioPlaceholder
         StorageManager.shared.downloadArtistBioImage(artist: artist) { image in

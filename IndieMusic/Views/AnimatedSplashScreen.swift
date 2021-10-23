@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import FLAnimatedImage
+
+// Record player icon is from "https://www.flaticon.com/authors/surang"
 
 struct AnimatedSplashScreen: View {
     @EnvironmentObject var vm: MainViewModel
+    @State private var startAnimation = false
     
     var body: some View {
         ZStack {
@@ -17,25 +21,18 @@ struct AnimatedSplashScreen: View {
             VStack {
                 Spacer()
                 
-                Text("Indie Music")
-                    .foregroundColor(.white)
-                    .fontWeight(.semibold)
-                    .scaleEffect(3)
-                    .animation(.easeInOut.repeatForever())
+                GifView(fileName: "record_player")
                 
                 Spacer()
             }
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    withAnimation() {
-                        vm.showSplash = false
-                    }
-                }
-            }
+            
         }
     }
-    
 }
+
+
+
+
 
 struct AnimatedSplashScreen_Preview: PreviewProvider {
     static var previews: some View {

@@ -234,8 +234,8 @@ final class DatabaseManger {
                     switch result {
                     case .success(let artist):
                         if let artist = artist {
-                            // A `Artist` value was successfully initialized from the DocumentSnapshot.
-                            print("Artist: \(artist)")
+                            // A `Artist` value was successfully initialized/retrieved from the DocumentSnapshot.
+                            print("Artist successfully retrieved: \(artist.name)")
                             _artists.append(artist)
                         } else {
                             // A nil value was successfully initialized from the DocumentSnapshot, or the DocumentSnapshot was nil.

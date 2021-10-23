@@ -193,11 +193,11 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             MainTabView()
-                .environmentObject(dev.mainVM)
+                .environmentObject(MainViewModel())
                 .environmentObject(dev.currentlyPlaingVM)
             
             MainTabView()
-                .environmentObject(dev.mainVM)
+                .environmentObject(MainViewModel())
                 .environmentObject(dev.currentlyPlaingVM)
                 .preferredColorScheme(.dark)
         }

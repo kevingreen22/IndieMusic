@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct FavoritesNavLinkCell: View {
-    @EnvironmentObject var vm: MainViewModel
     @State private var isFavorited: Bool = false
     let systemImageName: String
     let label: String
@@ -24,6 +23,7 @@ struct FavoritesNavLinkCell: View {
                 .cornerRadius(3)
                 .foregroundColor(Color.theme.primary)
             Text(label)
+                .fontWeight(.semibold)
         }
     }
 }

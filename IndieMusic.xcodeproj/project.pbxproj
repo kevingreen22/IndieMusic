@@ -7,11 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		03A99B53A8B48B237B1A735A /* Pods_IndieMusicTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93B76CFEC2AE606DAF135E25 /* Pods_IndieMusicTests.framework */; };
 		5A479E4E26673C7F2DC66287 /* Pods_IndieMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 171274AC31AF0159F48D2D46 /* Pods_IndieMusic.framework */; };
-		9B843EF42C9C8329C8F5900B /* Pods_IndieMusic_IndieMusicUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52EC076D28F0B3A745FB63B0 /* Pods_IndieMusic_IndieMusicUITests.framework */; };
+		74E641A67AFA2F8209D40500 /* Pods_IndieMusic_IndieMusicUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A3CD9F9889D02BCBEA2866A /* Pods_IndieMusic_IndieMusicUITests.framework */; };
 		C72FF35926B11A6A00F3ABC1 /* MyAlertItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72FF35826B11A6A00F3ABC1 /* MyAlertItem.swift */; };
 		C72FF36226B33CD300F3ABC1 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72FF36126B33CD300F3ABC1 /* ProfileViewModel.swift */; };
 		C72FF36426B472DF00F3ABC1 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72FF36326B472DF00F3ABC1 /* ImagePicker.swift */; };
+		C73722FA2723707F0077A32E /* GifView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73722F92723707F0077A32E /* GifView.swift */; };
+		C73722FC272387B50077A32E /* record_player.gif in Resources */ = {isa = PBXBuildFile; fileRef = C73722FB272387B50077A32E /* record_player.gif */; };
 		C74264BF26A1F4AF0075C8E0 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74264BE26A1F4AF0075C8E0 /* IAPManager.swift */; };
 		C74264C126A1F4E60075C8E0 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74264C026A1F4E60075C8E0 /* DatabaseManager.swift */; };
 		C74264C326A1F5100075C8E0 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74264C226A1F5100075C8E0 /* AuthManager.swift */; };
@@ -87,7 +90,6 @@
 		C7D64ADD26BAE696001ACB12 /* CreateAccountVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D64ADC26BAE696001ACB12 /* CreateAccountVM.swift */; };
 		C7D64B0426BDFB10001ACB12 /* UploadSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D64B0326BDFB10001ACB12 /* UploadSongView.swift */; };
 		C7FDA5732718EE2E007B5973 /* RealBlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7FDA5722718EE2E007B5973 /* RealBlurView.swift */; };
-		CBE43A1B9494B3ECA3198171 /* Pods_IndieMusicTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C900F38D54D7F5B639815B03 /* Pods_IndieMusicTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -123,14 +125,18 @@
 
 /* Begin PBXFileReference section */
 		171274AC31AF0159F48D2D46 /* Pods_IndieMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IndieMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2765BCB4FA4C271CEFEE6702 /* Pods-IndieMusic-IndieMusicUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IndieMusic-IndieMusicUITests.debug.xcconfig"; path = "Target Support Files/Pods-IndieMusic-IndieMusicUITests/Pods-IndieMusic-IndieMusicUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		228E7BAED6440E16E6808023 /* Pods-IndieMusic-IndieMusicUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IndieMusic-IndieMusicUITests.debug.xcconfig"; path = "Target Support Files/Pods-IndieMusic-IndieMusicUITests/Pods-IndieMusic-IndieMusicUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		4395AEE87D7A0A81934C2167 /* Pods-IndieMusic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IndieMusic.debug.xcconfig"; path = "Target Support Files/Pods-IndieMusic/Pods-IndieMusic.debug.xcconfig"; sourceTree = "<group>"; };
-		52EC076D28F0B3A745FB63B0 /* Pods_IndieMusic_IndieMusicUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IndieMusic_IndieMusicUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		59D860F0E17A9F38F2A72EB8 /* Pods-IndieMusic-IndieMusicUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IndieMusic-IndieMusicUITests.release.xcconfig"; path = "Target Support Files/Pods-IndieMusic-IndieMusicUITests/Pods-IndieMusic-IndieMusicUITests.release.xcconfig"; sourceTree = "<group>"; };
-		8B707E26F461156C159BD575 /* Pods-IndieMusicTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IndieMusicTests.release.xcconfig"; path = "Target Support Files/Pods-IndieMusicTests/Pods-IndieMusicTests.release.xcconfig"; sourceTree = "<group>"; };
+		5A3CD9F9889D02BCBEA2866A /* Pods_IndieMusic_IndieMusicUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IndieMusic_IndieMusicUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7D2D0BE2A7594CC62008A768 /* Pods-IndieMusic-IndieMusicUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IndieMusic-IndieMusicUITests.release.xcconfig"; path = "Target Support Files/Pods-IndieMusic-IndieMusicUITests/Pods-IndieMusic-IndieMusicUITests.release.xcconfig"; sourceTree = "<group>"; };
+		826B1FA08E7363F364F071C6 /* Pods-IndieMusicTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IndieMusicTests.debug.xcconfig"; path = "Target Support Files/Pods-IndieMusicTests/Pods-IndieMusicTests.debug.xcconfig"; sourceTree = "<group>"; };
+		9272856C7FC00888DC7A9AF8 /* Pods-IndieMusicTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IndieMusicTests.release.xcconfig"; path = "Target Support Files/Pods-IndieMusicTests/Pods-IndieMusicTests.release.xcconfig"; sourceTree = "<group>"; };
+		93B76CFEC2AE606DAF135E25 /* Pods_IndieMusicTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IndieMusicTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C72FF35826B11A6A00F3ABC1 /* MyAlertItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAlertItem.swift; sourceTree = "<group>"; };
 		C72FF36126B33CD300F3ABC1 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		C72FF36326B472DF00F3ABC1 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		C73722F92723707F0077A32E /* GifView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifView.swift; sourceTree = "<group>"; };
+		C73722FB272387B50077A32E /* record_player.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = record_player.gif; sourceTree = "<group>"; };
 		C74264BE26A1F4AF0075C8E0 /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
 		C74264C026A1F4E60075C8E0 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		C74264C226A1F5100075C8E0 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
@@ -212,8 +218,6 @@
 		C7D64ADC26BAE696001ACB12 /* CreateAccountVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountVM.swift; sourceTree = "<group>"; };
 		C7D64B0326BDFB10001ACB12 /* UploadSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadSongView.swift; sourceTree = "<group>"; };
 		C7FDA5722718EE2E007B5973 /* RealBlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealBlurView.swift; sourceTree = "<group>"; };
-		C900F38D54D7F5B639815B03 /* Pods_IndieMusicTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IndieMusicTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D077E4E6316CF3AA815DDCA7 /* Pods-IndieMusicTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IndieMusicTests.debug.xcconfig"; path = "Target Support Files/Pods-IndieMusicTests/Pods-IndieMusicTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D5C68E754FD93C6122E4689E /* Pods-IndieMusic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IndieMusic.release.xcconfig"; path = "Target Support Files/Pods-IndieMusic/Pods-IndieMusic.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -232,7 +236,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CBE43A1B9494B3ECA3198171 /* Pods_IndieMusicTests.framework in Frameworks */,
+				03A99B53A8B48B237B1A735A /* Pods_IndieMusicTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,7 +244,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B843EF42C9C8329C8F5900B /* Pods_IndieMusic_IndieMusicUITests.framework in Frameworks */,
+				74E641A67AFA2F8209D40500 /* Pods_IndieMusic_IndieMusicUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,6 +281,7 @@
 			children = (
 				C785E20926CED3B600CFA4AD /* GoogleService-Info.plist */,
 				C787DC8F26A8B7C4005BC46E /* brokeneck_erection.mp3 */,
+				C73722FB272387B50077A32E /* record_player.gif */,
 				C7AE89ED2696638300B738C6 /* Assets.xcassets */,
 				C77F46E526F05F9D00059260 /* Colors.xcassets */,
 			);
@@ -322,8 +327,8 @@
 				C77F476F26FC02B100059260 /* RQPermissions.framework */,
 				C74264C726A1F59A0075C8E0 /* StoreKit.framework */,
 				171274AC31AF0159F48D2D46 /* Pods_IndieMusic.framework */,
-				52EC076D28F0B3A745FB63B0 /* Pods_IndieMusic_IndieMusicUITests.framework */,
-				C900F38D54D7F5B639815B03 /* Pods_IndieMusicTests.framework */,
+				5A3CD9F9889D02BCBEA2866A /* Pods_IndieMusic_IndieMusicUITests.framework */,
+				93B76CFEC2AE606DAF135E25 /* Pods_IndieMusicTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -390,6 +395,7 @@
 				C7FDA5722718EE2E007B5973 /* RealBlurView.swift */,
 				C7AE8A2A26A0AB3D00B738C6 /* AirplayList.swift */,
 				C787DC9126A8C838005BC46E /* VolumeSliderView.swift */,
+				C73722F92723707F0077A32E /* GifView.swift */,
 			);
 			path = Representables;
 			sourceTree = "<group>";
@@ -570,10 +576,10 @@
 			children = (
 				4395AEE87D7A0A81934C2167 /* Pods-IndieMusic.debug.xcconfig */,
 				D5C68E754FD93C6122E4689E /* Pods-IndieMusic.release.xcconfig */,
-				2765BCB4FA4C271CEFEE6702 /* Pods-IndieMusic-IndieMusicUITests.debug.xcconfig */,
-				59D860F0E17A9F38F2A72EB8 /* Pods-IndieMusic-IndieMusicUITests.release.xcconfig */,
-				D077E4E6316CF3AA815DDCA7 /* Pods-IndieMusicTests.debug.xcconfig */,
-				8B707E26F461156C159BD575 /* Pods-IndieMusicTests.release.xcconfig */,
+				228E7BAED6440E16E6808023 /* Pods-IndieMusic-IndieMusicUITests.debug.xcconfig */,
+				7D2D0BE2A7594CC62008A768 /* Pods-IndieMusic-IndieMusicUITests.release.xcconfig */,
+				826B1FA08E7363F364F071C6 /* Pods-IndieMusicTests.debug.xcconfig */,
+				9272856C7FC00888DC7A9AF8 /* Pods-IndieMusicTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -605,7 +611,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C7AE8A0E2696638300B738C6 /* Build configuration list for PBXNativeTarget "IndieMusicTests" */;
 			buildPhases = (
-				0ABEF84892E38FCE78D92923 /* [CP] Check Pods Manifest.lock */,
+				55BB765B1B5515CE00C1B209 /* [CP] Check Pods Manifest.lock */,
 				C7AE89F32696638300B738C6 /* Sources */,
 				C7AE89F42696638300B738C6 /* Frameworks */,
 				C7AE89F52696638300B738C6 /* Resources */,
@@ -624,11 +630,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C7AE8A112696638300B738C6 /* Build configuration list for PBXNativeTarget "IndieMusicUITests" */;
 			buildPhases = (
-				D00CEF65307EC058A8F05ED0 /* [CP] Check Pods Manifest.lock */,
+				D31CDA0BE772CB99B5A34A37 /* [CP] Check Pods Manifest.lock */,
 				C7AE89FE2696638300B738C6 /* Sources */,
 				C7AE89FF2696638300B738C6 /* Frameworks */,
 				C7AE8A002696638300B738C6 /* Resources */,
-				3480B3A554FC4638E9C63A0C /* [CP] Embed Pods Frameworks */,
+				81E400BB876833F84F2CFA21 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -687,6 +693,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C73722FC272387B50077A32E /* record_player.gif in Resources */,
 				C7AE89F12696638300B738C6 /* Preview Assets.xcassets in Resources */,
 				C7AE89EE2696638300B738C6 /* Assets.xcassets in Resources */,
 				C785E20A26CED3B600CFA4AD /* GoogleService-Info.plist in Resources */,
@@ -713,45 +720,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0ABEF84892E38FCE78D92923 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-IndieMusicTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3480B3A554FC4638E9C63A0C /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-IndieMusic-IndieMusicUITests/Pods-IndieMusic-IndieMusicUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-IndieMusic-IndieMusicUITests/Pods-IndieMusic-IndieMusicUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-IndieMusic-IndieMusicUITests/Pods-IndieMusic-IndieMusicUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		4D940DFC0F9EE87100D86FC3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -768,6 +736,28 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-IndieMusic-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		55BB765B1B5515CE00C1B209 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-IndieMusicTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -791,7 +781,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-IndieMusic/Pods-IndieMusic-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D00CEF65307EC058A8F05ED0 /* [CP] Check Pods Manifest.lock */ = {
+		81E400BB876833F84F2CFA21 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-IndieMusic-IndieMusicUITests/Pods-IndieMusic-IndieMusicUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-IndieMusic-IndieMusicUITests/Pods-IndieMusic-IndieMusicUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-IndieMusic-IndieMusicUITests/Pods-IndieMusic-IndieMusicUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D31CDA0BE772CB99B5A34A37 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -873,6 +880,7 @@
 				C74264CC26A1F7CB0075C8E0 /* MusicModel.swift in Sources */,
 				C7AE89EA2696638200B738C6 /* IndieMusicApp.swift in Sources */,
 				C78ECE51270F6D2200223E77 /* ActiveFullScreen.swift in Sources */,
+				C73722FA2723707F0077A32E /* GifView.swift in Sources */,
 				C74A3A47270149DB00C354BF /* ProgressBarView.swift in Sources */,
 				C7AE8A2E26A0B3FF00B738C6 /* CreateAccountView.swift in Sources */,
 				C77F46EC26F3FBA400059260 /* CreateAlbumView.swift in Sources */,
@@ -1086,7 +1094,7 @@
 		};
 		C7AE8A0F2696638300B738C6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D077E4E6316CF3AA815DDCA7 /* Pods-IndieMusicTests.debug.xcconfig */;
+			baseConfigurationReference = 826B1FA08E7363F364F071C6 /* Pods-IndieMusicTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1109,7 +1117,7 @@
 		};
 		C7AE8A102696638300B738C6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8B707E26F461156C159BD575 /* Pods-IndieMusicTests.release.xcconfig */;
+			baseConfigurationReference = 9272856C7FC00888DC7A9AF8 /* Pods-IndieMusicTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1132,7 +1140,7 @@
 		};
 		C7AE8A122696638300B738C6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2765BCB4FA4C271CEFEE6702 /* Pods-IndieMusic-IndieMusicUITests.debug.xcconfig */;
+			baseConfigurationReference = 228E7BAED6440E16E6808023 /* Pods-IndieMusic-IndieMusicUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1153,7 +1161,7 @@
 		};
 		C7AE8A132696638300B738C6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 59D860F0E17A9F38F2A72EB8 /* Pods-IndieMusic-IndieMusicUITests.release.xcconfig */;
+			baseConfigurationReference = 7D2D0BE2A7594CC62008A768 /* Pods-IndieMusic-IndieMusicUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;

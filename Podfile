@@ -13,7 +13,7 @@ target 'IndieMusic' do
   pod 'Firebase/Auth'
   pod 'FirebaseAnalytics'
   pod 'Purchases'
-
+  pod 'FLAnimatedImage'
 
   target 'IndieMusicTests' do
     inherit! :search_paths

@@ -22,23 +22,17 @@ struct FavoritesView: View {
                                 .environmentObject(vm),
                                label: {
                     FavoritesNavLinkCell(systemImageName: "music.mic", label: "Artists")
-                        .environmentObject(vm)
-                }
-                ).listRowBackground(Color.clear)
+                }).listRowBackground(Color.clear)
                 
                 NavigationLink(destination: AlbumsView(albums: vm.user?.favoriteAlbums ?? []),
                                label: {
                     FavoritesNavLinkCell(systemImageName: "music.note.list", label: "Albums")
-                        .environmentObject(vm)
-                }
-                ).listRowBackground(Color.clear)
+                }).listRowBackground(Color.clear)
                 
                 NavigationLink(destination: SongsListView(songs: vm.user?.favoriteSongs ?? [], album: nil),
                                label: {
                     FavoritesNavLinkCell(systemImageName: "music.note", label: "Songs")
-                        .environmentObject(vm)
-                }
-                )
+                })
                 
                 
                 Text("Recently Added")
