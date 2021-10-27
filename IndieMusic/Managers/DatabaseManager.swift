@@ -120,8 +120,10 @@ final class DatabaseManger {
             .delete() { error in
                 if let error = error {
                     print("Error removing document: \(error)")
+                    completion(false)
                 } else {
                     print("Document successfully removed!")
+                    completion(true)
                 }
             }
     }
@@ -175,18 +177,7 @@ final class DatabaseManger {
         var _artists: [Artist] = []
         database
             .collection(FirebaseCollection.artists)
-            .whereField("name", isNotEqualTo: "")
             .getDocuments { snapshot, error in
-//                guard let documents = snapshot?.documents.compactMap({ $0.data() }), error == nil else { return }
-//                let artists: [Artist] = documents.compactMap({
-//                    let name = $0["name"] as! String
-//                    let albums = $0["albums"] as! [Album]
-//                    let metaData = $0["metaData"] as? [String]
-//
-//                    return Artist(name: name, albums: albums, metaData: metaData)
-//                })
-//                print("retrieved artists: \(artists)")
-                
                 guard let documents = snapshot?.documents, error == nil else { return }
                 for document in documents {
                     let result = Result {
@@ -352,8 +343,8 @@ final class DatabaseManger {
                     completion(true)
                     return
                 }
-                completion(true)
                 print("Genre successfully added.")
+                completion(true)
             })
     }
     

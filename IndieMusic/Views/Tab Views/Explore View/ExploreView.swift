@@ -72,9 +72,20 @@ struct ExploreView: View {
 
 extension ExploreView {
     
+    private func getArtistGridRows() -> [GridItem] {
+        switch exploreVM.artists.count {
+        case 0, 1:
+            return [GridItem(.flexible())]
+        case 2:
+            return [GridItem(.flexible()), GridItem(.flexible())]
+        default:
+            return [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
+        }
+    }
+    
     var artistGridView: some View {
         VStack(spacing: 0) {
-            HStack {
+            HStack(spacing: 0) {
                 Text("Artists")
                     .font(.title)
                     .fontWeight(.bold)
@@ -90,13 +101,10 @@ extension ExploreView {
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHGrid(rows: [GridItem(.flexible()),
-                                 GridItem(.flexible()),
-                                 GridItem(.flexible())
-                    ]) {
+                LazyHGrid(rows: getArtistGridRows()) {
                     ForEach(exploreVM.artists.sorted(), id: \.self) { artist in
                         ArtistNavLinkCell(artist: artist)
-                            .frame(width: UIScreen.main.bounds.width * 0.85, height: 50)
+                            .frame(width: UIScreen.main.bounds.width * 0.85)
                             .environmentObject(vm)
                     }
                 }
