@@ -62,11 +62,12 @@ struct MainTabView: View {
                 }
             }
             
-            CurrentlyPlayingMinimizedView()
 //            NewCurrentlyPlayingView()
+            CurrentlyPlayingMinimizedView()
                 .environmentObject(vm)
                 .environmentObject(cpVM)
-                .offset(y: ((getScreenBounds().height/2) - UITabBarController().tabBar.frame.height - MainViewModel.Constants.currentlyPlayingMinimizedViewHeight - 10))
+                .padding(.horizontal, 5)
+                .offset(y: currentlyPlayingMinimizedViewOffset())
             
             if vm.showNotification {
                 NonObstructiveNotificationView {
@@ -157,6 +158,10 @@ struct MainTabView: View {
         
     }
     
+    
+    fileprivate func currentlyPlayingMinimizedViewOffset() -> CGFloat {
+        return ((getScreenBounds().height/2) - UITabBarController().tabBar.frame.height - MainViewModel.Constants.currentlyPlayingMinimizedViewHeight - 10)
+    }
     
     func onDismissOfActiveSheet() {
         switch vm.activeSheet {
