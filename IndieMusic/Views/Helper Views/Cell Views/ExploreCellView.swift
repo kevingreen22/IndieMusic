@@ -20,7 +20,7 @@ struct ExploreCellView: View {
     
     private let imagePlaceholder: UIImage = UIImage.genreImagePlaceholder
     
-    init( imageName: String?, title: String, altText: String?, layoutType: ExploreCellLayoutType = .square) {
+    init(imageName: String?, title: String, altText: String?, layoutType: ExploreCellLayoutType = .square) {
         self.imageName = imageName
         self.title = title
         self.altText = altText
@@ -32,23 +32,25 @@ struct ExploreCellView: View {
         case .square:
             VStack(spacing: 8) {
                 if imageName != nil {
-                 Image(imageName!)
+                    Image(imageName!)
                         .resizable()
                         .scaledToFit()
+                        .padding(4)
                 }
 
                 Text(title)
-                    .foregroundColor(.black)
-                    .font(.title3)
+                    .foregroundColor(Color.theme.primaryText)
+                    .font(.title)
                     .fontWeight(.semibold)
                     .truncationMode(.tail)
                 
                 if altText != nil {
                     Text(altText!)
-                        .foregroundColor(.gray)
-                        .font(.caption2)
+                        .foregroundColor(Color.theme.secondaryText)
+                        .font(.title2)
                         .fontWeight(.semibold)
                         .truncationMode(.tail)
+                        .padding(.bottom, 5)
                 }
             }
             
@@ -59,21 +61,24 @@ struct ExploreCellView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 50, height: 50)
+                        .padding(5)
                 }
                     
                 VStack {
                     Text(title)
-                        .foregroundColor(Color.theme.primary)
+                        .foregroundColor(Color.theme.primaryText)
                         .font((altText != nil) ? .title3 : .title)
                         .fontWeight(.semibold)
                         .truncationMode(.tail)
+                        .padding(.trailing, 5)
                     
                     if altText != nil {
                         Text(altText!)
-                            .foregroundColor(.gray)
-                            .font(.caption2)
+                            .foregroundColor(Color.theme.secondaryText)
+                            .font(.body)
                             .fontWeight(.semibold)
                             .truncationMode(.tail)
+                            .padding(.trailing, 5)
                     }
                 }
             }
@@ -87,10 +92,17 @@ struct ExploreCellView: View {
 struct ExploreCellView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ExploreCellView(imageName: "metal", title: "Metal", altText: nil, layoutType: .list)
+            ExploreCellView(imageName: "metal", title: "Metal", altText: "Heavy Metal", layoutType: .square)
                 .previewLayout(.sizeThatFits)
             
-            ExploreCellView(imageName: "metal", title: "Metal", altText: nil, layoutType: .list)
+            ExploreCellView(imageName: "metal", title: "Metal", altText: "Heavy Metal", layoutType: .square)
+                .previewLayout(.sizeThatFits)
+                .preferredColorScheme(.dark)
+            
+            ExploreCellView(imageName: "metal", title: "Metal", altText: "Heavy Metal", layoutType: .list)
+                .previewLayout(.sizeThatFits)
+            
+            ExploreCellView(imageName: "metal", title: "Metal", altText: "Heavy Metal", layoutType: .list)
                 .previewLayout(.sizeThatFits)
                 .preferredColorScheme(.dark)
         }

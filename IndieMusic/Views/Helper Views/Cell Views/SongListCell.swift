@@ -26,7 +26,7 @@ struct SongListCell: View {
                     .overlay(
                         ZStack {
                             if song == selectedSongCell {
-                                Color.black.opacity(0.7)
+                                Color.black.opacity(0.3)
                                 SwimplyPlayIndicator(state: $cpVM.playState, color: Color.theme.primary, style: .legacy)
                                     .frame(width: constants.playIndicatorSize, height: constants.playIndicatorSize, alignment: .leading)
                             }
@@ -34,52 +34,54 @@ struct SongListCell: View {
                         .cornerRadius(3)
                     )
                 
-                if cpVM.audioPlayer.isPlaying {
-                    SwimplyPlayIndicator(state: $cpVM.playState, style: .legacy)
-                        .frame(width: constants.playIndicatorSize, height: constants.playIndicatorSize, alignment: .leading)
-                }
+//                if cpVM.audioPlayer.isPlaying {
+//                    SwimplyPlayIndicator(state: $cpVM.playState, style: .modern)
+//                        .frame(width: constants.playIndicatorSize, height: constants.playIndicatorSize, alignment: .leading)
+//                }
                 
                 Text(song.title)
+                    .font(.title)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                
                 Spacer()
-                FarvoriteHeartView(typeOfFavorite: Song.self, isFavorited: $isFavorited)
+                
+                FarvoriteHeartView(typeOfFavorite: Song.self, isFavorited: $isFavorited).padding(.trailing, 5)
             }
+            .gesture(cellTapped)
         }
-        .highPriorityGesture(
-            CellTapped(vm: _vm, cpVM: _cpVM, song: song, selectedSongCell: $selectedSongCell)
-        )
-        
     }
 }
 
-fileprivate struct CellTapped: Gesture {
-    @EnvironmentObject var vm: MainViewModel
-    @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
-    let song: Song
-    @Binding var selectedSongCell: Song?
+
+extension SongListCell {
     
-    var body: some Gesture {
+    var cellTapped: some Gesture {
         TapGesture()
             .onEnded {
                 selectedSongCell = song
-                if song == selectedSongCell {
-                    cpVM.song = song
-                    if let user = vm.user {
-                        user.addSongToUserSongList(song: song)
-                    }
+                cpVM.song = song
+                if let user = vm.user {
+                    user.addSongToUserSongList(song: song)
+                    vm.updateUser()
                 }
             }
     }
+    
 }
-
 
 
 struct SongListCell_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             SongListCell(song: dev.songs.first!, selectedSongCell: .constant(dev.songs.first!))
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.currentlyPlaingVM)
                 .previewLayout(.sizeThatFits)
             
             SongListCell(song: dev.songs.first!, selectedSongCell: .constant(dev.songs.first!))
+                .environmentObject(dev.mainVM)
+                .environmentObject(dev.currentlyPlaingVM)
                 .previewLayout(.sizeThatFits)
                 .preferredColorScheme(.dark)
         }

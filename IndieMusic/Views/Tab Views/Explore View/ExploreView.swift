@@ -4,6 +4,7 @@
 //
 //  Created by Kevin Green on 7/20/21.
 //
+
 // Attributions
 //<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 //
@@ -20,11 +21,7 @@ import SwiftUI
 
 struct ExploreView: View {
     @EnvironmentObject var vm: MainViewModel
-    @StateObject var exploreVM = ExploreViewModel()
-    
-    let colums = [GridItem(.fixed(ExploreViewModel.gridCellSize))]
-    let rows = [GridItem(.fixed(ExploreViewModel.gridCellSize))]
-    
+    @EnvironmentObject var exploreVM: ExploreViewModel
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
@@ -38,30 +35,27 @@ struct ExploreView: View {
                 
                 
                 // ARTISTS
-//                if !exploreVM.artists.isEmpty {
+                if !exploreVM.artists.isEmpty {
                     artistGridView
-//                }
-                
-//                Divider()
+                    Divider()
+                }
                 
                 //ALBUMS
-//                if !exploreVM.albums.isEmpty {
+                if !exploreVM.albums.isEmpty {
                     albumsGridView
-//                }
-                
-//                Divider()
+                    Divider()
+                }
                 
                 //GENRES
-//                if !exploreVM.genreOfAlbums.isEmpty {
+                if !exploreVM.genreOfAlbums.isEmpty {
                     genreGridView
-//                }
-                
-//                Divider()
+                    Divider()
+                }
                 
                 // SONGS
-//                if !exploreVM.songs.isEmpty {
+                if !exploreVM.songs.isEmpty {
                     songListView
-//                }
+                }
                 
             }
         }
@@ -74,7 +68,7 @@ extension ExploreView {
     
     private func getArtistGridRows() -> [GridItem] {
         switch exploreVM.artists.count {
-        case 0, 1:
+        case 1:
             return [GridItem(.flexible())]
         case 2:
             return [GridItem(.flexible()), GridItem(.flexible())]
@@ -104,11 +98,13 @@ extension ExploreView {
                 LazyHGrid(rows: getArtistGridRows()) {
                     ForEach(exploreVM.artists.sorted(), id: \.self) { artist in
                         ArtistNavLinkCell(artist: artist)
-                            .frame(width: UIScreen.main.bounds.width * 0.85)
+                            .frame(width: UIScreen.main.bounds.width * 0.90)
                             .environmentObject(vm)
                     }
                 }
             }
+            .frame(minHeight: 180)
+            .padding(.leading)
         }
     }
     
@@ -121,7 +117,8 @@ extension ExploreView {
                     .padding(.leading)
                 Spacer()
                 NavigationLink {
-                    AlbumsView(albums: exploreVM.albums.sorted()).environmentObject(vm)
+                    AlbumsView(albums: exploreVM.albums)
+                        .environmentObject(vm)
                 } label: {
                     Text("See All")
                         .foregroundColor(Color.theme.primary)
@@ -131,13 +128,13 @@ extension ExploreView {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHGrid(rows: [GridItem(.flexible())]) {
-                    ForEach(exploreVM.albums.prefix(10).sorted(), id: \.self) { album in
+                    ForEach(exploreVM.albums.sorted(), id: \.self) { album in
                         AlbumNavLinkCellView(album: album)
-                            .frame(width: UIScreen.main.bounds.width / 2.3, height: UIScreen.main.bounds.width / 2.3)
+                            .frame(width: UIScreen.main.bounds.width / 2.3)
                             .environmentObject(vm)
                     }
                 }
-            }
+            }.padding(.leading)
         }
     }
     
@@ -161,8 +158,8 @@ extension ExploreView {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHGrid(rows: [GridItem(.flexible())]) {
                     ForEach(Array(zip(exploreVM.genreOfAlbums.keys, Array(exploreVM.genreOfAlbums.values))), id: \.0) { genre, albums in
-                        ExploreCellView(imageName: nil, title: genre, altText: nil)
-                            .frame(width: UIScreen.main.bounds.width / 2.3, height: 90)
+                        ExploreCellView(imageName: genre.underscoredLowercased(), title: genre, altText: nil)
+                            .frame(width: UIScreen.main.bounds.width / 3.3, height: 100)
                             .environmentObject(vm)
                             .preference(key: GenreOfAlbumsIndexPreferenceKey.self, value: albums)
                     }
@@ -190,10 +187,10 @@ extension ExploreView {
             }
             
             List {
-                ForEach(exploreVM.songs, id: \.self) { song in
-                    SongListCell(song: song, selectedSongCell: .constant(nil))
+                ForEach(exploreVM.songs.sorted(), id: \.self) { song in
+                    SongListCell(song: song, selectedSongCell: $vm.selectedSongCell)
                 }
-            }.listStyle(DefaultListStyle())
+            }.listStyle(PlainListStyle())
         }
     }
     
@@ -217,14 +214,30 @@ struct GenreOfAlbumsIndexPreferenceKey: PreferenceKey {
 struct ExploreView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ExploreView()
-                .environmentObject(dev.mainVM)
-                .environmentObject(dev.exploreVM)
+            TabView {
+                NavigationView {
+                    ExploreView()
+                        .environmentObject(dev.mainVM)
+                        .environmentObject(dev.exploreVM)
+                        .environmentObject(dev.currentlyPlaingVM)
+                        .navigationTitle(Text("Explore"))
+                }.tabItem {
+                    Label("Explore", systemImage: "flashlight.on.fill")
+                }
+            }
             
-            ExploreView()
-                .environmentObject(dev.mainVM)
-                .environmentObject(dev.exploreVM)
-                .preferredColorScheme(.dark)
+            TabView {
+                NavigationView {
+                    ExploreView()
+                        .environmentObject(dev.mainVM)
+                        .environmentObject(dev.exploreVM)
+                        .environmentObject(dev.currentlyPlaingVM)
+                        .preferredColorScheme(.dark)
+                        .navigationTitle(Text("Explore"))
+                }.tabItem {
+                    Label("Explore", systemImage: "flashlight.on.fill")
+                }
+            }
         }
     }
 }

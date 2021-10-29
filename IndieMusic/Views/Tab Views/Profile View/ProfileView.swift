@@ -25,10 +25,10 @@ struct ProfileView: View {
                 }
                 
                 .onAppear { profileVM.prepare(user) }
-                
-            } else { showSignInViewButton }
             
             topNavButtons
+                
+            } else { showSignInViewButton }
             
             if profileVM.showLoader { LoaderView() }
         }
@@ -123,7 +123,7 @@ extension ProfileView {
                                     profileVM.isExpanded.toggle()
                                 }
                             })
-                        ], size: 50, color: .theme.secondary, isExpanded: $profileVM.isExpanded)
+                        ], size: 50, color: Color.theme.primary, isExpanded: $profileVM.isExpanded)
                     }
                 }.padding([.trailing, .bottom])
             }
@@ -158,7 +158,7 @@ extension ProfileView {
                             Text(song.title)
                                 .font(.title3)
                             Text(song.albumTitle)
-                                .foregroundColor(Color.theme.secondary)
+                                .foregroundColor(Color.theme.primary)
                         }
                     }
                 }
@@ -255,7 +255,7 @@ fileprivate struct UseAsArtistProfileButton: View {
                 .rotationEffect(.degrees(profileVM.showArtistOwnerInfo ? 0 : 360))
         })
             .frame(width: 50, height: 50)
-            .background(Color.theme.secondary)
+            .background(Color.theme.primary)
             .cornerRadius(50 / 2)
             .shadow(
                 color: shadowColor,

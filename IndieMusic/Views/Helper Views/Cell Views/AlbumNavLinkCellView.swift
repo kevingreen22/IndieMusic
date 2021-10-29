@@ -11,9 +11,7 @@ struct AlbumNavLinkCellView: View {
     @EnvironmentObject var vm: MainViewModel
     @State private var isFavorited: Bool = false
     let album: Album
-    let imageWidth: CGFloat = 30
-    let imageHeight: CGFloat = 30
-
+  
     var body: some View {
         NavigationLink(
             destination: SongsListView(songs: album.songs, album: nil),
@@ -28,17 +26,17 @@ struct AlbumNavLinkCellView: View {
                             Text(album.title)
                                 .lineLimit(1)
                                 .truncationMode(.tail)
-                                .foregroundColor(.black)
-                                .font(.title3)
+                                .foregroundColor(Color.theme.primaryText)
+                                .font(.title2)
                             Text(album.artistName)
                                 .lineLimit(1)
                                 .truncationMode(.tail)
-                                .foregroundColor(.gray)
+                                .foregroundColor(Color.theme.secondaryText)
                                 .font(.body)
                         }
                         Spacer()
                         FarvoriteHeartView(typeOfFavorite: Album.self, isFavorited: $isFavorited)
-                    }.padding(.horizontal)
+                    }.padding([.horizontal, .bottom])
                 }
             })
     }
@@ -49,9 +47,11 @@ struct AlbumNavLinkCellView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             AlbumNavLinkCellView(album: dev.albums.first!)
+                .environmentObject(dev.mainVM)
                 .previewLayout(.sizeThatFits)
             
             AlbumNavLinkCellView(album: dev.albums.first!)
+                .environmentObject(dev.mainVM)
                 .previewLayout(.sizeThatFits)
                 .preferredColorScheme(.dark)
         }

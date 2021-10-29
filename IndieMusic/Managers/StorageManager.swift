@@ -33,7 +33,8 @@ final class StorageManager {
         let metadata = StorageMetadata()
         metadata.contentType = "audio/mp3"
 
-        let ref = container.reference().child("\(FirebaseCollection.artists)/\(song.artistID)/\(song.albumID)/\(song.title)\(SuffixNames.mp3)")
+        let songTitle = song.title.lowercased().replacingOccurrences(of: " ", with: "_")
+        let ref = container.reference().child("\(FirebaseCollection.artists)/\(song.artistID)/\(song.albumID)/\(songTitle)\(SuffixNames.mp3)")
         
 //        let task = ref.putFile(from: localFilePath, metadata: metadata)
         let task = ref.putData(file, metadata: metadata)
@@ -96,6 +97,22 @@ final class StorageManager {
     }
     
     
+    public func getDownloadURLFor(song: Song, completion: @escaping (URL?) -> ()) {
+        let songTitle = song.title.lowercased().replacingOccurrences(of: " ", with: "_")
+        let path = ("\(FirebaseCollection.artists)/\(song.artistID)/\(song.albumID)/\(songTitle)\(SuffixNames.mp3)")
+        
+        container
+            .reference(withPath: path)
+            .downloadURL { url, _ in
+                if let url = url {
+                    completion(url)
+                } else {
+                    completion(nil)
+                }
+            }
+    }
+    
+    
     public func delete(song: Song, completion: @escaping (Error?) -> Void) {
         let path = "\(FirebaseCollection.artists)/\(song.artistID)/\(song.albumID)/\(song.id)\(SuffixNames.mp3)"
         container
@@ -117,9 +134,7 @@ final class StorageManager {
     
     // MARK: Album artwork storage methods
     
-    public func uploadAlbumArtworkImage(album: Album, image: UIImage?, completion: @escaping (Bool) -> Void) {
-        //        let path = "\(ContainerNames.artists)/\(album.artistID)/\(album.id)/\(SuffixNames.albumArtworkPNG)"
-        
+    public func uploadAlbumArtworkImage(album: Album, image: UIImage?, completion: @escaping (Bool) -> Void) {        
         guard let path = album.artworkURL?.absoluteString else { return }
         guard let pngData = image?.pngData() else { return }
 

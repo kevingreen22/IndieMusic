@@ -13,19 +13,17 @@ class ExploreViewModel: ObservableObject {
     
     @Published var searchText: String = ""
     
-    @Published var genreOfAlbums: [String : [Album]] = [:]
-    @Published var albumsForGenre: [Album] = []
+    var genreOfAlbums: [String : [Album]] = [:]
+    var albumsForGenre: [Album] = []
     
-    @Published var artists: [Artist] = []
+    var artists: [Artist] = []
     
-    @Published var albums: [Album] = []
-    @Published var albumArtworks: [UIImage] = []
+    var albums: [Album] = []
     
-    @Published var songs: [Song] = []
+    var songs: [Song] = []
     
     init() {
         fetchAll()
-//        fetchExplores()
     }
     
     

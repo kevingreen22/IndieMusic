@@ -14,44 +14,38 @@ struct CurrentlyPlayingFullScreen: View {
     
     var body: some View {
         ZStack {
-            BackgroundGradient()
-                .environmentObject(cpVM)
+            backgroundGradient
             
-            DismissChevron()
+            dismissChevron
             
             VStack {
                 Spacer()
                 
                 // Album artwork
                 if !cpVM.showingLyrics {
-                    AlbumArtwork()
+                    albumArtwork
                 } else {
-                    ShowingLyricsView()
-                        .environmentObject(cpVM)
+                    showingLyricsView
                 }
                 
                 // Song info
                 if !cpVM.showingLyrics {
-                    SongInfo()
-                        .environmentObject(cpVM)
+                    songInfo
                 }
                 
                 // Track timeline
-                TrackTimeline()
-                    .environmentObject(cpVM)
+                trackTimeline
                 
                 // Play Control buttons
-                PlayControlButtons()
-                    .environmentObject(cpVM)
+                playControlButtons
                 
                 Spacer()
                 
                 // volume control
-                VolumeControl()
+                volumeControl
 
                 // Option buttons
-                OptionButtons()
-                    .environmentObject(cpVM)
+                optionButtons
                 
                 Spacer()
                 
@@ -62,11 +56,9 @@ struct CurrentlyPlayingFullScreen: View {
 
 
 
-
-fileprivate struct DismissChevron: View {
-    @Environment(\.presentationMode) var presentationMode
+extension CurrentlyPlayingFullScreen {
     
-    var body: some View {
+    private var dismissChevron: some View {
         VStack {
             HStack {
                 Button(action: {
@@ -82,23 +74,14 @@ fileprivate struct DismissChevron: View {
             Spacer()
         }
     }
-}
-
-fileprivate struct BackgroundGradient: View {
-    @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
-    var body: some View {
+    private var backgroundGradient: some View {
         LinearGradient(gradient: Gradient(colors: [Color(cpVM.dominantColors.1), Color(cpVM.dominantColors.0), Color.black]), startPoint: .topLeading, endPoint: .bottomTrailing)
             .ignoresSafeArea()
             .opacity(0.7)
     }
-}
-
-fileprivate struct PlayControlButtons: View {
-    @EnvironmentObject var vm: MainViewModel
-    @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
-    var body: some View {
+    private var playControlButtons: some View {
         HStack {
             Button(action: {
                 guard let user = vm.user else { return }
@@ -109,7 +92,8 @@ fileprivate struct PlayControlButtons: View {
                     .padding(.leading, 40)
                     .foregroundColor(.white)
                     .opacity(0.7)
-            }).disabled(cpVM.song.url.path != "")
+            })
+            //                .disabled(cpVM.song.url.path != "")
             
             Spacer()
             
@@ -120,7 +104,8 @@ fileprivate struct PlayControlButtons: View {
                     .scaleEffect(4)
                     .foregroundColor(.white)
                     .opacity(0.7)
-            }).disabled(cpVM.song.url.path != "")
+            })
+            //                .disabled(cpVM.song.url.path != "")
             
             Spacer()
             
@@ -133,14 +118,13 @@ fileprivate struct PlayControlButtons: View {
                     .padding(.trailing, 40)
                     .foregroundColor(.white)
                     .opacity(0.7)
-            }).disabled(cpVM.song.url.path != "")
+            })
+            //                .disabled(cpVM.song.url.path != "")
             
         }.padding().padding(.top, 20)
     }
-}
-
-fileprivate struct VolumeControl: View {
-    var body: some View {
+    
+    private var volumeControl: some View {
         HStack {
             Image(systemName: "speaker.fill")
                 .padding(.leading)
@@ -158,12 +142,8 @@ fileprivate struct VolumeControl: View {
                 .opacity(0.8)
         }
     }
-}
-
-fileprivate struct OptionButtons: View {
-    @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
-    var body: some View {
+    private var optionButtons: some View {
         HStack {
             Spacer()
             
@@ -186,10 +166,10 @@ fileprivate struct OptionButtons: View {
             Spacer()
             
             Menu(content: {
-                Button("♥️ - Hearts", action: doSomething)
-                Button("♣️ - Clubs", action: doSomething)
-                Button("♠️ - Spades", action: doSomething)
-                Button("♦️ - Diamonds", action: doSomething)
+                Button("♥️ - Hearts", action: self.doSomething)
+                Button("♣️ - Clubs", action: self.doSomething)
+                Button("♠️ - Spades", action: self.doSomething)
+                Button("♦️ - Diamonds", action: self.doSomething)
             }, label: {
                 Image(systemName: "ellipsis.circle")
                     .foregroundColor(.white)
@@ -201,17 +181,8 @@ fileprivate struct OptionButtons: View {
             
         }.padding([.horizontal, .top])
     }
-    
-    private func doSomething() {
         
-    }
-    
-}
-
-fileprivate struct SongInfo: View {
-    @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
-    
-    var body: some View {
+    private var songInfo: some View {
         HStack {
             VStack(alignment: .leading) {
                 Text(cpVM.song.title)
@@ -229,57 +200,51 @@ fileprivate struct SongInfo: View {
         }
         .transition(.scale)
     }
-}
-
-fileprivate struct TrackTimeline: View {
-    @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
-    var body: some View {
-        ZStack(alignment: .leading) {
-            Capsule().fill(Color.black.opacity(0.08)).frame(height: 5)
-            Capsule().fill(Color.red).frame(width: cpVM.currentPlayTrackWidth, height: 5)
-                
+    private var trackTimeline: some View {
+        VStack {
+            ZStack(alignment: .leading) {
+                Capsule().fill(Color.black.opacity(0.08)).frame(height: 5)
+                Capsule().fill(Color.red).frame(width: cpVM.currentPlayTrackWidth, height: 5)
+
                 // allows to scrub the track time by draging the progress bar
-                .gesture(
-                    DragGesture()
-                        .onChanged({ value in
-                            cpVM.currentPlayTrackWidth = value.location.x
-                            cpVM.currTime = cpVM.audioPlayer.currentTime + 1
-                            cpVM.remainingTime = cpVM.audioPlayer.currentTime - cpVM.audioPlayer.duration
-                        })
-                        .onEnded({ value in
-                            let x = value.location.x
-                            let screen = UIScreen.main.bounds.width - 30
-                            let percent = x / screen
-                            cpVM.audioPlayer.currentTime = Double(percent) * cpVM.audioPlayer.duration
-                            cpVM.currTime = cpVM.audioPlayer.currentTime
-                        })
-                )
-        }.padding(.horizontal)
-        
-        HStack {
-            Text(cpVM.currTime.timeFormat(unitsAllowed: cpVM.audioPlayer.duration >= 3600 ? [.hour, .minute, .second] : [.minute, .second]))
-                .font(.caption2)
-                .fontWeight(.light)
-                .foregroundColor(.white)
-                .opacity(0.7)
+                    .gesture(
+                        DragGesture()
+                            .onChanged({ value in
+                                cpVM.currentPlayTrackWidth = value.location.x
+                                cpVM.currTime = cpVM.audioPlayer.currentTime + 1
+                                cpVM.remainingTime = cpVM.audioPlayer.currentTime - cpVM.audioPlayer.duration
+                            })
+                            .onEnded({ value in
+                                let x = value.location.x
+                                let screen = UIScreen.main.bounds.width - 30
+                                let percent = x / screen
+                                cpVM.audioPlayer.currentTime = Double(percent) * cpVM.audioPlayer.duration
+                                cpVM.currTime = cpVM.audioPlayer.currentTime
+                            })
+                    )
+            }.padding(.horizontal)
             
-            Spacer()
             
-            Text(cpVM.remainingTime.timeFormat(unitsAllowed: cpVM.audioPlayer.duration >= 3600 ? [.hour, .minute, .second] : [.minute, .second]))
-                .font(.caption2)
-                .fontWeight(.light)
-                .foregroundColor(.white)
-                .opacity(0.7)
-        }.padding(.horizontal)
-
+            HStack {
+                Text(cpVM.currTime.timeFormat(unitsAllowed: cpVM.audioPlayer.duration >= 3600 ? [.hour, .minute, .second] : [.minute, .second]))
+                    .font(.caption2)
+                    .fontWeight(.light)
+                    .foregroundColor(.white)
+                    .opacity(0.7)
+                
+                Spacer()
+                
+                Text(cpVM.remainingTime.timeFormat(unitsAllowed: cpVM.audioPlayer.duration >= 3600 ? [.hour, .minute, .second] : [.minute, .second]))
+                    .font(.caption2)
+                    .fontWeight(.light)
+                    .foregroundColor(.white)
+                    .opacity(0.7)
+            }.padding(.horizontal)
+        }
     }
-}
-
-fileprivate struct ShowingLyricsView: View {
-    @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
-    var body: some View {
+    private var showingLyricsView: some View {
         VStack {
             HStack {
                 Image(uiImage: cpVM.albumImage)
@@ -288,14 +253,14 @@ fileprivate struct ShowingLyricsView: View {
                     .frame(width: 40, height: 40, alignment: .leading)
                 
                 VStack(alignment: .leading) {
-//                    MarqueTextView(text: song.title)
+                    //                    MarqueTextView(text: song.title)
                     Text(cpVM.song.title)
                         .font(.title3)
                         .bold()
                         .foregroundColor(.white)
                         .opacity(0.7)
                     
-//                    MarqueTextView(text: song.artistName)
+                    //                    MarqueTextView(text: song.artistName)
                     Text(cpVM.album.artistName)
                         .fontWeight(.medium)
                         .foregroundColor(.white)
@@ -318,13 +283,8 @@ fileprivate struct ShowingLyricsView: View {
         .padding(.top, 40)
         .transition(.move(edge: .top))
     }
-}
-
-
-fileprivate struct AlbumArtwork: View {
-    @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     
-    var body: some View {
+    private var albumArtwork: some View {
         Image(uiImage: cpVM.albumImage)
             .resizable()
             .cornerRadius(10)
@@ -332,9 +292,12 @@ fileprivate struct AlbumArtwork: View {
             .transition(.scale)
             .padding()
     }
+
+    private func doSomething() {
+        
+    }
+
 }
-
-
 
 
 

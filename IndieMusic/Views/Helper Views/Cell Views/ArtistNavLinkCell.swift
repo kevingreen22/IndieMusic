@@ -25,12 +25,14 @@ struct ArtistNavLinkCell: View {
                         .aspectRatio(contentMode: .fit)
                         .cornerRadius(3)
                         .clipShape(Circle())
-                    Text(artist.name).foregroundColor(.black).fontWeight(.semibold)
+                        .padding(4)
+                    Text(artist.name).foregroundColor(Color.theme.primaryText).fontWeight(.semibold)
                     Spacer()
                     FarvoriteHeartView(typeOfFavorite: Artist.self, isFavorited: $isFavorited)
+                        .padding(.trailing)
                 }
             }
-        )
+        ).frame(height: 54)
     }
 }
 
@@ -38,9 +40,11 @@ struct ArtistNavLinkCell_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             ArtistNavLinkCell(artist: dev.artists.first!)
+                .environmentObject(dev.mainVM)
                 .previewLayout(.sizeThatFits)
             
             ArtistNavLinkCell(artist: dev.artists.first!)
+                .environmentObject(dev.mainVM)
                 .previewLayout(.sizeThatFits)
                 .preferredColorScheme(.dark)
         }

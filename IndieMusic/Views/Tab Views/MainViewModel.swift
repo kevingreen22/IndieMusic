@@ -11,8 +11,8 @@ class MainViewModel: ObservableObject {
     
     struct Constants {
         static let currentlyPlayingMinimizedViewHeight: CGFloat = 60
-        static let playIndicatorSize: CGFloat = 30
-        static let songCellImageSize: CGFloat = 30
+        static let playIndicatorSize: CGFloat = 25
+        static let songCellImageSize: CGFloat = 50
     }
     
     @Published var user: User? = nil
@@ -53,7 +53,9 @@ class MainViewModel: ObservableObject {
         var artwork = UIImage.albumArtworkPlaceholder
         StorageManager.shared.downloadAlbumArtworkFor(albumID: song.albumID, artistID: song.artistID) { image in
             guard let image = image else { return }
-            artwork = image
+            DispatchQueue.main.async {
+                artwork = image
+            }
         }
         return artwork
     }
@@ -65,9 +67,9 @@ class MainViewModel: ObservableObject {
             return
         }
         DispatchQueue.global().async {
-            DatabaseManger.shared.fetchUser(email: email) { user in
+            DatabaseManger.shared.fetchUser(email: email) { [weak self] user in
                 guard let user = user else { return }
-                self.user = user
+                self?.user = user
                 StorageManager.shared.downloadProfilePictureFor(user: user) { uiimage in
                     guard let image = uiimage else { return }
                     guard let data = image.jpegData(compressionQuality: 1) else { return}
@@ -78,6 +80,14 @@ class MainViewModel: ObservableObject {
         }
     }
     
+    public func updateUser() {
+        guard let user = self.user else { return }
+        DatabaseManger.shared.update(user: user) { success, error in
+            if success {
+                print("User updated.")
+            }
+        }
+    }
     
     public func cacheGenres(completion: (([String]?, Error?) -> Void)? = nil) {
         DatabaseManger.shared.fetchGenres { genres, error in
@@ -88,15 +98,16 @@ class MainViewModel: ObservableObject {
     }
     
     public func saveNewGenre(newGenreName: String) {
-        DatabaseManger.shared.addNewGenre(newGenreName, completion: { success in
-            self.cacheGenres()
+        DatabaseManger.shared.addNewGenre(newGenreName, completion: { [weak self] success in
+            self?.cacheGenres()
         })
     }
     
     
     
-    /// Decides if the app is being opened from iPhone Home screen and not the background.
-    /// This UserDefault gets set in main .app file when the sceenPhase goes to inactive.
+    /*
+     Decides if the app is being opened from iPhone Home screen and not the background. This UserDefault gets set in main .app file when the sceenPhase goes to inactive.
+     */
     var isOpeningApp: Bool {
         get {
             return UserDefaults.standard.bool(forKey: "openingApp")

@@ -17,8 +17,9 @@ extension Color {
 
 
 struct ColorTheme {
-    var primary = Color("MainApp")
-    var secondary = Color("SecondaryApp")
+    var primary = Color("AppPrimary")
+    var appSecondary = Color("AppSecondary")
     var tabBarBackground = Color("TabBarBackground")
-    
+    var primaryText = Color("PrimaryText")
+    var secondaryText = Color("SecondaryText")
 }

@@ -13,6 +13,7 @@ struct MainTabView: View {
     @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var cpVM: CurrentlyPlayingViewModel
     @StateObject var profileVM: ProfileViewModel = ProfileViewModel()
+    @StateObject var exploreVM = ExploreViewModel()
 
     
     init() {
@@ -25,7 +26,6 @@ struct MainTabView: View {
                 NavigationView {
                     FavoritesView()
                         .environmentObject(vm)
-                        .environmentObject(cpVM)
                         .environment(\.defaultMinListRowHeight, 60)
                         .navigationBarTitleDisplayMode(.large)
                         .navigationBarTitle(TabTitle.favorites.rawValue)
@@ -37,7 +37,7 @@ struct MainTabView: View {
                 NavigationView {
                     ExploreView()
                         .environmentObject(vm)
-                        .environmentObject(cpVM)
+                        .environmentObject(exploreVM)
                         .environment(\.defaultMinListRowHeight, 60)
                         .navigationBarTitleDisplayMode(.large)
                         .navigationBarTitle(TabTitle.explore.rawValue)
@@ -47,7 +47,6 @@ struct MainTabView: View {
                 
                 ProfileView(user: vm.user)
                     .environmentObject(vm)
-                    .environmentObject(cpVM)
                     .environmentObject(profileVM)
                     .environment(\.defaultMinListRowHeight, 60)
                     .tabItem {

@@ -16,7 +16,7 @@ struct GenresListView: View {
                 NavigationLink {
                     AlbumsView(albums: albums)
                 } label: {
-                    ExploreCellView(imageName: nil, title: genre, altText: nil, layoutType: .list)
+                    ExploreCellView(imageName: genre.underscoredLowercased(), title: genre, altText: nil, layoutType: .list)
                 }
             }
         }

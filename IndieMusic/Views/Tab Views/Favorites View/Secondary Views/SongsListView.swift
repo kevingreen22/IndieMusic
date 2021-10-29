@@ -23,7 +23,10 @@ struct SongsListView: View {
                             .environmentObject(vm)
                             .environmentObject(cpVM)
                     }
-                }.environment(\.defaultMinListRowHeight, 60)
+                }
+                .listStyle(PlainListStyle())
+                .environment(\.defaultMinListRowHeight, 60)
+                
             }.navigationBarTitle("Songs", displayMode: .large)
         } else if let _album = album {
             VStack {
@@ -47,7 +50,9 @@ struct SongsListView: View {
                             .environmentObject(vm)
                             .environmentObject(cpVM)
                     }
-                }.environment(\.defaultMinListRowHeight, 60)
+                }
+                .listStyle(PlainListStyle())
+                .environment(\.defaultMinListRowHeight, 60)
             }
             
         }

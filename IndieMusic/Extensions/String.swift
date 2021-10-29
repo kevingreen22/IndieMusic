@@ -14,6 +14,8 @@ extension String {
         return self.replacingOccurrences(of: "@", with: "_").replacingOccurrences(of: ".", with: "_")
     }
     
-    
+    func underscoredLowercased() -> String {
+        return self.replacingOccurrences(of: " ", with: "_").lowercased()
+    }
     
 }

@@ -18,9 +18,23 @@ extension PreviewProvider {
 class DeveloperPreview {
     static let instance = DeveloperPreview()
     
+    var user: User? = nil
+    
+    var artists: [Artist] = []
+    var albums: [Album] = []
+    var songs: [Song] = []
+    var genresOfAlbums: [String : [Album]] = [:]
+    
+    let mainVM = MainViewModel()
+    let profileVM = ProfileViewModel()
+    let exploreVM = ExploreViewModel()
+    let currentlyPlaingVM = CurrentlyPlayingViewModel()
+    let signinVM = SigninViewModel()
+       
+    
     private init() {
         var artist: Artist {
-            let artistID: UUID = UUID(uuidString: "brokeneck")!
+            let artistID: UUID = UUID()
             let albumIDs = ["album1", "album2", "album3"]
             
             let mockSong1 = Song(
@@ -56,7 +70,8 @@ class DeveloperPreview {
             url: URL(fileURLWithPath: "artists/brokeneck/hellFest_ep/penguins_are_awfly_cute.mp3")
         )
             
-            let mockAlbum = Album(
+            let album1 = Album(
+                id: UUID(uuidString: albumIDs[0]),
                 title: "Hellfest EP",
                 artistName: "Brokeneck",
                 artistID: artistID.uuidString,
@@ -65,17 +80,53 @@ class DeveloperPreview {
                 year: "2009",
                 genre: "Metal")
             
+            let album2 = Album(
+                id: UUID(uuidString: albumIDs[1]),
+                title: "Garage Days",
+                artistName: "Brokeneck",
+                artistID: artistID.uuidString,
+                artworkURL: URL(string: "artists/brokeneck/hellfest_ep/album_artwork.png"),
+                songs: [mockSong1, mockSong2, mockSong3],
+                year: "2009",
+                genre: "R & B")
+            
+            let album3 = Album(
+                id: UUID(uuidString: albumIDs[2]),
+                title: "Penguins",
+                artistName: "Brokeneck",
+                artistID: artistID.uuidString,
+                artworkURL: URL(string: "artists/brokeneck/hellfest_ep/album_artwork.png"),
+                songs: [mockSong1, mockSong2, mockSong3],
+                year: "2009",
+                genre: "Rap")
+            
             let artist = Artist(
                 id: artistID,
                 name: "Brokeneck",
                 genre: "Metal",
                 imageURL: URL(string: "artists/brokeneck/artist_photo.png"),
-                albums: [mockAlbum, mockAlbum, mockAlbum]
+                albums: [album1, album2, album3]
             )
             
             return artist
         }
-        self.artists = [artist]
+        self.artists = [artist, artist, artist]
+        
+        let a = setAlbums()
+        let s = setSongs()
+        let ga = setGenresOfAlbums()
+        
+        self.albums = a
+        self.songs = s
+        self.genresOfAlbums = ga
+        
+        self.exploreVM.artists = artists
+        self.exploreVM.albums = a
+        self.exploreVM.songs = s
+        self.exploreVM.genreOfAlbums = ga
+        
+        self.currentlyPlaingVM.album = a.first!
+        self.currentlyPlaingVM.song = a.first!.songs.first!
         
         self.user = User(
             name: "Kevin",
@@ -91,30 +142,11 @@ class DeveloperPreview {
         )
         
         self.mainVM.user = self.user
-        
-        self.exploreVM.albums = albums
-        self.exploreVM.artists = artists
-        self.exploreVM.songs = songs
-        self.exploreVM.genreOfAlbums = genresOfAlbums
-        
-        self.currentlyPlaingVM.album = albums.first!
-        self.currentlyPlaingVM.song = albums.first!.songs.first!
-        
     }
     
     
     
-    let user: User
-    let artists: [Artist]
-    
-    let mainVM = MainViewModel()
-    let profileVM = ProfileViewModel()
-    let exploreVM = ExploreViewModel()
-    let currentlyPlaingVM = CurrentlyPlayingViewModel()
-    let signinVM = SigninViewModel()
-        
-    
-    var albums: [Album] {
+    func setAlbums() -> [Album]{
         var albumNames: [Album] = []
         for artist in artists {
             for album in artist.albums {
@@ -125,20 +157,18 @@ class DeveloperPreview {
         return albumNames
     }
     
-    var songs: [Song] {
+    func setSongs() -> [Song] {
         var songs: [Song] = []
         for artist in artists {
             for album in artist.albums {
-                for song in album.songs {
-                    songs.append(song)
-                }
+                songs.append(contentsOf: album.songs)
             }
         }
         
         return songs
     }
     
-    var genresOfAlbums: [String : [Album]] {
+    func setGenresOfAlbums() -> [String: [Album]] {
         var genreOfAlbums: [String : [Album]] = [:]
         for artist in artists {
             for album in artist.albums {

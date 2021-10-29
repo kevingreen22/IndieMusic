@@ -15,55 +15,18 @@ struct CurrentlyPlayingMinimizedView: View {
     
     var body: some View {
         VStack {
-            ZStack(alignment: .leading) {
-                Capsule()
-                    .fill(Color.black.opacity(0.08))
-                    .frame(height: 3)
-                Capsule()
-                    .fill(Color.theme.primary)
-                    .frame(width: cpVM.currentPlayTrackWidth, height: 3)
-            }
+            trackTimeLine
             Spacer()
             HStack {
-                Image(uiImage: cpVM.albumImage)
-                    .resizable()
-                    .frame(width: 40, height: 40, alignment: .leading)
-                    .cornerRadius(5)
-                    .padding(.leading)
-                
-                VStack {
-                    Text(cpVM.song.title).truncationMode(.tail)
-                    Text(cpVM.song.artistName).truncationMode(.tail)
-                }
-                
+                albumArtworkImage
+                titleTexts
                 Spacer()
                 Spacer()
-                
-                Button(action: {
-                    cpVM.playPauseSong()
-                }, label: {
-                    Image(systemName: cpVM.trackPlaying && !cpVM.trackEnded ? "pause.fill" : "play.fill")
-                        .foregroundColor(.black)
-                        .scaleEffect(1.4)
-                }).disabled(cpVM.song.url.path != "")
-                
+                playButton
                 Spacer()
-                
-                Button(action: {
-                    guard let user = vm.user else { return }
-                    cpVM.playNextSong(songList: user.songListData)
-                }, label: {
-                    Image(systemName: "forward.fill")
-                        .foregroundColor(.black)
-                        .scaleEffect(1.4)
-                })
-                .padding(.trailing)
-                .disabled(cpVM.song.url.path != "")
-                
+                forwardButton
             }
-            .padding(.horizontal)
             .offset(y: -9)
-            
         }
         .background(RealBlurView())
         .frame(height: MainViewModel.Constants.currentlyPlayingMinimizedViewHeight)
@@ -77,16 +40,75 @@ struct CurrentlyPlayingMinimizedView: View {
             cpVM.showFullScreenCover.toggle()
         }
         
-        .fullScreenCover(isPresented: $cpVM.showFullScreenCover, content: {
+        .fullScreenCover(isPresented: $cpVM.showFullScreenCover) {
             CurrentlyPlayingFullScreen()
                 .environmentObject(vm)
                 .environmentObject(cpVM)
-        })
+        }
         
     }
 }
 
 
+extension CurrentlyPlayingMinimizedView {
+    
+    private var trackTimeLine: some View {
+        ZStack(alignment: .leading) {
+            Capsule()
+                .fill(Color.black.opacity(0.08))
+                .frame(height: 3)
+            Capsule()
+                .fill(Color.theme.primary)
+                .frame(width: cpVM.currentPlayTrackWidth, height: 3)
+        }
+    }
+    
+    private var albumArtworkImage: some View {
+        Image(uiImage: cpVM.albumImage)
+            .resizable()
+            .frame(width: 50, height: 50, alignment: .leading)
+            .foregroundColor(Color.theme.primaryText)
+            .cornerRadius(5)
+            .padding(.leading)
+    }
+    
+    private var titleTexts: some View {
+        VStack {
+            Text(cpVM.song.title)
+                .truncationMode(.tail)
+            Text(cpVM.song.artistName)
+                .truncationMode(.tail)
+                .foregroundColor(Color.gray)
+                .opacity(0.70)
+        }
+    }
+    
+    private var playButton: some View {
+        Button(action: {
+            cpVM.playPauseSong()
+        }, label: {
+            Image(systemName: cpVM.trackPlaying && !cpVM.trackEnded ? "pause.fill" : "play.fill")
+                .foregroundColor(Color.theme.primaryText)
+                .scaleEffect(1.4)
+        })//.disabled(cpVM.song.url.path != "")
+        
+    }
+    
+    private var forwardButton: some View {
+        Button(action: {
+            guard let user = vm.user else { return }
+            cpVM.playNextSong(songList: user.songListData)
+        }, label: {
+            Image(systemName: "forward.fill")
+                .foregroundColor(Color.theme.primaryText)
+                .scaleEffect(1.4)
+        })
+        .padding(.trailing)
+//        .disabled(cpVM.song.url.path != "")
+        
+    }
+    
+}
 
 
 
@@ -95,11 +117,15 @@ struct CurrentlyPlayingView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             CurrentlyPlayingMinimizedView()
+                .environmentObject(dev.mainVM)
                 .environmentObject(dev.currentlyPlaingVM)
+                .previewLayout(.sizeThatFits)
             
             CurrentlyPlayingMinimizedView()
+                .environmentObject(dev.mainVM)
                 .environmentObject(dev.currentlyPlaingVM)
                 .preferredColorScheme(.dark)
+                .previewLayout(.sizeThatFits)
         }
     }
 }
