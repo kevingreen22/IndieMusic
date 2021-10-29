@@ -33,7 +33,6 @@ struct ExploreView: View {
                     SearchBar(text: $exploreVM.searchText)
                 }
                 
-                
                 // ARTISTS
                 if !exploreVM.artists.isEmpty {
                     artistGridView

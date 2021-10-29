@@ -142,6 +142,8 @@ class DeveloperPreview {
         )
         
         self.mainVM.user = self.user
+        self.mainVM.selectedTab = 2
+        self.mainVM.showSplash = false
     }
     
     
