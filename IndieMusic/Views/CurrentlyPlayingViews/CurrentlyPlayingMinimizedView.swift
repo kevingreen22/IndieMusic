@@ -14,9 +14,12 @@ struct CurrentlyPlayingMinimizedView: View {
     
     
     var body: some View {
-        VStack {
-            trackTimeLine
-            Spacer()
+        ZStack {
+            VStack(spacing: 0) {
+                trackTimeLine
+                Spacer()
+            }.clipShape(Capsule())
+            .frame(height: MainViewModel.Constants.currentlyPlayingMinimizedViewHeight)
             HStack {
                 albumArtworkImage
                 titleTexts
@@ -26,14 +29,11 @@ struct CurrentlyPlayingMinimizedView: View {
                 Spacer()
                 forwardButton
             }
-            .offset(y: -9)
         }
         .background(RealBlurView())
-        .frame(height: MainViewModel.Constants.currentlyPlayingMinimizedViewHeight)
         .background(Color.theme.tabBarBackground.opacity(0.7))
+        .frame(height: MainViewModel.Constants.currentlyPlayingMinimizedViewHeight)
         .clipShape(Capsule())
-        .padding(.horizontal)
-        
         
         .onTapGesture {
             // Show currently playing song full screen view
@@ -66,10 +66,10 @@ extension CurrentlyPlayingMinimizedView {
     private var albumArtworkImage: some View {
         Image(uiImage: cpVM.albumImage)
             .resizable()
-            .frame(width: 50, height: 50, alignment: .leading)
+            .frame(width: 45, height: 45, alignment: .leading)
             .foregroundColor(Color.theme.primaryText)
             .cornerRadius(5)
-            .padding(.leading)
+            .padding([.leading, .vertical])
     }
     
     private var titleTexts: some View {
@@ -88,9 +88,9 @@ extension CurrentlyPlayingMinimizedView {
             cpVM.playPauseSong()
         }, label: {
             Image(systemName: cpVM.trackPlaying && !cpVM.trackEnded ? "pause.fill" : "play.fill")
+                .font(.system(size: 37))
                 .foregroundColor(Color.theme.primaryText)
-                .scaleEffect(1.4)
-        })//.disabled(cpVM.song.url.path != "")
+        })
         
     }
     
@@ -100,11 +100,10 @@ extension CurrentlyPlayingMinimizedView {
             cpVM.playNextSong(songList: user.songListData)
         }, label: {
             Image(systemName: "forward.fill")
+                .font(.system(size: 37))
                 .foregroundColor(Color.theme.primaryText)
-                .scaleEffect(1.4)
         })
         .padding(.trailing)
-//        .disabled(cpVM.song.url.path != "")
         
     }
     
