@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AlbumNavLinkCellView: View {
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var vm: MainViewModel
     @State private var isFavorited: Bool = false
     let album: Album
@@ -21,6 +22,10 @@ struct AlbumNavLinkCellView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .cornerRadius(5)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 5)
+                                .stroke(colorScheme == .dark ? .white : .clear, lineWidth: 2)
+                        )
                     HStack {
                         VStack(alignment: .leading) {
                             Text(album.title)
