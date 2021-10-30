@@ -192,7 +192,10 @@ extension ExploreView {
                 ForEach(exploreVM.songs.sorted(), id: \.self) { song in
                     SongListCell(song: song, selectedSongCell: $vm.selectedSongCell)
                 }
-            }.listStyle(PlainListStyle())
+            }
+            .listStyle(PlainListStyle())
+            .frame(minHeight: 60, maxHeight: .infinity)
+            
         }
     }
     

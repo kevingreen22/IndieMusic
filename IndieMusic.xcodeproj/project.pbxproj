@@ -89,7 +89,6 @@
 		C7D64ADA26BAE48A001ACB12 /* SigninViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D64AD926BAE48A001ACB12 /* SigninViewModel.swift */; };
 		C7D64ADD26BAE696001ACB12 /* CreateAccountVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D64ADC26BAE696001ACB12 /* CreateAccountVM.swift */; };
 		C7D64B0426BDFB10001ACB12 /* UploadSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D64B0326BDFB10001ACB12 /* UploadSongView.swift */; };
-		C7E09149272CBDA1009154DC /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E09148272CBDA1009154DC /* Int.swift */; };
 		C7FDA5732718EE2E007B5973 /* RealBlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7FDA5722718EE2E007B5973 /* RealBlurView.swift */; };
 /* End PBXBuildFile section */
 
@@ -218,7 +217,6 @@
 		C7D64AD926BAE48A001ACB12 /* SigninViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninViewModel.swift; sourceTree = "<group>"; };
 		C7D64ADC26BAE696001ACB12 /* CreateAccountVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountVM.swift; sourceTree = "<group>"; };
 		C7D64B0326BDFB10001ACB12 /* UploadSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadSongView.swift; sourceTree = "<group>"; };
-		C7E09148272CBDA1009154DC /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		C7FDA5722718EE2E007B5973 /* RealBlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealBlurView.swift; sourceTree = "<group>"; };
 		D5C68E754FD93C6122E4689E /* Pods-IndieMusic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IndieMusic.release.xcconfig"; path = "Target Support Files/Pods-IndieMusic/Pods-IndieMusic.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -384,7 +382,6 @@
 				C75CC2252720E00100D73BA3 /* View.swift */,
 				C75CC2272720E02B00D73BA3 /* UINavigationController.swift */,
 				C75CC2292720E04E00D73BA3 /* UITableView.swift */,
-				C7E09148272CBDA1009154DC /* Int.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -840,7 +837,6 @@
 				C7D64ADD26BAE696001ACB12 /* CreateAccountVM.swift in Sources */,
 				C74264C526A1F52E0075C8E0 /* StorageManager.swift in Sources */,
 				C7AE8A192697970F00B738C6 /* SongsListView.swift in Sources */,
-				C7E09149272CBDA1009154DC /* Int.swift in Sources */,
 				C7A0389B27189C98006E5FEC /* LoaderView.swift in Sources */,
 				C74264C326A1F5100075C8E0 /* AuthManager.swift in Sources */,
 				C78ECE552716836100223E77 /* ActivityIndicatorButtonStyle.swift in Sources */,
