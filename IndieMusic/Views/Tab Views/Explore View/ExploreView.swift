@@ -163,7 +163,7 @@ extension ExploreView {
                         GenreNavLinkCellView(imageName: genre.underscoredLowercased(), title: genre, albums: albums)
                             .frame(width: UIScreen.main.bounds.width / 3.3, height: 100)
                             .environmentObject(vm)
-                            .preference(key: GenreOfAlbumsIndexPreferenceKey.self, value: albums)
+//                            .preference(key: GenreOfAlbumsIndexPreferenceKey.self, value: albums)
                     }
                 }
             }
@@ -198,20 +198,19 @@ extension ExploreView {
             
         }
     }
-    
 }
 
 
 
 
-struct GenreOfAlbumsIndexPreferenceKey: PreferenceKey {
-    static var defaultValue: [Album] = []
-    
-    static func reduce(value: inout [Album], nextValue: () -> [Album]) {
-        value = nextValue()
-    }
-    
-}
+//struct GenreOfAlbumsIndexPreferenceKey: PreferenceKey {
+//    static var defaultValue: [Album] = []
+//
+//    static func reduce(value: inout [Album], nextValue: () -> [Album]) {
+//        value = nextValue()
+//    }
+//
+//}
 
 
 
