@@ -61,6 +61,7 @@ extension SongListCell {
             .onEnded {
                 selectedSongCell = song
                 cpVM.song = song
+                cpVM.playPauseSong()
                 if let user = vm.user {
                     user.addSongToUserSongList(song: song)
                     vm.updateUser()
