@@ -23,6 +23,7 @@ struct ExploreView: View {
     @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var exploreVM: ExploreViewModel
     
+    
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack {
@@ -93,12 +94,14 @@ extension ExploreView {
                 }
             }
             
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHGrid(rows: getArtistGridRows()) {
-                    ForEach(exploreVM.artists.sorted(), id: \.self) { artist in
-                        ArtistNavLinkCell(artist: artist)
-                            .frame(width: UIScreen.main.bounds.width * 0.90)
-                            .environmentObject(vm)
+            ScrollViewReader { proxy in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHGrid(rows: getArtistGridRows()) {
+                        ForEach(exploreVM.artists, id: \.self) { artist in
+                            ArtistNavLinkCell(artist: artist)
+                                .frame(width: UIScreen.main.bounds.width * 0.90)
+                                .environmentObject(vm)
+                        }
                     }
                 }
             }
@@ -157,7 +160,7 @@ extension ExploreView {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHGrid(rows: [GridItem(.flexible())]) {
                     ForEach(Array(zip(exploreVM.genreOfAlbums.keys, Array(exploreVM.genreOfAlbums.values))), id: \.0) { genre, albums in
-                        ExploreCellView(imageName: genre.underscoredLowercased(), title: genre, altText: nil)
+                        GenreNavLinkCellView(imageName: genre.underscoredLowercased(), title: genre, albums: albums)
                             .frame(width: UIScreen.main.bounds.width / 3.3, height: 100)
                             .environmentObject(vm)
                             .preference(key: GenreOfAlbumsIndexPreferenceKey.self, value: albums)

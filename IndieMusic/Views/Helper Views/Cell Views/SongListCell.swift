@@ -40,7 +40,7 @@ struct SongListCell: View {
 //                }
                 
                 Text(song.title)
-                    .font(.title)
+                    .font(.headline)
                     .lineLimit(1)
                     .truncationMode(.tail)
                 

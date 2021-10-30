@@ -29,19 +29,19 @@ class ExploreViewModel: ObservableObject {
     
     fileprivate func fetchAll() {
         DatabaseManger.shared.fetchAllArtists { [weak self] artists in
-            self?.artists.append(contentsOf: artists)
+            
             
             for artist in artists {
                 for album in artist.albums {
-                    
-                    self?.genreOfAlbums[album.genre]?.append(album)
-                    
                     if !album.songs.isEmpty {
+                        self?.artists.append(artist)
+                        
+                        self?.genreOfAlbums.updateValue([album], forKey: album.genre)
+                        
                         self?.albums.append(album)
+                        
+                        self?.songs.append(contentsOf: album.songs)
                     }
-                    
-                    self?.songs.append(contentsOf: album.songs)
-                    
                 }
             }
         }

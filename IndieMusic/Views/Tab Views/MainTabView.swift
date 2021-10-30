@@ -190,6 +190,24 @@ struct MainTabView: View {
 
 
 
+//extension MainTabView {
+//
+//    var profileNavBarButton: some View {
+//        Button {
+//            ProfileView(user: vm.user)
+//                .environmentObject(vm)
+//                .environmentObject(profileVM)
+//                .environment(\.defaultMinListRowHeight, 60)
+//        } label: {
+//            Image(uiImage: profileVM.selectedImage ?? UIImage(systemName: "person.circle.fill")!)
+//                .resizable()
+//                .frame(width: 45, height: 45)
+//                .clipShape(Circle())
+//        }
+//    }
+//
+//
+//}
 
 
 

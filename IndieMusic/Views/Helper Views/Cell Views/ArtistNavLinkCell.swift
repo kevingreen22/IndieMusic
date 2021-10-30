@@ -32,9 +32,11 @@ struct ArtistNavLinkCell: View {
                         .padding(.trailing)
                 }
             }
-        ).frame(height: 54)
+        )
     }
 }
+
+
 
 struct ArtistNavLinkCell_Previews: PreviewProvider {
     static var previews: some View {

@@ -145,12 +145,9 @@ class Album: Hashable, Identifiable, Equatable, Comparable, Codable {
         self.timeStamp = Date().timeIntervalSince1970
     }
     
-//    var albumArtworkURL: URL {
-//        guard let artworkURL = artworkURL else {
-//            return URL(fileURLWithPath: "album_artwork_placeholder")
-//        }
-//        return artworkURL
-//    }
+    func removingEmptyAlbums(_ albums: [Album]) -> [Album] {
+        return albums.filter { !$0.songs.isEmpty }
+    }
     
 }
 

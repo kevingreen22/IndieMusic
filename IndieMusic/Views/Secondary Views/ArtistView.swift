@@ -20,6 +20,7 @@ struct ArtistsView: View {
                     .listRowBackground(Color.clear)
             }
         }
+        .listStyle(PlainListStyle())
         .environment(\.defaultMinListRowHeight, 60)
         .navigationBarTitle("Artists", displayMode: .large)
     }
@@ -34,12 +35,17 @@ struct ArtistsView: View {
 struct ArtistView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ArtistsView(artists: dev.artists)
-                .environmentObject(dev.mainVM)
+            NavigationView {
+                ArtistsView(artists: dev.artists)
+                    .environmentObject(dev.mainVM)
+                    
+            }
             
-            ArtistsView(artists: dev.artists)
-                .environmentObject(dev.mainVM)
-                .preferredColorScheme(.dark)
+            NavigationView {
+                ArtistsView(artists: dev.artists)
+                    .environmentObject(dev.mainVM)
+                    .preferredColorScheme(.dark)
+            }
         }
     }
 }
