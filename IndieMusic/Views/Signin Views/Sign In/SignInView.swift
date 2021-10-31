@@ -32,8 +32,9 @@ struct SignInView: View {
                 Spacer()
                 
             } // End main VStack
+            .padding(.top, 50)
             
-            .padding(.top)
+            dismissButton
             
         } // End ZStack
         
@@ -63,11 +64,24 @@ struct SignInView: View {
 
 extension SignInView {
     
+    var dismissButton: some View {
+        VStack {
+            HStack {
+                Button {
+                    self.presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Text("Cancel")
+                }
+                Spacer()
+            }
+            Spacer()
+        }.padding([.leading, .top])
+    }
+    
     var mainImage: some View {
-        Image(systemName: "play.rectangle")
-            .font(.system(size: 200))
-            .foregroundColor(Color.theme.primary)
-            .shadow(radius: 5)
+        Image("record_player")
+            .resizable()
+            .frame(width: 300, height: 300)
     }
     
     var emailField: some View {
@@ -129,7 +143,7 @@ extension SignInView {
     var forgotPassword: some View {
         Button("Forgot Password?") {
             signinVM.activeFullScreen = .forgotPassword
-        }.offset(y: 20)
+        }.padding(.top, 20)
         
     }
     
@@ -144,7 +158,7 @@ extension SignInView {
                 Text("Create One")
             })
             Spacer()
-        }.offset(y: 40)
+        }.padding(.top, 20)
     }
     
     
