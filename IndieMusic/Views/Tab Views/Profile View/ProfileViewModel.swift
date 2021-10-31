@@ -199,9 +199,6 @@ class ProfileViewModel: ObservableObject {
     
     
     
-    
-    
-    
     func signOut(viewModel: MainViewModel, completion: @escaping (Bool) -> Void) {
         AuthManager.shared.signOut { success in
             guard success else { completion(false); return }

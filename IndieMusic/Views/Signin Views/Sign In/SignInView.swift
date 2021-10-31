@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SignInView: View {
-    @Environment(\.colorScheme) var colorScheme
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var vm: MainViewModel
     @StateObject var signinVM = SigninViewModel()
@@ -64,7 +63,7 @@ struct SignInView: View {
 
 extension SignInView {
     
-    var dismissButton: some View {
+    private var dismissButton: some View {
         VStack {
             HStack {
                 Button {
@@ -78,35 +77,32 @@ extension SignInView {
         }.padding([.leading, .top])
     }
     
-    var mainImage: some View {
+    private var mainImage: some View {
         Image("record_player")
             .resizable()
             .frame(width: 300, height: 300)
     }
     
-    var emailField: some View {
+    private var emailField: some View {
         TextField("Email", text: $signinVM.email, onCommit: {
             hideKeyboard()
         })
             .frame(width: 330, height: 80, alignment: .center)
             .font(.title)
-            .foregroundColor(colorScheme == .light ? .black : .white)
             .accentColor(.gray)
             .multilineTextAlignment(.center)
             .autocapitalization(.none)
             .disableAutocorrection(true)
             .lineLimit(1)
             .keyboardType(.emailAddress)
-        
     }
     
-    var secureField: some View {
+    private var secureField: some View {
         SecureField("Password", text: $signinVM.password, onCommit:  {
             hideKeyboard()
         })
             .frame(width: 330, height: 80, alignment: .center)
             .font(.title)
-            .foregroundColor(colorScheme == .light ? .black : .white)
             .accentColor(.gray)
             .multilineTextAlignment(.center)
             .autocapitalization(.none)
@@ -114,7 +110,7 @@ extension SignInView {
             .lineLimit(1)
     }
     
-    var signInButton: some View {
+    private var signInButton: some View {
         Button {
             signinVM.isSigningIn.toggle()
             signinVM.signIn(completion: { success in
@@ -140,14 +136,14 @@ extension SignInView {
         .padding(.top)
     }
     
-    var forgotPassword: some View {
+    private var forgotPassword: some View {
         Button("Forgot Password?") {
             signinVM.activeFullScreen = .forgotPassword
         }.padding(.top, 20)
         
     }
     
-    var createAccount: some View {
+    private var createAccount: some View {
         HStack {
             Spacer()
             Text("Dont have an account?")
@@ -160,7 +156,6 @@ extension SignInView {
             Spacer()
         }.padding(.top, 20)
     }
-    
     
 }
 

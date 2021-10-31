@@ -21,10 +21,8 @@ struct ProfileView: View {
 //            if let user = vm.user, AuthManager.shared.isSignedIn {
                 VStack(alignment: .leading, spacing: 0) {
                     profileViewHeader
-                    
                     ownerSongsList
                 }
-                
                 .onAppear { profileVM.prepare(user) }
             
             topNavButtons
@@ -55,7 +53,7 @@ struct ProfileView: View {
 
 extension ProfileView {
     
-    var profileViewHeader: some View {
+    private var profileViewHeader: some View {
         ZStack {
             Rectangle()
                 .fill(Color.theme.primary)
@@ -96,7 +94,7 @@ extension ProfileView {
             VStack {
                 Spacer()
                 HStack {
-                    UseAsArtistProfileButton(artist: user.artist)
+                    useAsArtistProfileButton
                         .environmentObject(vm)
                         .environmentObject(profileVM)
                     
@@ -131,7 +129,51 @@ extension ProfileView {
         }.frame(height: 260)
     }
     
-    var ownerSongsList: some View {
+    private var useAsArtistProfileButton: some View {
+        
+        return Button(action: {
+            withAnimation(.spring()) {
+                profileVM.showArtistOwnerInfo.toggle()
+            }
+        }, label: {
+            Image(systemName: profileVM.showArtistOwnerInfo ? "music.mic" : "person.fill")
+                .foregroundColor(.white)
+                .rotationEffect(.degrees(profileVM.showArtistOwnerInfo ? 0 : 360))
+        })
+            .frame(width: 50, height: 50)
+            .background(Color.theme.primary)
+            .cornerRadius(50 / 2)
+            .shadow(color: Color.black.opacity(0.4), radius: 3, x: 2, y: 2)
+        
+        .onChange(of: profileVM.showArtistOwnerInfo, perform: { changed in
+            if changed && user.artist == nil {
+                vm.activeFullScreen = .createArtist
+            } else
+            if !changed && user.artist != nil {
+                /* Alert user if they turn off "Artist Profile" that all of their albums/songs including thier artist will be deleted from the service, and they'll have to re-upload everything if they want to turn it back on. i.e. no one will be able to listen to it anymore */
+                profileVM.alertItem = MyAlertItem(
+                    title: Text("Are you sure?"),
+                    message: Text("This will delete all of your albums/songs including your artist profile from the service. Everyone will no longer be able to listen to your uploaded song(s)"),
+                    primaryButton: .cancel(Text("Cancel"), action: {
+                        profileVM.showArtistOwnerInfo = true
+                    }),
+                    secondaryButton: .destructive(
+                        Text("Confirm"),
+                        action: {
+                            profileVM.showLoader.toggle()
+                            profileVM.removeUsersOwnerPrivilage(viewModel: vm, completion: { success in
+                                if success {
+                                    profileVM.showLoader.toggle()
+                                }
+                            })
+                        }
+                    )
+                )
+            }
+        })
+    }
+    
+    private var ownerSongsList: some View {
         VStack {
             if let artist = user.artist {
                 HStack {
@@ -171,20 +213,18 @@ extension ProfileView {
     }
     
     // Add this at the end of ZStack.
-    var topNavButtons: some View {
+    private var topNavButtons: some View {
         VStack {
             HStack {
                 settingsButton
-                    
                 Spacer()
-                
                 signOutButton
             }
             Spacer()
         }.padding([.top, .horizontal])
     }
     
-    var settingsButton: some View {
+    private var settingsButton: some View {
         Button(action: {
             profileVM.showSettings.toggle()
         }, label: {
@@ -193,9 +233,9 @@ extension ProfileView {
         })
     }
     
-    var signOutButton: some View {
+    private var signOutButton: some View {
         Button(action: {
-            vm.alertItem = MyAlertItem(
+            profileVM.alertItem = MyAlertItem(
                 title: Text("Sign Out?"),
                 message: Text("Are you sure you want to sign out?"),
                 primaryButton: .cancel(),
@@ -222,7 +262,7 @@ extension ProfileView {
         })
     }
     
-    var showSignInViewButton: some View {
+    private var showSignInViewButton: some View {
         Button {
             vm.activeSheet = .signIn
         } label: {
@@ -238,68 +278,7 @@ extension ProfileView {
 }
 
 
-
-fileprivate struct UseAsArtistProfileButton: View {
-    @EnvironmentObject var vm: MainViewModel
-    @EnvironmentObject var profileVM: ProfileViewModel
-    let artist: Artist?
-    private let shadowColor = Color.black.opacity(0.4)
-    private let shadowPosition: (x: CGFloat, y: CGFloat) = (x: 2, y: 2)
-    private let shadowRadius: CGFloat = 3
     
-    
-    var body: some View {
-        Button(action: {
-            withAnimation(.spring()) {
-                profileVM.showArtistOwnerInfo.toggle()
-            }
-        }, label: {
-            Image(systemName: profileVM.showArtistOwnerInfo ? "music.mic" : "person.fill")
-                .foregroundColor(.white)
-                .rotationEffect(.degrees(profileVM.showArtistOwnerInfo ? 0 : 360))
-        })
-            .frame(width: 50, height: 50)
-            .background(Color.theme.primary)
-            .cornerRadius(50 / 2)
-            .shadow(
-                color: shadowColor,
-                radius: shadowRadius,
-                x: shadowPosition.x,
-                y: shadowPosition.y
-            )
-        
-        
-        .onChange(of: profileVM.showArtistOwnerInfo, perform: { changed in
-            if changed && artist == nil {
-                vm.activeFullScreen = .createArtist
-            } else
-            if !changed && artist != nil {
-                /* Alert user if they turn off "Artist Profile" that all of their albums/songs including thier artist will be deleted from the service, and they'll have to re-upload everything if they want to turn it back on. i.e. no one will be able to listen to it anymore */
-                vm.alertItem = MyAlertItem(
-                    title: Text("Are you sure?"),
-                    message: Text("This will delete all of your albums/songs including your artist profile from the service. Everyone will no longer be able to listen to your uploaded song(s)"),
-                    primaryButton: .cancel(Text("Cancel"), action: {
-                        profileVM.showArtistOwnerInfo = true
-                    }),
-                    secondaryButton: .destructive(
-                        Text("Confirm"),
-                        action: {
-                            profileVM.showLoader.toggle()
-                            profileVM.removeUsersOwnerPrivilage(viewModel: vm, completion: { success in
-                                if success {
-                                    profileVM.showLoader.toggle()
-                                }
-                            })
-                        }
-                    )
-                )
-            }
-        })
-    }
-}
-
-
-
 
 
 struct ProfileView_Previews: PreviewProvider {
