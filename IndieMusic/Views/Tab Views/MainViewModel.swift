@@ -16,16 +16,15 @@ class MainViewModel: ObservableObject {
     }
     
     @Published var user: User? = nil
-    @Published var showSplash = true
-    @Published var initProgress: CGFloat = 0.0
-    @Published var initProgressText = "fetching..."
-    @Published var showSigninView = false
+    @Published var selectedSongCell: Song? = nil
     @Published var alertItem: MyAlertItem?
     @Published var activeSheet: ActiveSheet?
     @Published var activeFullScreen: ActiveFullScreen?
-    @Published var selectedTab: Int = 2
+    @Published var showSplash = true
+    @Published var initProgress: CGFloat = 0.0
+    @Published var initProgressText = "fetching..."
+    @Published var selectedTab: Int = 1
     @Published var searchText: String = ""
-    @Published var selectedSongCell: Song? = nil
     @Published var uploadProgress: CGFloat = 0
     @Published var showNotification = false
     @Published var notificationText = "Uploading..."
@@ -78,6 +77,14 @@ class MainViewModel: ObservableObject {
                 completion(true)
             }
         }
+    }
+    
+    public func getProfilePictureFromUserCache() -> UIImage {
+        var profileImage = UIImage(systemName: "person.circle.fill")!
+        if let data = user?.profilePictureData, let image = UIImage(data: data) {
+            profileImage = image
+        }
+        return profileImage
     }
     
     public func updateUser() {

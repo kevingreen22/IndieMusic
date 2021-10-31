@@ -23,44 +23,17 @@ struct MainTabView: View {
     var body: some View {
         ZStack {
             TabView(selection: $vm.selectedTab) {
-                NavigationView {
-                    FavoritesView()
-                        .environmentObject(vm)
-                        .environment(\.defaultMinListRowHeight, 60)
-                        .navigationBarTitleDisplayMode(.large)
-                        .navigationBarTitle(TabTitle.favorites.rawValue)
-                }.tabItem {
-                    Label(TabTitle.favorites.rawValue, systemImage: TabImage.favorites.rawValue)
-                }.tag(1)
-                
-                
-                NavigationView {
-                    ExploreView()
-                        .environmentObject(vm)
-                        .environmentObject(exploreVM)
-                        .environment(\.defaultMinListRowHeight, 60)
-                        .navigationBarTitleDisplayMode(.large)
-                        .navigationBarTitle(TabTitle.explore.rawValue)
-                }.tabItem {
-                    Label(TabTitle.explore.rawValue, systemImage: TabImage.explore.rawValue)
-                }.tag(2)
-                
-                ProfileView(user: vm.user)
-                    .environmentObject(vm)
-                    .environmentObject(profileVM)
-                    .environment(\.defaultMinListRowHeight, 60)
-                    .tabItem {
-                        Label(TabTitle.profile.rawValue, systemImage: TabImage.profile.rawValue)
-                    }.tag(3)
-                
-            } // End TabView
+                exploreTab
+                favoritesTab
+//                profileTab
+            }
             .accentColor(Color.theme.primary)
             .transition(.move(edge: .bottom))
-            .onChange(of: vm.selectedTab) { newValue in
-                if newValue == 2 && AuthManager.shared.isSignedIn == false {
-                    vm.user = nil
-                }
-            }
+//            .onChange(of: vm.selectedTab) { newValue in
+//                if newValue == 2 && AuthManager.shared.isSignedIn == false {
+//                    vm.user = nil
+//                }
+//            }
             
 //            NewCurrentlyPlayingView()
             CurrentlyPlayingMinimizedView()
@@ -70,20 +43,14 @@ struct MainTabView: View {
                 .offset(y: currentlyPlayingMinimizedViewOffset())
             
             if vm.showNotification {
-                NonObstructiveNotificationView {
-                    VStack(spacing: 3) {
-                        Text(vm.notificationText)
-                        ProgressBarView(progress: $vm.uploadProgress, color: Color.theme.primary)
-                    }
-                }
-                .ignoresSafeArea()
-                .offset(y: -280)
+                notificationView
             }
             
             AnimatedSplashScreen()
                 .environmentObject(vm)
                 .opacity(vm.showSplash ? 1 : 0)
             
+            profileNavBarButton
         } // End ZStack
         .edgesIgnoringSafeArea(.vertical)
         
@@ -93,7 +60,7 @@ struct MainTabView: View {
 //                    vm.showNotification.toggle()
 //                }
 //            }
-        
+//
 //            if vm.isOpeningApp && !IAPManager.shared.isPremium() && AuthManager.shared.isSignedIn { vm.showPayWall.toggle() }
 //        }
         
@@ -130,6 +97,12 @@ struct MainTabView: View {
         
         .fullScreenCover(item: $vm.activeFullScreen, onDismiss: onDismissOfActiveFullScreenCover, content: { item in
             switch item {
+            case .profileView:
+                ProfileView(user: vm.user!)
+                    .environmentObject(vm)
+                    .environmentObject(profileVM)
+                    .environment(\.defaultMinListRowHeight, 60)
+                
             case .createArtist:
                 CreateArtistView()
                     .environmentObject(vm)
@@ -158,6 +131,84 @@ struct MainTabView: View {
         
     }
     
+}
+
+
+
+extension MainTabView {
+
+    var profileNavBarButton: some View {
+        VStack {
+            HStack {
+                Spacer()
+                Button {
+                    if vm.user != nil {
+                        vm.activeFullScreen = .profileView
+                    } else {
+                        vm.activeSheet = .signIn
+                    }
+                } label: {
+                    Image(uiImage: vm.getProfilePictureFromUserCache())
+                        .resizable()
+                        .frame(width: 35, height: 35)
+                        .clipShape(Circle())
+                }
+            }
+            Spacer()
+        }
+        .padding(.top, 40)
+        .padding(.trailing, 30)
+        .opacity(vm.showSplash ? 0 : 1)
+    }
+    
+    
+    private var notificationView: some View {
+        NonObstructiveNotificationView {
+            VStack(spacing: 3) {
+                Text(vm.notificationText)
+                ProgressBarView(progress: $vm.uploadProgress, color: Color.theme.primary)
+            }
+        }
+        .ignoresSafeArea()
+        .offset(y: -280)
+    }
+    
+    
+    private var exploreTab: some View {
+        NavigationView {
+            ExploreView()
+                .environmentObject(vm)
+                .environmentObject(exploreVM)
+                .environment(\.defaultMinListRowHeight, 60)
+                .navigationBarTitleDisplayMode(.large)
+                .navigationBarTitle(TabTitle.explore.rawValue)
+        }.tabItem {
+            Label(TabTitle.explore.rawValue, systemImage: TabImage.explore.rawValue)
+        }.tag(1)
+    }
+    
+    private var favoritesTab: some View {
+        NavigationView {
+            FavoritesView()
+                .environmentObject(vm)
+                .environment(\.defaultMinListRowHeight, 60)
+                .navigationBarTitleDisplayMode(.large)
+                .navigationBarTitle(TabTitle.favorites.rawValue)
+        }.tabItem {
+            Label(TabTitle.favorites.rawValue, systemImage: TabImage.favorites.rawValue)
+        }.tag(2)
+        
+    }
+    
+//    private var profileTab: some View {
+//        ProfileView(user: vm.user)
+//            .environmentObject(vm)
+//            .environmentObject(profileVM)
+//            .environment(\.defaultMinListRowHeight, 60)
+//            .tabItem {
+//                Label(TabTitle.profile.rawValue, systemImage: TabImage.profile.rawValue)
+//            }.tag(3)
+//    }
     
     fileprivate func currentlyPlayingMinimizedViewOffset() -> CGFloat {
         return ((getScreenBounds().height/2) - UITabBarController().tabBar.frame.height - MainViewModel.Constants.currentlyPlayingMinimizedViewHeight - 10)
@@ -181,33 +232,13 @@ struct MainTabView: View {
             guard let user = vm.user, user.artist == nil else { return }
             profileVM.showArtistOwnerInfo = false
             
-        case .uploadSong, .createAlbum, .forgotPassword, .createAccount, .none:
+        case .uploadSong, .createAlbum, .forgotPassword, .createAccount, .profileView, .none:
             break
         }
     }
-    
+
+
 }
-
-
-
-//extension MainTabView {
-//
-//    var profileNavBarButton: some View {
-//        Button {
-//            ProfileView(user: vm.user)
-//                .environmentObject(vm)
-//                .environmentObject(profileVM)
-//                .environment(\.defaultMinListRowHeight, 60)
-//        } label: {
-//            Image(uiImage: profileVM.selectedImage ?? UIImage(systemName: "person.circle.fill")!)
-//                .resizable()
-//                .frame(width: 45, height: 45)
-//                .clipShape(Circle())
-//        }
-//    }
-//
-//
-//}
 
 
 

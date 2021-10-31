@@ -20,7 +20,6 @@ class CurrentlyPlayingViewModel: ObservableObject {
                 self.prepareInfoForSong()
             }
             playerItem = AVPlayerItem(url: self.song.url)
-            playPauseSong()
             currentSongRefString = songPersistentRef()
         }
     }
