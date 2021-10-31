@@ -14,6 +14,8 @@ enum ActiveFullScreen: Identifiable {
     case uploadSong
     case forgotPassword
     case createAccount
+    case profileView
+    
 //    case imagePicker(sourceType: UIImagePickerController.SourceType, picking: PickingType)
 //    case documentPicker(picking: PickingType)
 //

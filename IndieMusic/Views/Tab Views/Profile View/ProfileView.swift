@@ -9,15 +9,16 @@ import SwiftUI
 import UIKit
 
 struct ProfileView: View {
+    @Environment(\.presentationMode) var presentationMode
     @State private var editMode = EditMode.inactive
     @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
-    let user: User?
+    let user: User
     
     
     var body: some View {
         ZStack {
-            if let user = vm.user, AuthManager.shared.isSignedIn {
+//            if let user = vm.user, AuthManager.shared.isSignedIn {
                 VStack(alignment: .leading, spacing: 0) {
                     profileViewHeader
                     
@@ -28,7 +29,7 @@ struct ProfileView: View {
             
             topNavButtons
                 
-            } else { showSignInViewButton }
+//            } else { showSignInViewButton }
             
             if profileVM.showLoader { LoaderView() }
         }
@@ -87,7 +88,7 @@ extension ProfileView {
                         .clipShape(Circle())
                 })
                 
-                Text(user!.name)
+                Text(user.name)
                     .foregroundColor(.white)
                     .font(.title)
             }
@@ -95,7 +96,7 @@ extension ProfileView {
             VStack {
                 Spacer()
                 HStack {
-                    UseAsArtistProfileButton(artist: user!.artist)
+                    UseAsArtistProfileButton(artist: user.artist)
                         .environmentObject(vm)
                         .environmentObject(profileVM)
                     
@@ -103,7 +104,7 @@ extension ProfileView {
                 }
             }.padding([.leading, .bottom])
             
-            if user!.artist != nil {
+            if user.artist != nil {
                 VStack {
                     Spacer()
                     HStack {
@@ -132,7 +133,7 @@ extension ProfileView {
     
     var ownerSongsList: some View {
         VStack {
-            if let user = user, let artist = user.artist {
+            if let artist = user.artist {
                 HStack {
                     Image(uiImage: profileVM.artistBioImage ?? UIImage(systemName: "music.mic")!)
                         .resizable()
@@ -148,7 +149,7 @@ extension ProfileView {
             }
             
             List {
-                ForEach(user?.ownerSongs ?? [], id: \.self) { song in
+                ForEach(user.ownerSongs, id: \.self) { song in
                     HStack {
                         Image(uiImage: profileVM.getAlbumArtworkFor(song: song))
                             .resizable()
@@ -206,7 +207,10 @@ extension ProfileView {
                         }
                         profileVM.signOut(viewModel: vm) { success in
                             profileVM.showLoader.toggle()
-                            vm.selectedTab = 2
+                            vm.selectedTab = 1
+                            self.presentationMode.wrappedValue.dismiss()
+                            vm.user = nil
+                            
                         }
                     }
                 )
@@ -301,11 +305,11 @@ fileprivate struct UseAsArtistProfileButton: View {
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ProfileView(user: dev.user)
+            ProfileView(user: dev.user!)
                 .environmentObject(dev.mainVM)
                 .environmentObject(dev.profileVM)
             
-            ProfileView(user: dev.user)
+            ProfileView(user: dev.user!)
                 .environmentObject(dev.mainVM)
                 .environmentObject(dev.profileVM)
                 .preferredColorScheme(.dark)
