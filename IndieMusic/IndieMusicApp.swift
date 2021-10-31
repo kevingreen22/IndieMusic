@@ -30,8 +30,8 @@ struct IndieMusicApp: App {
                 .environmentObject(vm)
                 .environmentObject(cpVM)
                 .onAppear {
-                    requestPermissionsIfNeeded()
                     cacheDataFromFirebase()
+                    requestPermissionsIfNeeded()
                 }
         }
         
@@ -64,26 +64,6 @@ private extension IndieMusicApp {
     }
     
     func cacheDataFromFirebase() {
-//        vm.cacheGenres { _, error in
-//            if error == nil {
-//                if AuthManager.shared.isSignedIn {
-//                    vm.cacheUser { success in
-//                        if success {
-//                            print("user cached")
-//                        } else {
-//                            print("user NOT cached")
-//                        }
-//                    }
-//                }
-////                else {
-////                    print("User not signed in.")
-////                    vm.showSigninView = true
-////                }
-//            } else {
-//                print("Error caching genres")
-//            }
-//        }
-
         enum Caches: CaseIterable {
             case genres
             case user
