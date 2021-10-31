@@ -13,6 +13,7 @@ class SigninViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var isSigningIn: Bool = false
     @Published var activeFullScreen: ActiveFullScreen?
+    @Published var alertItem: MyAlertItem?
     
     
     func signIn(completion: @escaping (Bool) -> Void) {

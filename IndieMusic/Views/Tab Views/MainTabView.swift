@@ -94,7 +94,6 @@ struct MainTabView: View {
             }
         }
         
-        
         .fullScreenCover(item: $vm.activeFullScreen, onDismiss: onDismissOfActiveFullScreenCover, content: { item in
             switch item {
             case .profileView:
