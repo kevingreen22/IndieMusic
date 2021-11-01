@@ -51,6 +51,17 @@ struct MainTabView: View {
                 .opacity(vm.showSplash ? 1 : 0)
             
             profileNavBarButton
+            
+            
+            if vm.showProfile {
+                ProfileView(user: vm.user!)
+                    .environmentObject(vm)
+                    .environmentObject(profileVM)
+                    .environment(\.defaultMinListRowHeight, 60)
+                    .transition(.move(edge: .bottom))
+            }
+            
+            
         } // End ZStack
         .edgesIgnoringSafeArea(.vertical)
         
@@ -136,13 +147,17 @@ struct MainTabView: View {
 
 extension MainTabView {
 
-    var profileNavBarButton: some View {
+    // MARK: component views
+    private var profileNavBarButton: some View {
         VStack {
             HStack {
                 Spacer()
                 Button {
                     if vm.user != nil {
-                        vm.activeFullScreen = .profileView
+//                        vm.activeFullScreen = .profileView
+                        withAnimation {
+                            vm.showProfile.toggle()
+                        }
                     } else {
                         vm.activeSheet = .signIn
                     }
@@ -160,7 +175,6 @@ extension MainTabView {
         .opacity(vm.showSplash ? 0 : 1)
     }
     
-    
     private var notificationView: some View {
         NonObstructiveNotificationView {
             VStack(spacing: 3) {
@@ -171,7 +185,6 @@ extension MainTabView {
         .ignoresSafeArea()
         .offset(y: -280)
     }
-    
     
     private var exploreTab: some View {
         NavigationView {
@@ -209,6 +222,8 @@ extension MainTabView {
 //            }.tag(3)
 //    }
     
+    
+    // MARK: Methods
     fileprivate func currentlyPlayingMinimizedViewOffset() -> CGFloat {
         return ((getScreenBounds().height/2) - UITabBarController().tabBar.frame.height - MainViewModel.Constants.currentlyPlayingMinimizedViewHeight - 10)
     }

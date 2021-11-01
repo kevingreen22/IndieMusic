@@ -20,6 +20,7 @@ class MainViewModel: ObservableObject {
     @Published var alertItem: MyAlertItem?
     @Published var activeSheet: ActiveSheet?
     @Published var activeFullScreen: ActiveFullScreen?
+    @Published var showProfile = false
     @Published var showSplash = true
     @Published var initProgress: CGFloat = 0.0
     @Published var initProgressText = "fetching..."

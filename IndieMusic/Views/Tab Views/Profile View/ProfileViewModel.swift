@@ -95,8 +95,6 @@ class ProfileViewModel: ObservableObject {
     }
     
     
-    
-    
     func removeUsersOwnerPrivilage(viewModel: MainViewModel, completion:  ((Bool) -> Void)?) {
         print("Attempting to remove User Artist owner privilage...")
         let totalRetrysAllowed = 2
@@ -154,20 +152,20 @@ class ProfileViewModel: ObservableObject {
         }
     }
     
-    fileprivate func updateUserOwnerPrivilage(viewModel: MainViewModel) {
+    func updateUserOwnerPrivilage(viewModel: MainViewModel) {
         let group = DispatchGroup()
         
         group.enter()
         // save user to Firebase DB
         DatabaseManger.shared.update(user: viewModel.user!) { _, error in
             if let error = error {
-//                errors?.append(error)
+                //                errors?.append(error)
             }
             print("User updated in DB")
             group.wait()
         }
-
-
+        
+        
         group.enter()
         // then re-cache user
         viewModel.cacheUser { success in
@@ -175,7 +173,7 @@ class ProfileViewModel: ObservableObject {
             print("User re-cached after removing owner artist")
             group.leave()
         }
-
+        
         let result2 = group.wait(timeout: .now() + 10)
         switch result2 {
         case .success:

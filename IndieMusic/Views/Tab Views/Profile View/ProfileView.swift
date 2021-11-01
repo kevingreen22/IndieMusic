@@ -10,28 +10,27 @@ import UIKit
 
 struct ProfileView: View {
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.colorScheme) var colorScheme
     @State private var editMode = EditMode.inactive
     @EnvironmentObject var vm: MainViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     let user: User
-    
-    
+        
     var body: some View {
         ZStack {
-//            if let user = vm.user, AuthManager.shared.isSignedIn {
-                VStack(alignment: .leading, spacing: 0) {
-                    profileViewHeader
-                    ownerSongsList
-                }
-                .onAppear { profileVM.prepare(user) }
-            
+            //                if let user = vm.user, AuthManager.shared.isSignedIn {
+            VStack(alignment: .leading, spacing: 0) {
+                profileViewHeader
+                ownerSongsList
+            }
             topNavButtons
-                
-//            } else { showSignInViewButton }
+            
+            //                } else { showSignInViewButton }
             
             if profileVM.showLoader { LoaderView() }
-        }
+        }.frame(minWidth: UIScreen.main.bounds.width, minHeight: UIScreen.main.bounds.height)
         
+            .onAppear { profileVM.prepare(user) }
     }
     
     fileprivate func onDelete(offsets: IndexSet) {
@@ -130,8 +129,7 @@ extension ProfileView {
     }
     
     private var useAsArtistProfileButton: some View {
-        
-        return Button(action: {
+        Button(action: {
             withAnimation(.spring()) {
                 profileVM.showArtistOwnerInfo.toggle()
             }
@@ -174,49 +172,55 @@ extension ProfileView {
     }
     
     private var ownerSongsList: some View {
-        VStack {
-            if let artist = user.artist {
-                HStack {
-                    Image(uiImage: profileVM.artistBioImage ?? UIImage(systemName: "music.mic")!)
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                        .clipShape(Circle())
-                        .padding(.leading)
-                    Text(artist.name)
-                        .font(.title)
-                        .fontWeight(.semibold)
-                    Spacer()
-                    EditButton().padding(.trailing)
-                }.padding(4)
-            }
-            
-            List {
-                ForEach(user.ownerSongs, id: \.self) { song in
+        ZStack {
+            colorScheme == .light ? Color.white : Color.black
+            VStack(spacing: 0) {
+                if let artist = user.artist {
                     HStack {
-                        Image(uiImage: profileVM.getAlbumArtworkFor(song: song))
+                        Image(uiImage: profileVM.artistBioImage ?? UIImage(systemName: "person.3.fill")!)
                             .resizable()
-                            .frame(width: 40, height: 40, alignment: .leading)
-                            .padding(.trailing)
-                        VStack(alignment: .leading) {
-                            Text(song.title)
-                                .font(.title3)
-                            Text(song.albumTitle)
-                                .foregroundColor(Color.theme.primary)
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
+                            .padding(.leading, 11)
+                        Text(artist.name)
+                            .font(.title)
+                            .fontWeight(.semibold)
+                            .padding(.leading)
+                        Spacer()
+                        EditButton().padding(.trailing)
+                    }.padding(4)
+                }
+                
+                List {
+                    ForEach(user.ownerSongs, id: \.self) { song in
+                        HStack {
+                            Image(uiImage: profileVM.getAlbumArtworkFor(song: song))
+                                .resizable()
+                                .frame(width: 40, height: 40, alignment: .leading)
+                                .padding(.trailing)
+                            VStack(alignment: .leading) {
+                                Text(song.title)
+                                    .font(.title3)
+                                Text(song.albumTitle)
+                                    .foregroundColor(Color.theme.primary)
+                            }
                         }
                     }
+                    .onDelete(perform: onDelete)
+                    
                 }
-                .onDelete(perform: onDelete)
-                
-            }.padding(0)
+                .listStyle(PlainListStyle())
+                .padding(0)
+            }
+            .environment(\.editMode, $editMode)
         }
-        .environment(\.editMode, $editMode)
     }
     
     // Add this at the end of ZStack.
     private var topNavButtons: some View {
         VStack {
             HStack {
-                settingsButton
+                dismissButton
                 Spacer()
                 signOutButton
             }
@@ -224,12 +228,13 @@ extension ProfileView {
         }.padding([.top, .horizontal])
     }
     
-    private var settingsButton: some View {
+    private var dismissButton: some View {
         Button(action: {
-            profileVM.showSettings.toggle()
+            vm.showProfile.toggle()
         }, label: {
-            Image(systemName: "gear")
+            Image(systemName: "xmark.circle")
                 .foregroundColor(.white)
+                .font(.system(size: 20))
         })
     }
     
